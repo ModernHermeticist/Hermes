@@ -93,11 +93,11 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>E:\Hermes\Hermes\Hermes\zlib;E:\Hermes\Hermes\Hermes\REXSpeeder\include;E:\Hermes\Hermes\Hermes\libtcod\include\libtcod;E:\Hermes\Hermes\Hermes\BearLibTerminal\Include\C;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\REXSpeeder\include;$(SolutionDir)\libtcod\include\libtcod;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
-      <AdditionalLibraryDirectories>E:\Hermes\Hermes\Hermes\libtcod;E:\Hermes\Hermes\Hermes\BearLibTerminal\Windows64;E:\Hermes\Hermes\Hermes\REXSpeeder\include;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)\libtcod;$(SolutionDir)\REXSpeeder\include;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>libtcod.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>

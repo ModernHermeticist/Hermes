@@ -6,7 +6,7 @@
 #include <vector>
 
 #include <libtcod.hpp>
-#include <\Hermes\Hermes\Hermes\REXSpeeder.h>
+#include "REXSpeeder.h"
 
 
 #include "Player.h"

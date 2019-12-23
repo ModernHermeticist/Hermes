@@ -13,19 +13,19 @@ Player::~Player()
 
 void Player::Update(TCOD_key_t key)
 {
-	if (key.vk == TCODK_KP4 && xPos > 0)
+	if ((key.vk == TCODK_KP4 || key.vk == TCODK_LEFT) && xPos > 0)
 	{
 		xPos -= 1;
 	}
-	else if (key.vk == TCODK_KP6 && xPos < CELL_COLUMNS - 1)
+	else if ((key.vk == TCODK_KP6 || key.vk == TCODK_RIGHT) && xPos < CELL_COLUMNS - 1)
 	{
 		xPos += 1;
 	}
-	else if (key.vk == TCODK_KP8 && yPos > 0)
+	else if ((key.vk == TCODK_KP8 || key.vk == TCODK_UP) && yPos > 0)
 	{
 		yPos -= 1;
 	}
-	else if (key.vk == TCODK_KP2 && yPos < CELL_ROWS - 1)
+	else if ((key.vk == TCODK_KP2 || key.vk == TCODK_DOWN) && yPos < CELL_ROWS - 1)
 	{
 		yPos += 1;
 	}
