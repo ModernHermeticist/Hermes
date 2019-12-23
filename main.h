@@ -1,15 +1,19 @@
-#pragma once
+#ifndef MAIN_H
+#define MAIN_H
 
 #include <iostream>
 #include <string>
+#include <vector>
 
-#include "BearLibTerminal/Include/C/BearLibTerminal.h"
-#include "libtcod/include/libtcod.hpp"
-#include "libtcod/include/libtcod/tileset/truetype.h"
+#include <libtcod.hpp>
+#include <\Hermes\Hermes\Hermes\REXSpeeder.h>
 
 
-int font_size = 16;
+#include "Player.h"
+
 const int SCREEN_WIDTH = 1920;
 const int SCREEN_HEIGHT = 1080;
-int cell_columns = SCREEN_WIDTH / 20;
-int cell_rows = SCREEN_HEIGHT / 20;
+const int CELL_COLUMNS = SCREEN_WIDTH / 20;
+const int CELL_ROWS = SCREEN_HEIGHT / 20;
+
+#endif

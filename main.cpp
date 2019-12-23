@@ -3,50 +3,74 @@
 
 int main() 
 {
-	int xPos = cell_columns / 2;
-	int yPos = cell_rows / 2;
+	int xPos = CELL_COLUMNS / 2;
+	int yPos = CELL_ROWS / 2;
 	TCODSystem::setFps(60);
 	TCODSystem::forceFullscreenResolution(SCREEN_WIDTH, SCREEN_HEIGHT);
-	TCODConsole::initRoot(cell_columns, cell_rows, "libtcod C++ tutorial", true, TCOD_RENDERER_GLSL);
+	TCODConsole::initRoot(CELL_COLUMNS, CELL_ROWS, "Hermes", true, TCOD_RENDERER_GLSL);
 	TCODConsole::setCustomFont("sirhenry.png", TCOD_FONT_LAYOUT_ASCII_INCOL);
+	Player* player = new Player(xPos, yPos);
+
+
+	xp::RexImage test("test.xp");
+	test.flatten();
+
+	
 
 	TCODConsole::root->clear();
-	TCODConsole::root->putChar(xPos, yPos, '@');
+
+	for (int i = 0; i < test.getWidth(); i++)
+	{
+		for (int j = 0; j < test.getHeight(); j++)
+		{
+			xp::RexTile t = *test.getTile(0, i, j);
+			TCODColor c = TCOD_black;
+			c.r = t.fore_red;
+			c.b = t.fore_blue;
+			c.g = t.fore_green;
+
+			TCODConsole::root->putCharEx(i, j, t.character, c, TCOD_black);
+		}
+	}
+
+	
+
+	TCODConsole::root->putChar(player->getXPos(), player->getYPos(), '@');
 	TCODConsole::flush();
+
 	
 	while (!TCODConsole::isWindowClosed())
 	{
 		bool refresh = false;
 		TCOD_key_t key;
 		TCODSystem::checkForEvent(TCOD_EVENT_KEY_PRESS, &key, NULL);
-		if (key.vk == TCODK_KP4 && xPos > 0)
+		if (key.vk != NULL)
 		{
-			xPos -= 1;
+			if (key.vk == TCODK_ESCAPE) break;
+			player->Update(key);
 			refresh = true;
 		}
-		else if (key.vk == TCODK_KP6 && xPos < cell_columns - 1)
-		{
-			xPos += 1;
-			refresh = true;
-		}
-		else if (key.vk == TCODK_KP8 && yPos > 0)
-		{
-			yPos -= 1;
-			refresh = true;
-		}
-		else if (key.vk == TCODK_KP2 && yPos < cell_rows - 1)
-		{
-			yPos += 1;
-			refresh = true;
-		}
-		else if (key.vk == TCODK_ESCAPE) break;
 
 		if (refresh)
 		{
 			TCODConsole::root->clear();
-			TCODConsole::root->putChar(xPos, yPos, '@');
+			for (int i = 0; i < test.getWidth(); i++)
+			{
+				for (int j = 0; j < test.getHeight(); j++)
+				{
+					xp::RexTile t = *test.getTile(0, i, j);
+					TCODColor c = TCOD_black;
+					c.r = t.fore_red;
+					c.b = t.fore_blue;
+					c.g = t.fore_green;
+					
+					TCODConsole::root->putCharEx(i, j, t.character, c, TCOD_black);
+				}
+			}
+			TCODConsole::root->putChar(player->getXPos(), player->getYPos(), '@');
 			TCODConsole::flush();
 		}
 	}
+	delete player;
 	return 0;
 }

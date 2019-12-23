@@ -70,7 +70,7 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>E:\Hermes\Hermes\Hermes\BearLibTerminal\Include\C;E:\Hermes\Hermes\Hermes\libtcod\include;$(IncludePath)</IncludePath>
+    <IncludePath>E:\Hermes\Hermes\Hermes\REXSpeeder\include;E:\Hermes\Hermes\Hermes\BearLibTerminal\Include\C;E:\Hermes\Hermes\Hermes\libtcod\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -78,9 +78,12 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>E:\Hermes\Hermes\Hermes\REXSpeeder\include;E:\Hermes\Hermes\Hermes\libtcod\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
+      <AdditionalLibraryDirectories>E:\Hermes\Hermes\Hermes\REXSpeeder\include;E:\Hermes\Hermes\Hermes\libtcod;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>REXSpeeder.lib;libtcod.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -90,11 +93,12 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>E:\Hermes\Hermes\Hermes\zlib;E:\Hermes\Hermes\Hermes\REXSpeeder\include;E:\Hermes\Hermes\Hermes\libtcod\include\libtcod;E:\Hermes\Hermes\Hermes\BearLibTerminal\Include\C;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
-      <AdditionalLibraryDirectories>E:\Hermes\Hermes\Hermes\libtcod;E:\Hermes\Hermes\Hermes\BearLibTerminal\Windows64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>BearLibTerminal.lib;libtcod.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>E:\Hermes\Hermes\Hermes\libtcod;E:\Hermes\Hermes\Hermes\BearLibTerminal\Windows64;E:\Hermes\Hermes\Hermes\REXSpeeder\include;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>libtcod.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -129,9 +133,13 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Player.cpp" />
+    <ClCompile Include="REXSpeeder.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h" />
+    <ClInclude Include="Player.h" />
+    <ClInclude Include="REXSpeeder.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
