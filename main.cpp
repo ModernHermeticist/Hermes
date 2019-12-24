@@ -3,8 +3,8 @@
 
 int main() 
 {
-	int xPos = CELL_COLUMNS / 2;
-	int yPos = CELL_ROWS / 2;
+	int xPos = 21;
+	int yPos = 20;
 	TCODSystem::setFps(60);
 	TCODSystem::forceFullscreenResolution(SCREEN_WIDTH, SCREEN_HEIGHT);
 	TCODConsole::initRoot(CELL_COLUMNS, CELL_ROWS, "Hermes", true, TCOD_RENDERER_GLSL);
@@ -15,7 +15,7 @@ int main()
 	xp::RexImage test("test.xp");
 	test.flatten();
 
-	
+	std::vector<Tile*> tiles;
 
 	TCODConsole::root->clear();
 
@@ -29,13 +29,22 @@ int main()
 			c.b = t.fore_blue;
 			c.g = t.fore_green;
 
-			TCODConsole::root->putCharEx(i, j, t.character, c, TCOD_black);
+			Tile* tile = new Tile(i, j, t.character, c, TCOD_black);
+			int sprite = tile->getSprite();
+
+			if (sprite == 192 || sprite == 179 || sprite == 191 || sprite == 196 || sprite == 217 || sprite == 218)
+			{
+				tile->setWalkable(false);
+				tile->setBlocks(true);
+			}
+
+			tiles.push_back(tile);
 		}
 	}
 
 	
-
-	TCODConsole::root->putChar(player->getXPos(), player->getYPos(), '@');
+	drawMainBorder();
+	drawMainWindow(tiles, player);
 	TCODConsole::flush();
 
 	
@@ -47,27 +56,16 @@ int main()
 		if (key.vk != NULL)
 		{
 			if (key.vk == TCODK_ESCAPE) break;
-			player->Update(key);
+			player->Update(key, tiles);
 			refresh = true;
 		}
 
 		if (refresh)
 		{
 			TCODConsole::root->clear();
-			for (int i = 0; i < test.getWidth(); i++)
-			{
-				for (int j = 0; j < test.getHeight(); j++)
-				{
-					xp::RexTile t = *test.getTile(0, i, j);
-					TCODColor c = TCOD_black;
-					c.r = t.fore_red;
-					c.b = t.fore_blue;
-					c.g = t.fore_green;
-					
-					TCODConsole::root->putCharEx(i, j, t.character, c, TCOD_black);
-				}
-			}
-			TCODConsole::root->putChar(player->getXPos(), player->getYPos(), '@');
+
+			drawMainBorder();
+			drawMainWindow(tiles, player);
 			TCODConsole::flush();
 		}
 	}
