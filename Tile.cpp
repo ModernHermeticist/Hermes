@@ -1,5 +1,10 @@
 #include "main.h"
 
+Tile::Tile()
+{
+
+}
+
 Tile::Tile(int _xPos, int _yPos, int _sprite, TCODColor _foreground, TCODColor _background, bool _walkable, bool _blocks)
 {
 	xPos = _xPos;
