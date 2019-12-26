@@ -133,6 +133,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AttackComponent.cpp" />
+    <ClCompile Include="DestoryComponent.cpp" />
+    <ClCompile Include="EnemyAI.cpp" />
     <ClCompile Include="Engine.cpp" />
     <ClCompile Include="Entity.cpp" />
     <ClCompile Include="gui.cpp" />
@@ -145,6 +148,10 @@
     <ClCompile Include="Tile.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AttackComponent.h" />
+    <ClInclude Include="constants.h" />
+    <ClInclude Include="DestroyComponent.h" />
+    <ClInclude Include="EnemyAI.h" />
     <ClInclude Include="Engine.h" />
     <ClInclude Include="Entity.h" />
     <ClInclude Include="gui.h" />

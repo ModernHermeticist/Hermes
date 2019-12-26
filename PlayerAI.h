@@ -4,7 +4,9 @@
 class PlayerAI
 {
 public:
-	enum movementDirection{ WEST,EAST,NORTH,SOUTH,NORTHWEST,NORTHEAST,SOUTHWEST,SOUTHEAST };
+	enum class movementDirection { WEST, EAST, NORTH, SOUTH, NORTHWEST, NORTHEAST, SOUTHWEST, SOUTHEAST };
+
+
 	PlayerAI();
 	~PlayerAI();
 

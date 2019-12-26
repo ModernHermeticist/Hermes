@@ -1,6 +1,7 @@
 #include "main.h"
 
 
+
 Engine::Engine(int _screen_width, int _screen_height, int _world_width, int _world_height)
 {
 	screen_width = _screen_width;
@@ -69,7 +70,7 @@ void Engine::loadMapFile(std::string fileName)
 				}
 				else
 				{
-					Entity* entity = new Entity(i, j, eT.character, cF, cB);
+					Entity* entity = new Entity(i, j, eT.character, cF, cB, NULL, NULL, NULL);
 					entities.push_back(entity);
 				}
 			}

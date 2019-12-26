@@ -1,6 +1,7 @@
 #include "main.h"
 
-Entity::Entity(int _xPos, int _yPos, int _sprite, TCODColor _spriteForeground, TCODColor _spriteBackground)
+
+Entity::Entity(int _xPos, int _yPos, int _sprite, TCODColor _spriteForeground, TCODColor _spriteBackground, EnemyAI* _enemyAI, AttackComponent* _attackComponent, DestroyComponent* _destroyComponent)
 {
 	xPos = _xPos;
 	yPos = _yPos;
@@ -9,9 +10,17 @@ Entity::Entity(int _xPos, int _yPos, int _sprite, TCODColor _spriteForeground, T
 	spriteBackground = _spriteBackground;
 	alive = true;
 	moveCount = 0;
+	enemyAI = _enemyAI;
+	attackComponent = _attackComponent;
+	destroyComponent = _destroyComponent;
 }
 
-Entity::~Entity() {};
+Entity::~Entity()
+{
+	if (enemyAI != NULL) delete enemyAI;
+	if (attackComponent != NULL) delete attackComponent;
+	if (destroyComponent != NULL) delete destroyComponent;
+};
 
 void Entity::Update(Tile** tiles, int targetX, int targetY)
 {

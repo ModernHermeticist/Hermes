@@ -9,7 +9,7 @@ public:
 	enum xDirection { left = -1, right = 1};
 	enum yDirection { up = -1, down = 1 };
 
-	Entity(int _xPos, int _yPos, int _sprite, TCODColor _spriteForeground, TCODColor _spriteBackground);
+	Entity(int _xPos, int _yPos, int _sprite, TCODColor _spriteForeground, TCODColor _spriteBackground, EnemyAI* _enemyAI, AttackComponent* _attackComponent, DestroyComponent* destroyComponent);
 	~Entity();
 	void Update(Tile** tiles, int targetX, int targetY);
 
@@ -39,6 +39,10 @@ private:
 
 	TCODColor spriteForeground;
 	TCODColor spriteBackground;
+
+	EnemyAI* enemyAI;
+	AttackComponent* attackComponent;
+	DestroyComponent* destroyComponent;
 
 };
 
