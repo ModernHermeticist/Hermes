@@ -24,6 +24,8 @@ Entity::~Entity()
 
 void Entity::Update(Tile** tiles, int targetX, int targetY)
 {
+	if (enemyAI != NULL) enemyAI->update();
+
 	if (!alive) { return; }
 	if (engine->getMap()->isInFov(xPos, yPos))
 	{
