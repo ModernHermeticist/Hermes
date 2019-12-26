@@ -1,0 +1,127 @@
+#include "main.h"
+
+void drawMainBorder()
+{
+	int borderWidth = MAIN_WINDOW_WIDTH;
+	int borderHeight = MAIN_WINDOW_HEIGHT;
+	TCODColor borderColor = TCOD_darker_green;
+	TCODConsole* con = new TCODConsole(borderWidth, borderHeight);
+	con->putCharEx(0, 0, TOP_FORK_WALL, borderColor, TCOD_black);
+	con->putCharEx(0, borderHeight-1, LEFT_FORK_WALL, borderColor, TCOD_black);
+	con->putCharEx(borderWidth-1, 0, TOP_RIGHT_CORNER_WALL, borderColor, TCOD_black);
+	con->putCharEx(borderWidth - 1, borderHeight-1, RIGHT_FORK_WALL, borderColor, TCOD_black);
+	for (int i = 1; i < borderWidth-1; i++)
+	{
+		con->putCharEx(i, 0, HORIZONTAL_WALL, borderColor, TCOD_black);
+		con->putCharEx(i, borderHeight-1, HORIZONTAL_WALL, borderColor, TCOD_black);
+	}
+	for (int i = 1; i < borderHeight-1; i++)
+	{
+		con->putCharEx(0, i, VERTICAL_WALL, borderColor, TCOD_black);
+		con->putCharEx(borderWidth-1, i, VERTICAL_WALL, borderColor, TCOD_black);
+	}
+
+	TCODConsole::blit(con, 0, 0, borderWidth, borderHeight, TCODConsole::root, CELL_COLUMNS - borderWidth, 0);
+	delete con;
+}
+
+void drawMainWindow(Map* map, Player* player, std::vector<Entity*> entities)
+{
+	int borderWidth = MAIN_WINDOW_WIDTH - 2;
+	int borderHeight = MAIN_WINDOW_HEIGHT - 2;
+	TCODConsole* con = new TCODConsole(borderWidth, borderHeight);
+
+	int width = engine->getWorldWidth();
+	int height = engine->getWorldHeight();
+	Tile** tiles = map->getWorld();
+	for (int x = 0; x < width; x++)
+	{
+		for (int y = 0; y < height; y++)
+		{
+			Tile* tile = &tiles[x][y];
+			if (map->isInFov(x, y))
+			{
+				con->putCharEx(tile->getXPos(), tile->getYPos(), tile->getSprite(), tile->getForeground(), tile->getBackground());
+			}
+		}
+	}
+	for (std::vector<Entity*>::iterator it = entities.begin(); it != entities.end(); it++)
+	{
+		Entity* entity = *it;
+		if (map->isInFov(entity->getXPos(), entity->getYPos()))
+		{
+			con->putCharEx(entity->getXPos(), entity->getYPos(), entity->getSprite(), entity->getSpriteForeground(), entity->getSpriteBackground());
+		}
+	}
+	con->putCharEx(player->getXPos(), player->getYPos(), player->getSprite(), player->getSpriteForeground(), player->getSpriteBackground());
+	TCODConsole::blit(con, 0, 0, borderWidth, borderHeight, TCODConsole::root, CELL_COLUMNS - borderWidth-1, 1);
+	delete con;
+}
+
+void drawUtilityWindow()
+{
+	int borderWidth = UTILITY_WINDOW_WIDTH;
+	int borderHeight = UTILITY_WINDOW_HEIGHT;
+	TCODColor borderColor = TCOD_darker_green;
+	Player* player = engine->getPlayer();
+	TCODConsole* con = new TCODConsole(borderWidth, borderHeight);
+
+	con->putCharEx(0, 0, TOP_LEFT_CORNER_WALL, borderColor, TCOD_black);
+	con->putCharEx(0, borderHeight - 1, BOTTOM_LEFT_CORNER_WALL, borderColor, TCOD_black);
+	con->putCharEx(borderWidth - 1, 0, TOP_RIGHT_CORNER_WALL, borderColor, TCOD_black);
+	con->putCharEx(borderWidth - 1, borderHeight - 1, BOTTOM_RIGHT_CORNER_WALL, borderColor, TCOD_black);
+
+	for (int i = 1; i < borderWidth-1; i++)
+	{
+		con->putCharEx(i, 0, HORIZONTAL_WALL, borderColor, TCOD_black);
+		con->putCharEx(i, borderHeight - 1, HORIZONTAL_WALL, borderColor, TCOD_black);
+	}
+	for (int i = 1; i < borderHeight-1; i++)
+	{
+		con->putCharEx(0, i, VERTICAL_WALL, borderColor, TCOD_black);
+		con->putCharEx(borderWidth - 1, i, VERTICAL_WALL, borderColor, TCOD_black);
+	}
+	std::string s = "HP: " + std::to_string(player->getCurrentHealth()) + '/' + std::to_string(player->getMaximumHealth());
+	con->printf(1, 1, s.c_str());
+
+	TCODConsole::blit(con, 0, 0, borderWidth, borderHeight, TCODConsole::root, 0, 0);
+	delete con;
+}
+
+void drawLogWindow()
+{
+	int borderWidth = LOG_WINDOW_WIDTH;
+	int borderHeight = LOG_WINDOW_HEIGHT;
+	TCODColor borderColor = TCOD_darker_green;
+	TCODConsole* con = new TCODConsole(borderWidth, borderHeight);
+
+	con->putCharEx(0, 0, TOP_LEFT_CORNER_WALL, borderColor, TCOD_black);
+	con->putCharEx(0, borderHeight - 1, BOTTOM_FORK_WALL, borderColor, TCOD_black);
+	con->putCharEx(borderWidth - 1, 0, RIGHT_FORK_WALL, borderColor, TCOD_black);
+	con->putCharEx(borderWidth - 1, borderHeight - 1, BOTTOM_RIGHT_CORNER_WALL, borderColor, TCOD_black);
+
+	for (int i = 1; i < borderWidth - 1; i++)
+	{
+		con->putCharEx(i, 0, HORIZONTAL_WALL, borderColor, TCOD_black);
+		con->putCharEx(i, borderHeight - 1, HORIZONTAL_WALL, borderColor, TCOD_black);
+	}
+	for (int i = 1; i < borderHeight - 1; i++)
+	{
+		con->putCharEx(0, i, VERTICAL_WALL, borderColor, TCOD_black);
+		con->putCharEx(borderWidth - 1, i, VERTICAL_WALL, borderColor, TCOD_black);
+	}
+
+	std::vector<LogEntry> log = engine->getLog();
+	for (int i = 0; i < log.size(); i++)
+	{
+		LogEntry entry = log[i];
+		std::string s = entry.getEntry();
+		for (int k = 0; k < s.size(); k++)
+		{
+			con->putCharEx(k + 1, i + 1, s[k], entry.getEntryColor(), TCOD_black);
+		}
+	}
+
+	TCODConsole::blit(con, 0, 0, borderWidth, borderHeight, TCODConsole::root, CELL_COLUMNS - borderWidth, MAIN_WINDOW_HEIGHT-1);
+	delete con;
+}
