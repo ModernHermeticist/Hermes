@@ -1,3 +1,13 @@
-﻿  gui.cpp
-E:\Hermes\Hermes\Hermes\REXSpeeder.h(62,29): warning C4267: 'return': conversion from 'size_t' to 'int', possible loss of data
-  Hermes.vcxproj -> E:\Hermes\Hermes\x64\Debug\Hermes.exe
+﻿  Engine.cpp
+  Entity.cpp
+  LogEntry.cpp
+  Map.cpp
+  Player.cpp
+  PlayerAI.cpp
+  Tile.cpp
+  gui.cpp
+  main.cpp
+D:\c\Hermes\Entity.cpp(31,34): warning C4244:  'argument': conversion from 'int' to 'float', possible loss of data
+  Generating Code...
+D:\c\Hermes\main.cpp(7,12): warning C4244:  'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+  Hermes.vcxproj -> D:\c\Hermes\x64\Debug\Hermes.exe

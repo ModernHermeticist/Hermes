@@ -31,6 +31,8 @@
  */
 #ifndef TCOD_CONSOLE_CONSOLE_H_
 #define TCOD_CONSOLE_CONSOLE_H_
+#pragma warning(push)
+#pragma warning(disable : 26451)
 
 #ifdef __cplusplus
 #include <array>
@@ -423,5 +425,6 @@ namespace console {
   }
 } // namespace console
 } // namespace tcod
+#pragma warning(pop)
 #endif // __cplusplus
 #endif // TCOD_CONSOLE_CONSOLE_H_

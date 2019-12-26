@@ -31,6 +31,10 @@
  */
 #ifndef LIBTCOD_TILESET_TILESET_H_
 #define LIBTCOD_TILESET_TILESET_H_
+#pragma warning(push)
+#pragma warning(disable : 26495)
+#pragma warning(push)
+#pragma warning(disable : 26451)
 #ifdef __cplusplus
 #include <algorithm>
 #include <memory>
@@ -212,4 +216,6 @@ TCODLIB_CAPI int TCOD_tileset_set_tile_(
     TCOD_Tileset* tileset,
     int codepoint,
     const struct TCOD_ColorRGBA* buffer);
+#pragma warning(pop)
+#pragma warning(pop)
 #endif /* LIBTCOD_TILESET_TILESET_H_ */

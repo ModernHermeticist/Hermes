@@ -32,6 +32,9 @@
 #ifndef _TCOD_BSP_HPP
 #define _TCOD_BSP_HPP
 
+#pragma warning( push )
+#pragma warning( disable : 26495 )
+
 #include "bsp.h"
 #include "list.hpp"
 #include "mersenne.hpp"
@@ -54,7 +57,10 @@ public :
 
 class TCODLIB_API TCODBsp : public TCODTree {
 public :
-	int x,y,w,h; //
+	int x = 0;
+	int y = 0;
+	int w = 0;
+	int h = 0; //
 	int position; // position of splitting
 	bool horizontal; // horizontal splitting ?
 	uint8_t level; // level in the tree
@@ -412,4 +418,5 @@ protected :
 
 };
 
+#pragma warning( pop )
 #endif

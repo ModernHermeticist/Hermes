@@ -7,6 +7,7 @@ Engine::Engine(int _screen_width, int _screen_height, int _world_width, int _wor
 	screen_height = _screen_height;
 	world_width = _world_width;
 	world_height = _world_height;
+	TCODSystem::checkForEvent(TCOD_EVENT_KEY_PRESS, &lastKey, NULL);
 	player = new Player(0, 0, '@', 15);
 	map = new Map(screen_width, screen_height);
 	fovRadius = 10;
@@ -153,3 +154,6 @@ void Engine::setComputeFov(bool val)
 {
 	computeFov = val;
 }
+
+TCOD_key_t Engine::getLastKey() { return lastKey; }
+void Engine::setLastKey(TCOD_key_t k) { lastKey = k; }

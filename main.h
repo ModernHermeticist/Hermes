@@ -15,6 +15,7 @@
 #include "Tile.h"
 #include "Map.h"
 #include "Entity.h"
+#include "PlayerAI.h"
 #include "Player.h"
 #include "gui.h"
 #include "LogEntry.h"

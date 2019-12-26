@@ -32,6 +32,9 @@ public:
 	bool getComputeFov();
 	void setComputeFov(bool val);
 
+	TCOD_key_t getLastKey();
+	void setLastKey(TCOD_key_t k);
+
 private:
 	int fovRadius;
 	bool computeFov;
@@ -49,6 +52,8 @@ private:
 	std::vector<Entity*> entities;
 
 	std::vector<LogEntry> log;
+
+	TCOD_key_t lastKey;
 };
 
 extern Engine* engine;

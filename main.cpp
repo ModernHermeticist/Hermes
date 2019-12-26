@@ -28,10 +28,11 @@ int main()
 		bool refresh = false;
 		TCOD_key_t key;
 		TCODSystem::checkForEvent(TCOD_EVENT_KEY_PRESS, &key, NULL);
+		engine->setLastKey(key);
 		if (key.vk != NULL)
 		{
 			if (key.vk == TCODK_ESCAPE) break;
-			engine->getPlayer()->Update(key, engine->getMap()->getWorld());
+			engine->getPlayer()->Update();
 			refresh = true;
 		}
 

@@ -8,6 +8,7 @@ Entity::Entity(int _xPos, int _yPos, int _sprite, TCODColor _spriteForeground, T
 	spriteForeground = _spriteForeground;
 	spriteBackground = _spriteBackground;
 	alive = true;
+	moveCount = 0;
 }
 
 Entity::~Entity() {};

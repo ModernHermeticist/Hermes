@@ -1,5 +1,9 @@
 /*For version 1.03 of REXPaint*/
 #pragma once
+#pragma warning(push)
+#pragma warning(disable : 26451)
+#pragma warning(push)
+#pragma warning(disable : 4267)
 #include <iostream>
 #include <stdint.h>
 #include <array>
@@ -105,3 +109,5 @@ namespace xp {
 	//The error code thrown when a file does not exist. Strangely, gzopen does not set an error code.
 	constexpr int ERR_FILE_DOES_NOT_EXIST = 20202;
 }
+#pragma warning(pop)
+#pragma warning(pop)

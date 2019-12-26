@@ -59,10 +59,10 @@ class TilesetObserver {
     observe(subject);
   }
 
-  TilesetObserver(TilesetObserver&& rhs)
+  TilesetObserver(TilesetObserver&& rhs) noexcept
   : TilesetObserver(rhs.tileset_)
   {}
-  TilesetObserver& operator=(TilesetObserver&& rhs)
+  TilesetObserver& operator=(TilesetObserver&& rhs) noexcept
   {
     if (this != &rhs) {
       observe(rhs.tileset_);
