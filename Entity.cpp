@@ -7,32 +7,47 @@ Entity::Entity(int _xPos, int _yPos, int _sprite, TCODColor _spriteForeground, T
 	sprite = _sprite;
 	spriteForeground = _spriteForeground;
 	spriteBackground = _spriteBackground;
+	alive = true;
 }
 
 Entity::~Entity() {};
 
-void Entity::Update(Tile** tiles)
+void Entity::Update(Tile** tiles, int targetX, int targetY)
 {
-	int dX = rand() % 3;
-	int dY = rand() % 3;
-	if (dX == 1) dX = xDirection::left;
-	else if (dX == 2) dX = xDirection::right;
-
-	if (dY == 1) dY = yDirection::up;
-	else if (dY == 2) dY = yDirection::down;
-
-
-
-	if (dX != 0 || dY != 0)
+	if (!alive) { return; }
+	if (engine->getMap()->isInFov(xPos, yPos))
 	{
-		int newX = dX + xPos;
-		int newY = dY + yPos;
-		Tile tile = tiles[newX][newY];
-		if (canMoveTo(tile, newX, newY))
+		moveCount = TRACKING_TURNS;
+	}
+	else moveCount--;
+
+	if (moveCount > 0)
+	{
+		int dX = targetX - xPos;
+		int dY = targetY - yPos;
+		int stepDX = (dX > 0 ? 1 : -1);
+		int stepDY = (dY > 0 ? 1 : -1);
+		float distance = sqrtf(dX * dX + dY * dY);
+		if (distance >= 2)
 		{
-			xPos += dX;
-			yPos += dY;
-			return;
+			dX = (int)(round(dX / distance));
+			dY = (int)(round(dY / distance));
+			int newX = dX + xPos;
+			int newY = dY + yPos;
+			Tile tile = tiles[newX][newY];
+			if (canMoveTo(tile, newX, newY))
+			{
+				xPos += dX;
+				yPos += dY;
+			}
+			else if (canMoveTo(tiles[xPos + stepDX][yPos], xPos + stepDX, yPos))
+			{
+				xPos += stepDX;
+			}
+			else if (canMoveTo(tiles[xPos][yPos + stepDY], xPos, yPos + stepDY))
+			{
+				yPos += stepDY;
+			}
 		}
 	}
 }

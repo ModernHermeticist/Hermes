@@ -11,7 +11,8 @@ public:
 
 	Player* getPlayer();
 
-	Tile** getWorld();
+	Map* getMap();
+
 
 	void addEntity(Entity* entity);
 	std::vector<Entity*> getEntities();
@@ -21,12 +22,20 @@ public:
 	int getWorldWidth();
 	int getWorldHeight();
 
-	std::vector<std::string> getLog();
-	void addToLog(std::string message);
+	std::vector<LogEntry> getLog();
+	void addToLog(std::string message, TCODColor c);
 
 	bool isImpassibleSprite(int sprite);
 
+	int getFovRadius();
+
+	bool getComputeFov();
+	void setComputeFov(bool val);
+
 private:
+	int fovRadius;
+	bool computeFov;
+
 	int screen_width;
 	int screen_height;
 
@@ -35,11 +44,11 @@ private:
 
 	Player* player;
 
-	Tile** world;
+	Map* map;
 	
 	std::vector<Entity*> entities;
 
-	std::vector<std::string> log;
+	std::vector<LogEntry> log;
 };
 
 extern Engine* engine;

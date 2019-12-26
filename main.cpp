@@ -15,13 +15,13 @@ int main()
 
 	TCODConsole::root->clear();
 
+	engine->getMap()->computeFov();
 
 	drawUtilityWindow();
 	drawLogWindow();
 	drawMainBorder();
-	drawMainWindow(engine->getWorld(), engine->getPlayer(), engine->getEntities());
+	drawMainWindow(engine->getMap(), engine->getPlayer(), engine->getEntities());
 	TCODConsole::flush();
-
 	
 	while (!TCODConsole::isWindowClosed())
 	{
@@ -31,19 +31,24 @@ int main()
 		if (key.vk != NULL)
 		{
 			if (key.vk == TCODK_ESCAPE) break;
-			engine->getPlayer()->Update(key, engine->getWorld());
+			engine->getPlayer()->Update(key, engine->getMap()->getWorld());
 			refresh = true;
 		}
 
 		if (refresh)
 		{
+			if (engine->getComputeFov())
+			{
+				engine->getMap()->computeFov();
+				engine->setComputeFov(false);
+			}
 			engine->updateEntities();
 
 			TCODConsole::root->clear();
 			drawUtilityWindow();
 			drawLogWindow();
 			drawMainBorder();
-			drawMainWindow(engine->getWorld(), engine->getPlayer(), engine->getEntities());
+			drawMainWindow(engine->getMap(), engine->getPlayer(), engine->getEntities());
 			TCODConsole::flush();
 		}
 	}

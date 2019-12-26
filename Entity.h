@@ -1,6 +1,8 @@
 #ifndef ENTITY_H
 #define ENTITY_H
 
+static const int TRACKING_TURNS = 3;
+
 class Entity
 {
 public:
@@ -9,7 +11,7 @@ public:
 
 	Entity(int _xPos, int _yPos, int _sprite, TCODColor _spriteForeground, TCODColor _spriteBackground);
 	~Entity();
-	void Update(Tile** tiles);
+	void Update(Tile** tiles, int targetX, int targetY);
 
 	int getXPos();
 	int getYPos();
@@ -30,6 +32,10 @@ private:
 	int yPos;
 
 	int sprite;
+
+	int moveCount;
+
+	bool alive;
 
 	TCODColor spriteForeground;
 	TCODColor spriteBackground;

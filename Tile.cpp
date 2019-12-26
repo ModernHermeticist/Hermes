@@ -2,7 +2,9 @@
 
 Tile::Tile()
 {
-
+	blocks = false;
+	walkable = false;
+	explored = false;
 }
 
 Tile::Tile(int _xPos, int _yPos, int _sprite, TCODColor _foreground, TCODColor _background, bool _walkable, bool _blocks)
@@ -14,6 +16,7 @@ Tile::Tile(int _xPos, int _yPos, int _sprite, TCODColor _foreground, TCODColor _
 	background = _background;
 	walkable = _walkable;
 	blocks = _blocks;
+	explored = false;
 }
 
 Tile::Tile(int _xPos, int _yPos, int _sprite, TCODColor _foreground, TCODColor _background)
@@ -25,6 +28,7 @@ Tile::Tile(int _xPos, int _yPos, int _sprite, TCODColor _foreground, TCODColor _
 	background = _background;
 	walkable = true;
 	blocks = false;
+	explored = false;
 }
 
 Tile::~Tile()
@@ -52,6 +56,11 @@ bool Tile::getBlocks()
 	return blocks;
 }
 
+bool Tile::getExplored()
+{
+	return explored;
+}
+
 int Tile::getSprite()
 {
 	return sprite;
@@ -75,6 +84,11 @@ void Tile::setWalkable(bool val)
 void Tile::setBlocks(bool val)
 {
 	blocks = val;
+}
+
+void Tile::setExplored(bool val)
+{
+	explored = val;
 }
 
 void Tile::setSprite(int c)

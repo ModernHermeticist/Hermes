@@ -7,23 +7,16 @@ Engine::Engine(int _screen_width, int _screen_height, int _world_width, int _wor
 	screen_height = _screen_height;
 	world_width = _world_width;
 	world_height = _world_height;
-	player = new Player(0, 0, '@');
-
-	world = new Tile * [world_width];
-	for (int i = 0; i < world_width; i++)
-	{
-		world[i] = new Tile[world_height];
-	}
+	player = new Player(0, 0, '@', 15);
+	map = new Map(screen_width, screen_height);
+	fovRadius = 10;
+	computeFov = true;
 }
 
 Engine::~Engine()
 {
 	delete player;
-	for (int i = 0; i < world_width; i++)
-	{
-		delete[] world[i];
-	}
-	delete[] world;
+	delete map;
 	for (int i = 0; i < entities.size(); i++)
 	{
 		delete entities[i];
@@ -32,24 +25,27 @@ Engine::~Engine()
 
 void Engine::loadMapFile(std::string fileName)
 {
-	xp::RexImage map(fileName);
+	xp::RexImage fileMap(fileName);
 
-	for (int i = 0; i < map.getWidth(); i++)
+	for (int i = 0; i < fileMap.getWidth(); i++)
 	{
-		for (int j = 0; j < map.getHeight(); j++)
+		for (int j = 0; j < fileMap.getHeight(); j++)
 		{
-			xp::RexTile t = *map.getTile(0, i, j);
-			xp::RexTile eT = *map.getTile(1, i, j);
+			xp::RexTile t = *fileMap.getTile(0, i, j);
+			xp::RexTile eT = *fileMap.getTile(1, i, j);
 			TCODColor c = TCOD_black;
 			c.r = t.fore_red;
 			c.b = t.fore_blue;
 			c.g = t.fore_green;
 			Tile newTile = Tile(i, j, t.character, c, TCOD_black);
 			int sprite = newTile.getSprite();
+			map->getTCODMap()->setProperties(i, j, true, true);
 			if (isImpassibleSprite(sprite))
 			{
 				newTile.setWalkable(false);
 				newTile.setBlocks(true);
+				if (sprite != WATER)
+					map->getTCODMap()->setProperties(i, j, false, false);
 			}
 
 			if (eT.character != 0)
@@ -62,10 +58,21 @@ void Engine::loadMapFile(std::string fileName)
 				cB.r = eT.back_red;
 				cB.b = eT.back_blue;
 				cB.g = eT.back_green;
-				Entity* entity = new Entity(i, j, eT.character, cF, cB);
-				entities.push_back(entity);
+				if (eT.character == '@')
+				{
+					player->setXPos(i);
+					player->setYPos(j);
+					player->setSprite(eT.character);
+					player->setSpriteForeground(cF);
+					player->setSpriteBackground(cB);
+				}
+				else
+				{
+					Entity* entity = new Entity(i, j, eT.character, cF, cB);
+					entities.push_back(entity);
+				}
 			}
-			world[i][j] = newTile;
+			map->setTile(i, j, newTile);
 		}
 	}
 }
@@ -75,10 +82,7 @@ Player* Engine::getPlayer()
 	return player;
 }
 
-Tile** Engine::getWorld()
-{
-	return world;
-}
+Map* Engine::getMap() { return map; }
 
 void Engine::addEntity(Entity* entity)
 {
@@ -95,7 +99,7 @@ void Engine::updateEntities()
 	for (std::vector<Entity*>::iterator it = entities.begin(); it != entities.end(); it++)
 	{
 		Entity* entity = *it;
-		entity->Update(world);
+		entity->Update(map->getWorld(), player->getXPos(), player->getYPos());
 	}
 }
 
@@ -109,20 +113,23 @@ int Engine::getWorldHeight()
 	return world_height;
 }
 
-std::vector<std::string> Engine::getLog()
+std::vector<LogEntry> Engine::getLog()
 {
 	return log;
 }
-void Engine::addToLog(std::string message)
+void Engine::addToLog(std::string message, TCODColor color)
 {
+	LogEntry lE = LogEntry(message, color);
 	if (log.size() > 6) log.erase(log.begin());
-	log.push_back(message);
+	log.push_back(lE);
 }
 
 bool Engine::isImpassibleSprite(int sprite)
 {
 	if (sprite == TOP_LEFT_CORNER_WALL ||
+		sprite == TOP_RIGHT_CORNER_WALL ||
 		sprite == BOTTOM_RIGHT_CORNER_WALL ||
+		sprite == BOTTOM_LEFT_CORNER_WALL ||
 		sprite == VERTICAL_WALL ||
 		sprite == HORIZONTAL_WALL ||
 		sprite == TOP_FORK_WALL ||
@@ -131,4 +138,18 @@ bool Engine::isImpassibleSprite(int sprite)
 		sprite == RIGHT_FORK_WALL ||
 		sprite == WATER) return true;
 	return false;
+}
+
+int Engine::getFovRadius()
+{
+	return fovRadius;
+}
+
+bool Engine::getComputeFov()
+{
+	return computeFov;
+}
+void Engine::setComputeFov(bool val)
+{
+	computeFov = val;
 }

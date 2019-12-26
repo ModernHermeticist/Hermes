@@ -15,6 +15,8 @@ public:
 	bool getWalkable();
 	bool getBlocks();
 
+	bool getExplored();
+
 	int getSprite();
 
 	TCODColor getForeground();
@@ -22,6 +24,8 @@ public:
 
 	void setWalkable(bool val);
 	void setBlocks(bool val);
+
+	void setExplored(bool val);
 
 	void setSprite(int c);
 
@@ -33,6 +37,7 @@ private:
 	int yPos;
 	bool walkable;
 	bool blocks;
+	bool explored;
 
 	int sprite;
 
