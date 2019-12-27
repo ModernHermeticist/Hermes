@@ -4,6 +4,8 @@
 class Engine
 {
 public:
+	enum class TURN{PLAYER_TURN, ENEMY_TURN};
+
 	Engine(int _screen_width, int _screen_height, int _world_width, int _world_height);
 	~Engine();
 
@@ -34,6 +36,8 @@ public:
 
 	TCOD_key_t getLastKey();
 	void setLastKey(TCOD_key_t k);
+
+	TURN turn;
 
 private:
 	int fovRadius;

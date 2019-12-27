@@ -45,7 +45,7 @@ void drawMainWindow(Map* map, Player* player, std::vector<Entity*> entities)
 			}
 		}
 	}
-	for (std::vector<Entity*>::iterator it = entities.begin(); it != entities.end(); it++)
+	for (std::vector<Entity*>::iterator it = entities.begin(); it != entities.end(); ++it)
 	{
 		Entity* entity = *it;
 		if (map->isInFov(entity->getXPos(), entity->getYPos()))
@@ -81,7 +81,8 @@ void drawUtilityWindow()
 		con->putCharEx(0, i, VERTICAL_WALL, borderColor, TCOD_black);
 		con->putCharEx(borderWidth - 1, i, VERTICAL_WALL, borderColor, TCOD_black);
 	}
-	std::string s = "HP: " + std::to_string(player->getCurrentHealth()) + '/' + std::to_string(player->getMaximumHealth());
+	std::string s = "HP: " + std::to_string(player->getDestroyComponent()->getCurrentHealth())
+		+ '/' + std::to_string(player->getDestroyComponent()->getMaximumHealth());
 	con->printf(1, 1, s.c_str());
 
 	TCODConsole::blit(con, 0, 0, borderWidth, borderHeight, TCODConsole::root, 0, 0);

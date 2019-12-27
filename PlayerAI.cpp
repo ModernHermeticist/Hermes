@@ -21,28 +21,27 @@ void PlayerAI::parseKeyInput()
 
 	switch (key.vk)
 	{
-	case TCODK_KP4:   moveOrAttack(-1, 0, movementDirection::WEST); break;
-	case TCODK_LEFT:  moveOrAttack(-1, 0, movementDirection::WEST); break;
-	case TCODK_KP6:   moveOrAttack(1, 0, movementDirection::EAST); break;
-	case TCODK_RIGHT: moveOrAttack(1, 0, movementDirection::EAST); break;
-	case TCODK_KP8:   moveOrAttack(0, -1, movementDirection::NORTH); break;
-	case TCODK_UP:    moveOrAttack(0, -1, movementDirection::NORTH); break;
-	case TCODK_KP2:   moveOrAttack(0, 1, movementDirection::SOUTH); break;
-	case TCODK_DOWN:  moveOrAttack(0, 1, movementDirection::SOUTH); break;
-	case TCODK_KP7:   moveOrAttack(-1, -1, movementDirection::NORTHWEST); break;
-	case TCODK_KP9:   moveOrAttack(1, -1, movementDirection::NORTHEAST); break;
-	case TCODK_KP1:   moveOrAttack(-1, 1, movementDirection::SOUTHWEST); break;
-	case TCODK_KP3:   moveOrAttack(1, 1, movementDirection::SOUTHEAST); break;
-
-
-	default: break;
+		case TCODK_KP4:   moveOrAttack(-1, 0, movementDirection::WEST); break;
+		case TCODK_LEFT:  moveOrAttack(-1, 0, movementDirection::WEST); break;
+		case TCODK_KP6:   moveOrAttack(1, 0, movementDirection::EAST); break;
+		case TCODK_RIGHT: moveOrAttack(1, 0, movementDirection::EAST); break;
+		case TCODK_KP8:   moveOrAttack(0, -1, movementDirection::NORTH); break;
+		case TCODK_UP:    moveOrAttack(0, -1, movementDirection::NORTH); break;
+		case TCODK_KP2:   moveOrAttack(0, 1, movementDirection::SOUTH); break;
+		case TCODK_DOWN:  moveOrAttack(0, 1, movementDirection::SOUTH); break;
+		case TCODK_KP7:   moveOrAttack(-1, -1, movementDirection::NORTHWEST); break;
+		case TCODK_KP9:   moveOrAttack(1, -1, movementDirection::NORTHEAST); break;
+		case TCODK_KP1:   moveOrAttack(-1, 1, movementDirection::SOUTHWEST); break;
+		case TCODK_KP3:   moveOrAttack(1, 1, movementDirection::SOUTHEAST); break;
+		default: break;
 	}
 }
 
 void PlayerAI::moveOrAttack(int dX, int dY, movementDirection dir)
 {
-	int xPos = engine->getPlayer()->getXPos();
-	int yPos = engine->getPlayer()->getYPos();
+	Player* player = engine->getPlayer();
+	int xPos = player->getXPos();
+	int yPos = player->getYPos();
 	Tile** tiles = engine->getMap()->getWorld();
 	int newX = dX + xPos;
 	int newY = dY + yPos;
@@ -57,32 +56,50 @@ void PlayerAI::moveOrAttack(int dX, int dY, movementDirection dir)
 	else if (dir == movementDirection::NORTHEAST) engine->addToLog("Trying to move north-east.", TCOD_light_red);
 
 
-	if (engine->getPlayer()->canMoveTo(tile, newX, newY))
+	if (player->canMoveTo(tile))
 	{
+		std::vector<Entity*> entities = engine->getEntities();
+		int numOfEntities = entities.size();
+		for (int i = 0; i < numOfEntities; i++)
+		{
+			Entity* entity = entities[i];
+			EnemyAI* enemy = entity->getEnemyAI();
+			DestroyComponent* destroyComponent = entity->getDestroyComponent();
+			if (newX == entity->getXPos() && newY == entity->getYPos() && destroyComponent->isAlive())
+			{
+				if (destroyComponent != NULL)
+				{
+					enemy->takeDamage(destroyComponent, 1);
+					engine->addToLog("You hit a thing for " + std::to_string(1) + " damage!", TCOD_red);
+					engine->setComputeFov(true);
+					return;
+				}
+			}
+		}
 		engine->setComputeFov(true);
-		engine->getPlayer()->updatePosition(dX, dY);
+		player->updatePosition(dX, dY);
 		return;
 	}
-	std::vector<Entity*> entities = engine->getEntities();
-	int numOfEntities = entities.size();
 }
 
 void PlayerAI::takeDamage(int val)
 {
 	Player* player = engine->getPlayer();
-	player->adjustCurrentHealth(-val);
-	if (player->getCurrentHealth() <= 0)
+	DestroyComponent* destroyComponent = player->getDestroyComponent();
+	destroyComponent->adjustCurrentHealth(-val);
+	if (destroyComponent->getCurrentHealth() <= 0)
 	{
-		player->setCurrentHealth(0);
-		player->setAlive(false);
+		destroyComponent->setCurrentHealth(0);
+		destroyComponent->setAlive(false);
 	}
 }
 void PlayerAI::heal(int val)
 {
 	Player* player = engine->getPlayer();
-	player->adjustCurrentHealth(val);
-	if (player->getCurrentHealth() > player->getMaximumHealth())
+	DestroyComponent* destroyComponent = player->getDestroyComponent();
+	destroyComponent->adjustCurrentHealth(val);
+	if (destroyComponent->getCurrentHealth() > destroyComponent->getMaximumHealth())
 	{
-		player->setCurrentHealth(player->getMaximumHealth());
+		destroyComponent->setCurrentHealth(destroyComponent->getMaximumHealth());
 	}
 }

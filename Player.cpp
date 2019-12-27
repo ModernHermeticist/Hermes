@@ -1,20 +1,20 @@
 #include "main.h"
 
 
-Player::Player(int _xPos, int _yPos, int _sprite, int _maximumHealth)
+Player::Player(int _xPos, int _yPos, int _sprite, PlayerAI* _playerAI, DestroyComponent* _destroyComponent)
 {
 	xPos = _xPos;
 	yPos = _yPos;
 	sprite = _sprite;
-	maximumHealth = _maximumHealth;
-	currentHealth = _maximumHealth;
-	playerAI = new PlayerAI();
+	playerAI = _playerAI;
+	destroyComponent = _destroyComponent;
 	alive = true;
 }
 
 Player::~Player()
 {
 	delete playerAI;
+	delete destroyComponent;
 }
 
 void Player::Update()
@@ -31,18 +31,10 @@ void Player::setYPos(int val) { yPos = val; }
 
 int Player::getSprite() { return sprite; }
 
-bool Player::canMoveTo(Tile tile, int newX, int newY)
+bool Player::canMoveTo(Tile tile)
 {
-	return (tile.getXPos() == newX && tile.getYPos() == newY) && (tile.getWalkable());
+	return tile.getWalkable();
 }
-
-int Player::getCurrentHealth() { return currentHealth; }
-int Player::getMaximumHealth() { return maximumHealth; }
-
-void Player::adjustCurrentHealth(int val) { currentHealth += val; }
-
-void Player::setCurrentHealth(int val) { currentHealth = val; }
-void Player::setMaximumHealtH(int val) { maximumHealth = val; }
 
 TCODColor Player::getSpriteForeground() { return spriteForeground; }
 TCODColor Player::getSpriteBackground() { return spriteBackground; }
@@ -51,11 +43,10 @@ void Player::setSprite(int s) { sprite = s; }
 void Player::setSpriteForeground(TCODColor c) { spriteForeground = c; }
 void Player::setSpriteBackground(TCODColor c) { spriteBackground = c; }
 
-bool Player::isAlive() { return alive; }
-void Player::setAlive(bool val) { alive = val; }
-
 void Player::updatePosition(int dX, int dY)
 {
 	xPos += dX;
 	yPos += dY;
 }
+PlayerAI* Player::getPlayerAI() { return playerAI; }
+DestroyComponent* Player::getDestroyComponent() { return destroyComponent; }

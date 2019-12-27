@@ -4,7 +4,7 @@
 class Player
 {
 public:
-	Player(int _xPos, int _yPos, int _sprite, int _maximumHealth);
+	Player(int _xPos, int _yPos, int _sprite, PlayerAI* _playerAI, DestroyComponent* _destroyComponent);
 	~Player();
 	void Update();
 
@@ -23,23 +23,16 @@ public:
 	void setSpriteForeground(TCODColor c);
 	void setSpriteBackground(TCODColor c);
 
-	int getCurrentHealth();
-	int getMaximumHealth();
-
-	void setCurrentHealth(int val);
-	void setMaximumHealtH(int val);
-
-	void adjustCurrentHealth(int val);
-
-	bool canMoveTo(Tile tile, int newX, int newY);
-
-	bool isAlive();
-	void setAlive(bool val);
+	bool canMoveTo(Tile tile);
 
 	void updatePosition(int dX, int dY);
 
+	PlayerAI* getPlayerAI();
+	DestroyComponent* getDestroyComponent();
+
 private:
 	PlayerAI* playerAI;
+	DestroyComponent* destroyComponent;
 
 	int xPos;
 	int yPos;
@@ -48,10 +41,7 @@ private:
 	TCODColor spriteForeground;
 	TCODColor spriteBackground;
 
-	int currentHealth;
-	int maximumHealth;
-
-	bool alive;
+	bool dead;
 
 };
 

@@ -9,10 +9,13 @@ Engine::Engine(int _screen_width, int _screen_height, int _world_width, int _wor
 	world_width = _world_width;
 	world_height = _world_height;
 	TCODSystem::checkForEvent(TCOD_EVENT_KEY_PRESS, &lastKey, NULL);
-	player = new Player(0, 0, '@', 15);
+	PlayerAI* playerAI = new PlayerAI();
+	DestroyComponent* destroyComponent = new DestroyComponent(25);
+	player = new Player(0, 0, '@', playerAI, destroyComponent);
 	map = new Map(screen_width, screen_height);
 	fovRadius = 10;
 	computeFov = true;
+	turn = TURN::PLAYER_TURN;
 }
 
 Engine::~Engine()
@@ -70,7 +73,9 @@ void Engine::loadMapFile(std::string fileName)
 				}
 				else
 				{
-					Entity* entity = new Entity(i, j, eT.character, cF, cB, NULL, NULL, NULL);
+					EnemyAI* enemyAI = new EnemyAI();
+					DestroyComponent* destroyComponent = new DestroyComponent(10);
+					Entity* entity = new Entity(i, j, eT.character, cF, cB, enemyAI, NULL, destroyComponent);
 					entities.push_back(entity);
 				}
 			}
@@ -98,10 +103,11 @@ std::vector<Entity*> Engine::getEntities()
 
 void Engine::updateEntities()
 {
-	for (std::vector<Entity*>::iterator it = entities.begin(); it != entities.end(); it++)
+	int numOfEntities = entities.size();
+	for (int i = 0; i < numOfEntities; i++)
 	{
-		Entity* entity = *it;
-		entity->Update(map->getWorld(), player->getXPos(), player->getYPos());
+		Entity* entity = entities[i];
+		entity->Update();
 	}
 }
 

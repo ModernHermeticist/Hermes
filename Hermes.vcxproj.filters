@@ -51,7 +51,7 @@
     <ClCompile Include="AttackComponent.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="DestoryComponent.cpp">
+    <ClCompile Include="DestroyComponent.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -89,14 +89,14 @@
     <ClInclude Include="EnemyAI.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="constants.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="AttackComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="DestroyComponent.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="constants.h">
+      <Filter>Resource Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

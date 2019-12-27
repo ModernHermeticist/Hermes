@@ -27,13 +27,20 @@ int main()
 	{
 		bool refresh = false;
 		TCOD_key_t key;
-		TCODSystem::checkForEvent(TCOD_EVENT_KEY_PRESS, &key, NULL);
+		TCODSystem::waitForEvent(TCOD_EVENT_KEY_PRESS, &key, NULL, true);
 		engine->setLastKey(key);
-		if (key.vk != NULL)
+		if (key.vk != 0 && engine->turn == Engine::TURN::PLAYER_TURN)
 		{
 			if (key.vk == TCODK_ESCAPE) break;
 			engine->getPlayer()->Update();
+			engine->turn = Engine::TURN::ENEMY_TURN;
 			refresh = true;
+		}
+
+		if (engine->turn == Engine::TURN::ENEMY_TURN)
+		{
+			engine->updateEntities();
+			engine->turn = Engine::TURN::PLAYER_TURN;
 		}
 
 		if (refresh)
@@ -43,7 +50,6 @@ int main()
 				engine->getMap()->computeFov();
 				engine->setComputeFov(false);
 			}
-			engine->updateEntities();
 
 			TCODConsole::root->clear();
 			drawUtilityWindow();
