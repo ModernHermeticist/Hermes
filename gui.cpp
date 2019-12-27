@@ -41,7 +41,11 @@ void drawMainWindow(Map* map, Player* player, std::vector<Entity*> entities)
 			Tile* tile = &tiles[x][y];
 			if (map->isInFov(x, y))
 			{
-				con->putCharEx(tile->getXPos(), tile->getYPos(), tile->getSprite(), tile->getForeground(), tile->getBackground());
+				con->putCharEx(tile->getXPos(), tile->getYPos(), tile->getSprite(), tile->getVisibleForeground(), tile->getVisibleBackground());
+			}
+			else if (tile->getExplored())
+			{
+				con->putCharEx(tile->getXPos(), tile->getYPos(), tile->getSprite(), tile->getExploredForeground(), tile->getExploredBackground());
 			}
 		}
 	}
@@ -81,9 +85,20 @@ void drawUtilityWindow()
 		con->putCharEx(0, i, VERTICAL_WALL, borderColor, TCOD_black);
 		con->putCharEx(borderWidth - 1, i, VERTICAL_WALL, borderColor, TCOD_black);
 	}
-	std::string s = "HP: " + std::to_string(player->getDestroyComponent()->getCurrentHealth())
-		+ '/' + std::to_string(player->getDestroyComponent()->getMaximumHealth());
-	con->printf(1, 1, s.c_str());
+	DestroyComponent* destroyComponent = player->getDestroyComponent();
+	destroyComponent->getCurrentStamina();
+	std::string s = "%cHealth: " + std::to_string(destroyComponent->getCurrentHealth())
+		+ '/' + std::to_string(destroyComponent->getMaximumHealth()) + "%c";
+	con->setColorControl(TCOD_COLCTRL_1, TCODColor::darkRed, TCODColor::black);
+	con->printf(1, 1, s.c_str(), TCOD_COLCTRL_1, TCOD_COLCTRL_STOP);
+	s = "%cStamina: " + std::to_string(destroyComponent->getCurrentStamina())
+		+ '/' + std::to_string(destroyComponent->getMaximumStamina()) + "%c";
+	con->setColorControl(TCOD_COLCTRL_1, TCODColor::darkGreen, TCODColor::black);
+	con->printf(1, 2, s.c_str(), TCOD_COLCTRL_1, TCOD_COLCTRL_STOP);
+	s = "%cMana: " + std::to_string(destroyComponent->getCurrentMana())
+		+ '/' + std::to_string(destroyComponent->getMaximumMana()) + "%c";
+	con->setColorControl(TCOD_COLCTRL_1, TCODColor::darkBlue, TCODColor::black);
+	con->printf(1, 3, s.c_str(), TCOD_COLCTRL_1, TCOD_COLCTRL_STOP);
 
 	TCODConsole::blit(con, 0, 0, borderWidth, borderHeight, TCODConsole::root, 0, 0);
 	delete con;

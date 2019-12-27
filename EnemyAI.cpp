@@ -59,28 +59,35 @@ void EnemyAI::moveOrAttack(Entity* owner, Player* target)
 		}
 		else
 		{
-			target->getPlayerAI()->takeDamage(1);
-			engine->addToLog("You were hit by a thing for " + std::to_string(1) + " damage!", TCOD_red);
+			AttackComponent* attackComponent = owner->getAttackComponent();
+			int damage = attackComponent->getDamage();
+			target->getPlayerAI()->takeDamage(damage);
+			engine->addToLog("You were hit by a thing for " + std::to_string(damage) + " damage!", TCOD_red);
 			engine->setComputeFov(true);
 		}
 	}
 }
 
-void EnemyAI::takeDamage(DestroyComponent* owner, int val)
+void EnemyAI::takeDamage(Entity* owner, int val)
 {
-	owner->adjustCurrentHealth(-val);
-	if (owner->getCurrentHealth() <= 0)
+	DestroyComponent* destroyComponent = owner->getDestroyComponent();
+	int damage = val - destroyComponent->getArmor();
+	if (damage < 0) damage = 0;
+	destroyComponent->adjustCurrentHealth(-damage);
+	if (destroyComponent->getCurrentHealth() <= 0)
 	{
-		owner->setCurrentHealth(0);
-		owner->setAlive(false);
+		destroyComponent->die(owner);
+		destroyComponent->setCurrentHealth(0);
+		destroyComponent->setAlive(false);
 	}
 }
-void EnemyAI::heal(DestroyComponent* owner, int val)
+void EnemyAI::heal(Entity* owner, int val)
 {
-	owner->adjustCurrentHealth(val);
-	if (owner->getCurrentHealth() > owner->getMaximumHealth())
+	DestroyComponent* destroyComponent = owner->getDestroyComponent();
+	destroyComponent->adjustCurrentHealth(val);
+	if (destroyComponent->getCurrentHealth() > destroyComponent->getMaximumHealth())
 	{
-		owner->setCurrentHealth(owner->getMaximumHealth());
+		destroyComponent->setCurrentHealth(destroyComponent->getMaximumHealth());
 	}
 }
 
@@ -89,7 +96,7 @@ bool EnemyAI::canMoveTo(Tile* tile, int newX, int newY)
 	std::vector<Entity*> entities = engine->getEntities();
 	for (int i = 0; i < entities.size(); i++)
 	{
-		if (entities[i]->getXPos() == newX && entities[i]->getYPos() == newY) return false;
+		if (entities[i]->getXPos() == newX && entities[i]->getYPos() == newY && entities[i]->getDestroyComponent()->isAlive()) return false;
 	}
 	return tile->getWalkable();
 }

@@ -10,8 +10,9 @@ Engine::Engine(int _screen_width, int _screen_height, int _world_width, int _wor
 	world_height = _world_height;
 	TCODSystem::checkForEvent(TCOD_EVENT_KEY_PRESS, &lastKey, NULL);
 	PlayerAI* playerAI = new PlayerAI();
-	DestroyComponent* destroyComponent = new DestroyComponent(25);
-	player = new Player(0, 0, '@', playerAI, destroyComponent);
+	AttackComponent* attackComponent = new AttackComponent(1, 5);
+	DestroyComponent* destroyComponent = new DestroyComponent(25, 10, 10, 1, 0.0, 0.0, 0.0);
+	player = new Player(0, 0, '@', playerAI, attackComponent, destroyComponent);
 	map = new Map(screen_width, screen_height);
 	fovRadius = 10;
 	computeFov = true;
@@ -74,8 +75,9 @@ void Engine::loadMapFile(std::string fileName)
 				else
 				{
 					EnemyAI* enemyAI = new EnemyAI();
-					DestroyComponent* destroyComponent = new DestroyComponent(10);
-					Entity* entity = new Entity(i, j, eT.character, cF, cB, enemyAI, NULL, destroyComponent);
+					AttackComponent* attackComponent = new AttackComponent(1, 1);
+					DestroyComponent* destroyComponent = new DestroyComponent(10, 2, 0, 0, 0, 0, 0);
+					Entity* entity = new Entity(i, j, eT.character, cF, cB, "Kobold Whelp", enemyAI, attackComponent, destroyComponent);
 					entities.push_back(entity);
 				}
 			}

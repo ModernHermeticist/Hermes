@@ -15,8 +15,8 @@ public:
 
 	void moveOrAttack(Entity* owner, Player* target);
 
-	void takeDamage(DestroyComponent* owner, int val);
-	void heal(DestroyComponent* owner, int val);
+	void takeDamage(Entity* owner, int val);
+	void heal(Entity* owner, int val);
 
 	bool canMoveTo(Tile* tile, int newX, int newY);
 

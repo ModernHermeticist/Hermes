@@ -1,17 +1,18 @@
 #include "main.h"
 
 
-Entity::Entity(int _xPos, int _yPos, int _sprite, TCODColor _spriteForeground, TCODColor _spriteBackground, EnemyAI* _enemyAI, AttackComponent* _attackComponent, DestroyComponent* _destroyComponent)
+Entity::Entity(int _xPos, int _yPos, int _sprite, TCODColor _spriteForeground, TCODColor _spriteBackground, std::string _name,
+	EnemyAI* _enemyAI, AttackComponent* _attackComponent, DestroyComponent* _destroyComponent)
 {
 	xPos = _xPos;
 	yPos = _yPos;
 	sprite = _sprite;
 	spriteForeground = _spriteForeground;
 	spriteBackground = _spriteBackground;
+	name = _name;
 	enemyAI = _enemyAI;
 	attackComponent = _attackComponent;
 	destroyComponent = _destroyComponent;
-	dead = false;
 }
 
 Entity::~Entity()
@@ -23,13 +24,7 @@ Entity::~Entity()
 
 void Entity::Update()
 {
-	if (dead) { return; }
-	if (!destroyComponent->isAlive()) 
-	{
-		sprite = '%';
-		spriteForeground = TCOD_red;
-		dead = true;
-	}
+	if (!this->destroyComponent->isAlive()) { return; }
 	if (enemyAI != NULL) enemyAI->update(this);
 }
 
@@ -43,25 +38,18 @@ void Entity::updatePosition(int dX, int dY)
 }
 
 int Entity::getSprite() { return sprite; }
+void Entity::setSprite(int s) { sprite = s; }
 
-TCODColor Entity::getSpriteForeground()
-{
-	return spriteForeground;
-}
+TCODColor Entity::getSpriteForeground(){return spriteForeground;}
 
-TCODColor Entity::getSpriteBackground()
-{
-	return spriteBackground;
-}
+TCODColor Entity::getSpriteBackground(){return spriteBackground;}
 
-void Entity::setSpriteForeground(TCODColor c)
-{
-	spriteForeground = c;
-}
-void Entity::setSpriteBackground(TCODColor c)
-{
-	spriteBackground = c;
-}
+void Entity::setSpriteForeground(TCODColor c){spriteForeground = c;}
+
+void Entity::setSpriteBackground(TCODColor c){spriteBackground = c;}
+
+std::string Entity::getName() { return name; }
+void Entity::setName(std::string n) { name = n; }
 
 EnemyAI* Entity::getEnemyAI() { return enemyAI; }
 AttackComponent* Entity::getAttackComponent() { return attackComponent; }

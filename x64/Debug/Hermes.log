@@ -1,3 +1,2 @@
-﻿  main.cpp
-E:\Hermes\Hermes\Hermes\main.cpp(7,12): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
-  Hermes.vcxproj -> E:\Hermes\Hermes\x64\Debug\Hermes.exe
+﻿  gui.cpp
+  Hermes.vcxproj -> D:\c\Hermes\x64\Debug\Hermes.exe

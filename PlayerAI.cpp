@@ -46,14 +46,6 @@ void PlayerAI::moveOrAttack(int dX, int dY, movementDirection dir)
 	int newX = dX + xPos;
 	int newY = dY + yPos;
 	Tile tile = tiles[newX][newY];
-	if (dir == movementDirection::WEST) engine->addToLog("Trying to move west.", TCOD_blue);
-	else if (dir == movementDirection::EAST) engine->addToLog("Trying to move east.", TCOD_orange);
-	else if (dir == movementDirection::NORTH) engine->addToLog("Trying to move north.", TCOD_red);
-	else if (dir == movementDirection::SOUTH) engine->addToLog("Trying to move south.", TCOD_purple);
-	else if (dir == movementDirection::SOUTHWEST) engine->addToLog("Trying to move south-west.", TCOD_yellow);
-	else if (dir == movementDirection::SOUTHEAST) engine->addToLog("Trying to move south-east.", TCOD_green);
-	else if (dir == movementDirection::NORTHWEST) engine->addToLog("Trying to move north-west.", TCOD_light_blue);
-	else if (dir == movementDirection::NORTHEAST) engine->addToLog("Trying to move north-east.", TCOD_light_red);
 
 
 	if (player->canMoveTo(tile))
@@ -69,8 +61,10 @@ void PlayerAI::moveOrAttack(int dX, int dY, movementDirection dir)
 			{
 				if (destroyComponent != NULL)
 				{
-					enemy->takeDamage(destroyComponent, 1);
-					engine->addToLog("You hit a thing for " + std::to_string(1) + " damage!", TCOD_red);
+					AttackComponent* attackComponent = player->getAttackComponent();
+					int damage = attackComponent->getDamage();
+					engine->addToLog("You hit a " + entity->getName() + " for " + std::to_string(damage) + " damage!", TCOD_red);
+					enemy->takeDamage(entity, damage);
 					engine->setComputeFov(true);
 					return;
 				}
@@ -80,13 +74,19 @@ void PlayerAI::moveOrAttack(int dX, int dY, movementDirection dir)
 		player->updatePosition(dX, dY);
 		return;
 	}
+	else
+	{
+		engine->addToLog("You cannot move there.", TCOD_grey);
+	}
 }
 
 void PlayerAI::takeDamage(int val)
 {
 	Player* player = engine->getPlayer();
 	DestroyComponent* destroyComponent = player->getDestroyComponent();
-	destroyComponent->adjustCurrentHealth(-val);
+	int damage = val - destroyComponent->getArmor();
+	if (damage < 0) damage = 0;
+	destroyComponent->adjustCurrentHealth(-damage);
 	if (destroyComponent->getCurrentHealth() <= 0)
 	{
 		destroyComponent->setCurrentHealth(0);

@@ -19,8 +19,10 @@ public:
 
 	int getSprite();
 
-	TCODColor getForeground();
-	TCODColor getBackground();
+	TCODColor getVisibleForeground();
+	TCODColor getVisibleBackground();
+	TCODColor getExploredForeground();
+	TCODColor getExploredBackground();
 
 	void setWalkable(bool val);
 	void setBlocks(bool val);
@@ -29,8 +31,10 @@ public:
 
 	void setSprite(int c);
 
-	void setForeground(TCODColor color);
-	void setBackground(TCODColor color);
+	void setVisibleForeground(TCODColor color);
+	void setVisibleBackground(TCODColor color);
+	void setExploredForeground(TCODColor color);
+	void setExploredBackground(TCODColor color);
 
 private:
 	int xPos;
@@ -41,8 +45,11 @@ private:
 
 	int sprite;
 
-	TCODColor foreground;
-	TCODColor background;
+	TCODColor visibleForeground;
+	TCODColor visibleBackground;
+
+	TCODColor exploredForeground;
+	TCODColor exploredBackground;
 };
 
 
