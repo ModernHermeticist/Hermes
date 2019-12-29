@@ -12,11 +12,13 @@ Engine::Engine(int _screen_width, int _screen_height, int _world_width, int _wor
 	PlayerAI* playerAI = new PlayerAI();
 	AttackComponent* attackComponent = new AttackComponent(1, 5);
 	DestroyComponent* destroyComponent = new DestroyComponent(25, 10, 10, 1, 0.0, 0.0, 0.0);
-	player = new Player(0, 0, '@', playerAI, attackComponent, destroyComponent);
+	InventoryComponent* inventoryComponent = new InventoryComponent(10);
+	player = new Player(0, 0, '@', "Ana", playerAI, attackComponent, destroyComponent, inventoryComponent);
 	map = new Map(screen_width, screen_height);
 	fovRadius = 10;
+	refresh = false;
 	computeFov = true;
-	turn = TURN::PLAYER_TURN;
+	state = Engine::STATE::PLAYER_TURN;
 }
 
 Engine::~Engine()
@@ -39,6 +41,7 @@ void Engine::loadMapFile(std::string fileName)
 		{
 			xp::RexTile t = *fileMap.getTile(0, i, j);
 			xp::RexTile eT = *fileMap.getTile(1, i, j);
+			xp::RexTile iT = *fileMap.getTile(2, i, j);
 			TCODColor c = TCOD_black;
 			c.r = t.fore_red;
 			c.b = t.fore_blue;
@@ -54,7 +57,7 @@ void Engine::loadMapFile(std::string fileName)
 					map->getTCODMap()->setProperties(i, j, false, false);
 			}
 
-			if (eT.character != 0)
+			if (eT.character != 0 && eT.character != 32)
 			{
 				TCODColor cF = TCOD_black;
 				cF.r = eT.fore_red;
@@ -75,11 +78,26 @@ void Engine::loadMapFile(std::string fileName)
 				else
 				{
 					EnemyAI* enemyAI = new EnemyAI();
-					AttackComponent* attackComponent = new AttackComponent(1, 1);
-					DestroyComponent* destroyComponent = new DestroyComponent(10, 2, 0, 0, 0, 0, 0);
-					Entity* entity = new Entity(i, j, eT.character, cF, cB, "Kobold Whelp", enemyAI, attackComponent, destroyComponent);
+					AttackComponent* attackComponent = new AttackComponent(1, 3);
+					DestroyComponent* destroyComponent = new DestroyComponent(10, 2, 0, 2, 0, 0, 0, 0);
+					Entity* entity = new Entity(i, j, eT.character, cF, cB, "Kobold Whelp", enemyAI, attackComponent, destroyComponent, NULL, NULL);
 					entities.push_back(entity);
 				}
+			}
+			if (iT.character != 0 && iT.character != 32)
+			{
+				TCODColor cF = TCOD_black;
+				cF.r = iT.fore_red;
+				cF.b = iT.fore_blue;
+				cF.g = iT.fore_green;
+				TCODColor cB = TCOD_black;
+				cB.r = iT.back_red;
+				cB.b = iT.back_blue;
+				cB.g = iT.back_green;
+
+				ItemComponent* itemComponent = new ItemComponent();
+				Entity* entity = new Entity(i, j, iT.character, cF, cB, "Limirail, Blade of the Ninth Moon", NULL, NULL, NULL, NULL, itemComponent);
+				entities.push_back(entity);
 			}
 			map->setTile(i, j, newTile);
 		}
@@ -101,6 +119,19 @@ void Engine::addEntity(Entity* entity)
 std::vector<Entity*> Engine::getEntities()
 {
 	return entities;
+}
+
+void Engine::removeEntity(Entity* entity)
+{
+	for (std::vector<Entity*>::iterator it = entities.begin(); it != entities.end(); it++)
+	{
+		Entity* entityInStorage = *it;
+		if (entity == entityInStorage)
+		{
+			entities.erase(it);
+			return;
+		}
+	}
 }
 
 void Engine::updateEntities()
@@ -166,3 +197,9 @@ void Engine::setComputeFov(bool val)
 
 TCOD_key_t Engine::getLastKey() { return lastKey; }
 void Engine::setLastKey(TCOD_key_t k) { lastKey = k; }
+
+Engine::STATE Engine::getState() { return state; }
+void Engine::setState(Engine::STATE s) { state = s; }
+
+bool Engine::getRefresh() { return refresh; }
+void Engine::setRefresh(bool val) { refresh = val; }

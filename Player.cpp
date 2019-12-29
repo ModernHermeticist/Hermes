@@ -1,14 +1,17 @@
 #include "main.h"
 
 
-Player::Player(int _xPos, int _yPos, int _sprite, PlayerAI* _playerAI, AttackComponent* _attackComponent, DestroyComponent* _destroyComponent)
+Player::Player(int _xPos, int _yPos, int _sprite, std::string _name, PlayerAI* _playerAI, 
+	AttackComponent* _attackComponent, DestroyComponent* _destroyComponent, InventoryComponent* _inventoryComponent)
 {
 	xPos = _xPos;
 	yPos = _yPos;
 	sprite = _sprite;
 	playerAI = _playerAI;
+	name = _name;
 	attackComponent = _attackComponent;
 	destroyComponent = _destroyComponent;
+	inventoryComponent = _inventoryComponent;
 }
 
 Player::~Player()
@@ -16,6 +19,7 @@ Player::~Player()
 	delete playerAI;
 	delete attackComponent;
 	delete destroyComponent;
+	delete inventoryComponent;
 }
 
 void Player::Update()
@@ -52,3 +56,4 @@ void Player::updatePosition(int dX, int dY)
 PlayerAI* Player::getPlayerAI() { return playerAI; }
 AttackComponent* Player::getAttackComponent() { return attackComponent; }
 DestroyComponent* Player::getDestroyComponent() { return destroyComponent; }
+InventoryComponent* Player::getInventoryComponent() { return inventoryComponent; }

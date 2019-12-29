@@ -1,6 +1,7 @@
 #include "main.h"
 
-DestroyComponent::DestroyComponent(int _maximumHealth, int _maximumStamina, int _maximumMana, int _armor, float _block, float _dodge, float _parry)
+DestroyComponent::DestroyComponent(int _maximumHealth, int _maximumStamina, int _maximumMana, 
+	int _armor, float _block, float _dodge, float _parry)
 {
 	maximumHealth = _maximumHealth;
 	currentHealth = maximumHealth;
@@ -11,6 +12,8 @@ DestroyComponent::DestroyComponent(int _maximumHealth, int _maximumStamina, int 
 	maximumMana = _maximumMana;
 	currentMana = maximumMana;
 
+	experienceValue = 0;
+
 	armor = _armor;
 	block = _block;
 	dodge = _dodge;
@@ -19,10 +22,35 @@ DestroyComponent::DestroyComponent(int _maximumHealth, int _maximumStamina, int 
 	alive = true;
 }
 
+DestroyComponent::DestroyComponent(int _maximumHealth, int _maximumStamina, int _maximumMana,
+	int _experienceValue, int _armor, float _block, float _dodge, float _parry)
+{
+	maximumHealth = _maximumHealth;
+	currentHealth = maximumHealth;
+
+	maximumStamina = _maximumStamina;
+	currentStamina = maximumStamina;
+
+	maximumMana = _maximumMana;
+	currentMana = maximumMana;
+
+	experienceValue = _experienceValue;
+
+	armor = _armor;
+	block = _block;
+	dodge = _dodge;
+	parry = _parry;
+
+	alive = true;
+}
+
+
 DestroyComponent::~DestroyComponent()
 {
 
 }
+
+int DestroyComponent::getExperienceValue() { return experienceValue; }
 
 int DestroyComponent::getCurrentHealth() { return currentHealth; }
 int DestroyComponent::getMaximumHealth() { return maximumHealth; }
@@ -77,5 +105,4 @@ void DestroyComponent::die(Entity* owner)
 	owner->setSprite('%');
 	owner->setSpriteForeground(TCOD_red);
 	alive = false;
-	engine->addToLog(owner->getName() + " dies!", TCOD_darker_red);
 }

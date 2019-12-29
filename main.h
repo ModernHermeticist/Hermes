@@ -14,6 +14,8 @@
 
 #include "Tile.h"
 #include "Map.h"
+#include "ItemComponent.h"
+#include "InventoryComponent.h"
 #include "AttackComponent.h"
 #include "DestroyComponent.h"
 #include "PlayerAI.h"

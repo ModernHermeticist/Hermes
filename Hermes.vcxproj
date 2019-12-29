@@ -70,7 +70,7 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(SolutionDir)\libtcod\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)\Hermes\libtcod\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -98,7 +98,7 @@
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
-      <AdditionalLibraryDirectories>$(SolutionDir)\libtcod;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)\Hermes\libtcod;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>libtcod.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
@@ -139,6 +139,8 @@
     <ClCompile Include="Engine.cpp" />
     <ClCompile Include="Entity.cpp" />
     <ClCompile Include="gui.cpp" />
+    <ClCompile Include="InventoryComponent.cpp" />
+    <ClCompile Include="ItemComponent.cpp" />
     <ClCompile Include="LogEntry.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Map.cpp" />
@@ -155,6 +157,8 @@
     <ClInclude Include="Engine.h" />
     <ClInclude Include="Entity.h" />
     <ClInclude Include="gui.h" />
+    <ClInclude Include="InventoryComponent.h" />
+    <ClInclude Include="ItemComponent.h" />
     <ClInclude Include="LogEntry.h" />
     <ClInclude Include="main.h" />
     <ClInclude Include="Map.h" />

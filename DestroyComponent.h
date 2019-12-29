@@ -7,7 +7,10 @@ class DestroyComponent
 {
 public:
 	DestroyComponent(int _maximumHealth, int _maximumStamina, int _maximumMana, int _armor, float _block, float _dodge, float _parry);
+	DestroyComponent(int _maximumHealth, int _maximumStamina, int _maximumMana, int _experienceValue, int _armor, float _block, float _dodge, float _parry);
 	~DestroyComponent();
+
+	int getExperienceValue();
 
 	int getCurrentHealth();
 	int getMaximumHealth();
@@ -59,6 +62,8 @@ public:
 	bool isAlive();
 	void setAlive(bool val);
 private:
+	int experienceValue;
+
 	int currentHealth;
 	int maximumHealth;
 

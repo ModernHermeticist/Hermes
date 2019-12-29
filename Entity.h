@@ -10,7 +10,8 @@ public:
 	enum yDirection { up = -1, down = 1 };
 
 	Entity(int _xPos, int _yPos, int _sprite, TCODColor _spriteForeground, TCODColor _spriteBackground, std::string _name, 
-		EnemyAI* _enemyAI, AttackComponent* _attackComponent, DestroyComponent* destroyComponent);
+		EnemyAI* _enemyAI, AttackComponent* _attackComponent, DestroyComponent* _destroyComponent, 
+		InventoryComponent* _inventoryComponent, ItemComponent* _itemComponent);
 	~Entity();
 	void Update();
 
@@ -34,6 +35,8 @@ public:
 	EnemyAI* getEnemyAI();
 	AttackComponent* getAttackComponent();
 	DestroyComponent* getDestroyComponent();
+	InventoryComponent* getInventoryComponent();
+	ItemComponent* getItemComponent();
 
 
 private:
@@ -50,6 +53,8 @@ private:
 	EnemyAI* enemyAI;
 	AttackComponent* attackComponent;
 	DestroyComponent* destroyComponent;
+	InventoryComponent* inventoryComponent;
+	ItemComponent* itemComponent;
 
 };
 

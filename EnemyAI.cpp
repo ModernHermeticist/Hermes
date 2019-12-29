@@ -61,25 +61,30 @@ void EnemyAI::moveOrAttack(Entity* owner, Player* target)
 		{
 			AttackComponent* attackComponent = owner->getAttackComponent();
 			int damage = attackComponent->getDamage();
-			target->getPlayerAI()->takeDamage(damage);
-			engine->addToLog("You were hit by a thing for " + std::to_string(damage) + " damage!", TCOD_red);
+			damage = target->getPlayerAI()->takeDamage(damage);
+			engine->addToLog("You were hit by a " + owner->getName() + " for " + std::to_string(damage) + " damage!", TCOD_red);
 			engine->setComputeFov(true);
 		}
 	}
 }
 
-void EnemyAI::takeDamage(Entity* owner, int val)
+std::vector<int> EnemyAI::takeDamage(Entity* owner, int val)
 {
 	DestroyComponent* destroyComponent = owner->getDestroyComponent();
 	int damage = val - destroyComponent->getArmor();
+	std::vector<int> retVal = { 0,0 };
 	if (damage < 0) damage = 0;
 	destroyComponent->adjustCurrentHealth(-damage);
+	retVal[0] = damage;
 	if (destroyComponent->getCurrentHealth() <= 0)
 	{
 		destroyComponent->die(owner);
 		destroyComponent->setCurrentHealth(0);
 		destroyComponent->setAlive(false);
+		retVal[1] = -1;
+		return retVal;
 	}
+	return retVal;
 }
 void EnemyAI::heal(Entity* owner, int val)
 {

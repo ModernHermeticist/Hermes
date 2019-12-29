@@ -15,12 +15,24 @@ public:
 	void parseKeyInput();
 
 	void moveOrAttack(int dX, int dY, movementDirection dir);
+	void pickUpItem();
+	void dropItem(int c);
 
-	void takeDamage(int val);
+	void gainExperience(int val);
+	
+	int getCharacterLevel();
+	int getCurrentExperience();
+	int getMaximumExperience();
+
+	void progressCharacter();
+
+	int takeDamage(int val);
 	void heal(int val);
 
 private:
-
+	int characterLevel;
+	int currentExperience;
+	int maximumExperience;
 
 
 };

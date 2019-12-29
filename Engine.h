@@ -4,7 +4,7 @@
 class Engine
 {
 public:
-	enum class TURN{PLAYER_TURN, ENEMY_TURN};
+	enum class STATE{PLAYER_TURN, ENEMY_TURN, SHOW_CHARACTER_SCREEN, SHOW_INVENTORY_SCREEN};
 
 	Engine(int _screen_width, int _screen_height, int _world_width, int _world_height);
 	~Engine();
@@ -18,6 +18,8 @@ public:
 
 	void addEntity(Entity* entity);
 	std::vector<Entity*> getEntities();
+
+	void removeEntity(Entity* entity);
 
 	void updateEntities();
 
@@ -37,7 +39,12 @@ public:
 	TCOD_key_t getLastKey();
 	void setLastKey(TCOD_key_t k);
 
-	TURN turn;
+	Engine::STATE getState();
+	void setState(Engine::STATE s);
+
+	bool getRefresh();
+	void setRefresh(bool val);
+
 
 private:
 	int fovRadius;
@@ -48,6 +55,10 @@ private:
 
 	int world_width;
 	int world_height;
+
+	STATE state;
+
+	bool refresh;
 
 	Player* player;
 
