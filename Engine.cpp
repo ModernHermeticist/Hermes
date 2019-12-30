@@ -14,7 +14,7 @@ Engine::Engine(int _screen_width, int _screen_height, int _world_width, int _wor
 	DestroyComponent* destroyComponent = new DestroyComponent(25, 10, 10, 1, 0.0, 0.0, 0.0);
 	InventoryComponent* inventoryComponent = new InventoryComponent(10);
 	EquipmentComponent* equipmentComponent = new EquipmentComponent();
-	player = new Player(0, 0, '@', "Ana", playerAI, attackComponent, destroyComponent, inventoryComponent, equipmentComponent);
+	player = new Player(0, 0, '@', "Player", playerAI, attackComponent, destroyComponent, inventoryComponent, equipmentComponent);
 	map = new Map(screen_width, screen_height);
 	fovRadius = 10;
 	refresh = false;
