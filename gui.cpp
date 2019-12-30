@@ -154,6 +154,7 @@ void drawCharacterWindow()
 	Player* player = engine->getPlayer();
 	AttackComponent* attackComponent = player->getAttackComponent();
 	DestroyComponent* destroyComponent = player->getDestroyComponent();
+	EquipmentComponent* equipmentComponent = player->getEquipmentComponent();
 
 	int borderWidth = CELL_COLUMNS;
 	int borderHeight = CELL_ROWS;
@@ -162,25 +163,116 @@ void drawCharacterWindow()
 	drawBorder(con, borderHeight, borderWidth, borderColor);
 	std::string s = "Character Sheet";
 	con->printf(CELL_COLUMNS / 2 - s.size() / 2, 1, s.c_str());
-	s = "Name: " + player->getName();
+	s = "Name:    " + player->getName();
 	con->printf(1, 2, s.c_str());
-	s = "Health: " + std::to_string(destroyComponent->getCurrentHealth()) + '/' +
+	s = "Health:  " + std::to_string(destroyComponent->getCurrentHealth()) + '/' +
 		std::to_string(destroyComponent->getMaximumHealth());
 	con->printf(1, 3, s.c_str());
 	s = "Stamina: " + std::to_string(destroyComponent->getCurrentStamina()) + '/' +
 		std::to_string(destroyComponent->getMaximumStamina());
 	con->printf(1, 4, s.c_str());
-	s = "Mana: " + std::to_string(destroyComponent->getCurrentMana()) + '/' +
+	s = "Mana:    " + std::to_string(destroyComponent->getCurrentMana()) + '/' +
 		std::to_string(destroyComponent->getMaximumMana());
 	con->printf(1, 5, s.c_str());
-	s = "Armor: " + std::to_string(destroyComponent->getArmor());
+
+	s = "Damage:  " + std::to_string(attackComponent->getMinimumAttackPower()) + '-' +
+		std::to_string(attackComponent->getMaximumAttackPower());
 	con->printf(1, 6, s.c_str());
-	s = "Block: " + std::to_string(destroyComponent->getBlock());
+	s = "Armor:   " + std::to_string(destroyComponent->getArmor());
 	con->printf(1, 7, s.c_str());
-	s = "Dodge: " + std::to_string(destroyComponent->getDodge());
+	s = "Block:   " + std::to_string(destroyComponent->getBlock());
 	con->printf(1, 8, s.c_str());
-	s = "Parry: " + std::to_string(destroyComponent->getParry());
+	s = "Dodge:   " + std::to_string(destroyComponent->getDodge());
 	con->printf(1, 9, s.c_str());
+	s = "Parry:   " + std::to_string(destroyComponent->getParry());
+	con->printf(1, 10, s.c_str());
+
+	s = "Equipment";
+	con->printf(1, 12, s.c_str());
+
+	Entity* itemInSlot = equipmentComponent->getRightHand();
+	if (itemInSlot != NULL)
+		s = "Right Hand:    " + itemInSlot->getName();
+	else s = "Right Hand:    None";
+	con->printf(1, 13, s.c_str());
+
+	itemInSlot = equipmentComponent->getLeftHand();
+	if (itemInSlot != NULL)
+		s = "Left Hand:     " + itemInSlot->getName();
+	else s = "Left Hand:     None";
+	con->printf(1, 14, s.c_str());
+
+	itemInSlot = equipmentComponent->getHead();
+	if (itemInSlot != NULL)
+		s = "Head:          " + itemInSlot->getName();
+	else s = "Head:          None";
+	con->printf(1, 15, s.c_str());
+
+	itemInSlot = equipmentComponent->getShoulders();
+	if (itemInSlot != NULL)
+		s = "Shoulders:     " + itemInSlot->getName();
+	else s = "Shoulders:     None";
+	con->printf(1, 16, s.c_str());
+
+	itemInSlot = equipmentComponent->getNeck();
+	if (itemInSlot != NULL)
+		s = "Neck:          " + itemInSlot->getName();
+	else s = "Neck:          None";
+	con->printf(1, 17, s.c_str());
+
+	itemInSlot = equipmentComponent->getChest();
+	if (itemInSlot != NULL)
+		s = "Chest:         " + itemInSlot->getName();
+	else s = "Chest:         None";
+	con->printf(1, 18, s.c_str());
+
+	itemInSlot = equipmentComponent->getWaist();
+	if (itemInSlot != NULL)
+		s = "Waist:         " + itemInSlot->getName();
+	else s = "Waist:         None";
+	con->printf(1, 19, s.c_str());
+
+	itemInSlot = equipmentComponent->getHands();
+	if (itemInSlot != NULL)
+		s = "Hands:         " + itemInSlot->getName();
+	else s = "Hands:         None";
+	con->printf(1, 20, s.c_str());
+
+	itemInSlot = equipmentComponent->getLegs();
+	if (itemInSlot != NULL)
+		s = "Legs:          " + itemInSlot->getName();
+	else s = "Legs:          None";
+	con->printf(1, 21, s.c_str());
+
+	itemInSlot = equipmentComponent->getFeet();
+	if (itemInSlot != NULL)
+		s = "Feet:          " + itemInSlot->getName();
+	else s = "Feet:          None";
+	con->printf(1, 22, s.c_str());
+
+	itemInSlot = equipmentComponent->getLeftRing();
+	if (itemInSlot != NULL)
+		s = "Left Ring:     " + itemInSlot->getName();
+	else s = "Left Ring:     None";
+	con->printf(1, 23, s.c_str());
+
+	itemInSlot = equipmentComponent->getRightRing();
+	if (itemInSlot != NULL)
+		s = "Right Ring:    " + itemInSlot->getName();
+	else s = "Right Ring:    None";
+	con->printf(1, 24, s.c_str());
+
+	itemInSlot = equipmentComponent->getLeftEarring();
+	if (itemInSlot != NULL)
+		s = "Left Earring:  " + itemInSlot->getName();
+	else s = "Left Earring:  None";
+	con->printf(1, 25, s.c_str());
+
+	itemInSlot = equipmentComponent->getRightEarring();
+	if (itemInSlot != NULL)
+		s = "Right Earring: " + itemInSlot->getName();
+	else s = "Right Earring: None";
+	con->printf(1, 26, s.c_str());
 
 	TCODConsole::blit(con, 0, 0, borderWidth, borderHeight, TCODConsole::root, 0, 0);
 	delete con;
@@ -199,11 +291,19 @@ void drawInventoryWindow()
 	TCODConsole* con = new TCODConsole(borderWidth, borderHeight);
 	drawBorder(con, borderHeight, borderWidth, borderColor);
 	std::string s = "Inventory";
+	std::stringstream ss;
 	con->printf(CELL_COLUMNS / 2 - s.size() / 2, 1, s.c_str());
-	for (int i = 0; i < size; i++ )
+	con->printf(1, CELL_ROWS - 2, "Use item: (letter)    Equip item: (shift+letter)    Drop item: (ctrl+letter)");
+	if (storage.size() > 0)
 	{
-		std::string s = std::to_string((char)(97 + i)) + ") " + storage[i]->getName();
-		con->printf(1, i + 2, s.c_str());
+		for (int i = 0; i < size; i++)
+		{
+			char label = 97 + i;
+			if (storage[i]->getItemComponent()->isEquipped())
+				ss << label << ") " << storage[i]->getName() << " (e)";
+			else ss << label << ") " << storage[i]->getName();
+			con->printf(1, i + 2, ss.str().c_str());
+		}
 	}
 
 	TCODConsole::blit(con, 0, 0, borderWidth, borderHeight, TCODConsole::root, 0, 0);

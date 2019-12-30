@@ -53,7 +53,9 @@ void InventoryComponent::removeFromStorage(Entity* entity)
 Entity* InventoryComponent::getItemAtLocation(int location)
 {
 	int itemPos = location - 97;
-	return storage[itemPos];
+	if (storage.size() > 0 && itemPos < storage.size())
+		return storage[itemPos];
+	else return NULL;
 }
 
 void InventoryComponent::clearStorage() { storage.clear(); }

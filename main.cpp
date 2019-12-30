@@ -6,7 +6,7 @@ int main()
 {
 	srand(time(NULL));
 	TCODSystem::forceFullscreenResolution(SCREEN_WIDTH, SCREEN_HEIGHT);
-	TCODConsole::initRoot(CELL_COLUMNS, CELL_ROWS, "Hermes", true, TCOD_RENDERER_GLSL);
+	TCODConsole::initRoot(CELL_COLUMNS, CELL_ROWS, "Hermes", false, TCOD_RENDERER_GLSL);
 	TCODConsole::setCustomFont("sirhenry.png", TCOD_FONT_LAYOUT_ASCII_INCOL);
 
 	engine = new Engine(CELL_COLUMNS, CELL_ROWS, MAIN_WINDOW_WIDTH, MAIN_WINDOW_HEIGHT);
@@ -30,30 +30,45 @@ int main()
 		TCOD_key_t key;
 		TCODSystem::waitForEvent(TCOD_EVENT_KEY_PRESS, &key, NULL, true);
 		engine->setLastKey(key);
-		if (key.vk != 0 && engine->getState() == Engine::STATE::PLAYER_TURN)
+		Engine::STATE currentGameState = engine->getState();
+		if (key.vk != 0 && currentGameState == Engine::STATE::PLAYER_TURN)
 		{
 			if (key.vk == TCODK_ESCAPE) break;
 			engine->getPlayer()->Update();
-			engine->setState(Engine::STATE::ENEMY_TURN);
+			key.vk = (TCOD_keycode_t)0;
 		}
 
-		if (engine->getState() == Engine::STATE::ENEMY_TURN)
+		currentGameState = engine->getState();
+		if (currentGameState == Engine::STATE::ENEMY_TURN)
 		{
 			engine->updateEntities();
 			engine->setState(Engine::STATE::PLAYER_TURN);
 		}
 		
-		if (engine->getState() == Engine::STATE::SHOW_CHARACTER_SCREEN && key.c == 'c')
+		currentGameState = engine->getState();
+		if (currentGameState == Engine::STATE::SHOW_CHARACTER_SCREEN && key.vk != 0 && key.c == 'c')
 		{
 			engine->setRefresh(true);
 			engine->setState(Engine::STATE::PLAYER_TURN);
+			key.vk = (TCOD_keycode_t)0;
 		}
 
-		if (engine->getState() == Engine::STATE::SHOW_INVENTORY_SCREEN && key.c == 'i')
+		currentGameState = engine->getState();
+		if (currentGameState == Engine::STATE::SHOW_INVENTORY_SCREEN && key.vk != 0)
 		{
-			engine->getPlayer()->getPlayerAI()->dropItem(key.c);
+			if (key.vk != TCODK_ESCAPE)
+			{
+				engine->getPlayer()->getPlayerAI()->equipItem(key.c);
+				/*
+				if (key.lctrl && key.c != NULL)
+					engine->getPlayer()->getPlayerAI()->dropItem(key.c);
+				else if (key.shift && key.c == 'a')
+					engine->getPlayer()->getPlayerAI()->equipItem(key.c);
+					*/
+			}
 			engine->setRefresh(true);
 			engine->setState(Engine::STATE::PLAYER_TURN);
+			key.vk = (TCOD_keycode_t)0;
 		}
 
 		if (engine->getRefresh())

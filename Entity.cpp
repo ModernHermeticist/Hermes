@@ -37,6 +37,9 @@ void Entity::Update()
 int Entity::getXPos() { return xPos; }
 int Entity::getYPos() { return yPos; }
 
+void Entity::setXPos(int val) { xPos = val; }
+void Entity::setYPos(int val) { yPos = val; }
+
 void Entity::updatePosition(int dX, int dY)
 {
 	xPos += dX;

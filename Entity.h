@@ -18,6 +18,9 @@ public:
 	int getXPos();
 	int getYPos();
 
+	void setXPos(int val);
+	void setYPos(int val);
+
 	void updatePosition(int dX, int dY);
 
 	int getSprite();

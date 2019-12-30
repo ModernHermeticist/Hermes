@@ -5,7 +5,8 @@ class Player
 {
 public:
 	Player(int _xPos, int _yPos, int _sprite, std::string _name, PlayerAI* _playerAI, 
-		AttackComponent* _attackComponent, DestroyComponent* _destroyComponent, InventoryComponent* _inventoryComponent);
+		AttackComponent* _attackComponent, DestroyComponent* _destroyComponent, 
+		InventoryComponent* _inventoryComponent, EquipmentComponent* _equipmentComponent);
 	~Player();
 	void Update();
 
@@ -35,12 +36,14 @@ public:
 	DestroyComponent* getDestroyComponent();
 	AttackComponent* getAttackComponent();
 	InventoryComponent* getInventoryComponent();
+	EquipmentComponent* getEquipmentComponent();
 
 private:
 	PlayerAI* playerAI;
 	AttackComponent* attackComponent;
 	DestroyComponent* destroyComponent;
 	InventoryComponent* inventoryComponent;
+	EquipmentComponent* equipmentComponent;
 
 	int xPos;
 	int yPos;

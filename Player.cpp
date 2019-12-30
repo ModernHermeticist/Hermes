@@ -2,7 +2,8 @@
 
 
 Player::Player(int _xPos, int _yPos, int _sprite, std::string _name, PlayerAI* _playerAI, 
-	AttackComponent* _attackComponent, DestroyComponent* _destroyComponent, InventoryComponent* _inventoryComponent)
+	AttackComponent* _attackComponent, DestroyComponent* _destroyComponent, 
+	InventoryComponent* _inventoryComponent, EquipmentComponent* _equipmentComponent)
 {
 	xPos = _xPos;
 	yPos = _yPos;
@@ -12,6 +13,7 @@ Player::Player(int _xPos, int _yPos, int _sprite, std::string _name, PlayerAI* _
 	attackComponent = _attackComponent;
 	destroyComponent = _destroyComponent;
 	inventoryComponent = _inventoryComponent;
+	equipmentComponent = _equipmentComponent;
 }
 
 Player::~Player()
@@ -20,6 +22,7 @@ Player::~Player()
 	delete attackComponent;
 	delete destroyComponent;
 	delete inventoryComponent;
+	delete equipmentComponent;
 }
 
 void Player::Update()
@@ -57,3 +60,4 @@ PlayerAI* Player::getPlayerAI() { return playerAI; }
 AttackComponent* Player::getAttackComponent() { return attackComponent; }
 DestroyComponent* Player::getDestroyComponent() { return destroyComponent; }
 InventoryComponent* Player::getInventoryComponent() { return inventoryComponent; }
+EquipmentComponent* Player::getEquipmentComponent() { return equipmentComponent; }

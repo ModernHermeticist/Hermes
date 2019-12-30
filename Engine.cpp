@@ -13,7 +13,8 @@ Engine::Engine(int _screen_width, int _screen_height, int _world_width, int _wor
 	AttackComponent* attackComponent = new AttackComponent(1, 5);
 	DestroyComponent* destroyComponent = new DestroyComponent(25, 10, 10, 1, 0.0, 0.0, 0.0);
 	InventoryComponent* inventoryComponent = new InventoryComponent(10);
-	player = new Player(0, 0, '@', "Ana", playerAI, attackComponent, destroyComponent, inventoryComponent);
+	EquipmentComponent* equipmentComponent = new EquipmentComponent();
+	player = new Player(0, 0, '@', "Ana", playerAI, attackComponent, destroyComponent, inventoryComponent, equipmentComponent);
 	map = new Map(screen_width, screen_height);
 	fovRadius = 10;
 	refresh = false;
@@ -95,7 +96,7 @@ void Engine::loadMapFile(std::string fileName)
 				cB.b = iT.back_blue;
 				cB.g = iT.back_green;
 
-				ItemComponent* itemComponent = new ItemComponent();
+				ItemComponent* itemComponent = new ItemComponent(0, 2,0,0,0,0,0,0,0,EquipmentComponent::EQUIPMENTSLOT::rightHand);
 				Entity* entity = new Entity(i, j, iT.character, cF, cB, "Limirail, Blade of the Ninth Moon", NULL, NULL, NULL, NULL, itemComponent);
 				entities.push_back(entity);
 			}

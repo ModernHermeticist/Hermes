@@ -2,6 +2,7 @@
 #define MAIN_H
 
 #include <iostream>
+#include <sstream>
 #include <string>
 #include <vector>
 
@@ -14,6 +15,7 @@
 
 #include "Tile.h"
 #include "Map.h"
+#include "EquipmentComponent.h"
 #include "ItemComponent.h"
 #include "InventoryComponent.h"
 #include "AttackComponent.h"

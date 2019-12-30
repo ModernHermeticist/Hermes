@@ -104,8 +104,48 @@ void PlayerAI::dropItem(int c)
 	Player* player = engine->getPlayer();
 	InventoryComponent* inventoryComponent = player->getInventoryComponent();
 	Entity* entity = inventoryComponent->getItemAtLocation(c);
-	inventoryComponent->removeFromStorage(entity);
-	engine->addEntity(entity);
+	if (entity != NULL)
+	{
+		inventoryComponent->removeFromStorage(entity);
+		entity->setXPos(player->getXPos());
+		entity->setYPos(player->getYPos());
+		engine->addEntity(entity);
+		engine->addToLog("You drop a " + entity->getName() + '.', TCOD_grey);
+	}
+}
+
+void PlayerAI::equipItem(int c)
+{
+	Player* player = engine->getPlayer();
+	InventoryComponent* inventoryComponent = player->getInventoryComponent();
+	EquipmentComponent* equipmentComponent = player->getEquipmentComponent();
+	Entity* entity = inventoryComponent->getItemAtLocation(c);
+	if (entity != NULL)
+	{
+		ItemComponent* itemComponent = entity->getItemComponent();
+		if (itemComponent != NULL)
+		{
+			EquipmentComponent::EQUIPMENTSLOT slot = itemComponent->getSlot();
+			if (slot != EquipmentComponent::EQUIPMENTSLOT::none)
+			{
+				Entity* itemInSlot = equipmentComponent->getItemAtSlot(slot);
+				if (itemInSlot != NULL)
+				{
+					itemInSlot->getItemComponent()->setEquipped(false);
+					equipmentComponent->removeItemAtSlot(slot);
+					modifyStatsOnItemDeEquip(itemInSlot->getItemComponent());
+					engine->addToLog("You unequip " + itemInSlot->getName() + ".", TCOD_grey);
+				}
+				if (itemInSlot != entity)
+				{
+					equipmentComponent->setItemAtSlot(entity, slot);
+					entity->getItemComponent()->setEquipped(true);
+					modifyStatsOnItemEquip(itemComponent);
+					engine->addToLog("You equip " + entity->getName() + ".", TCOD_grey);
+				}
+			}
+		}
+	}
 }
 
 void PlayerAI::moveOrAttack(int dX, int dY, movementDirection dir)
@@ -118,7 +158,7 @@ void PlayerAI::moveOrAttack(int dX, int dY, movementDirection dir)
 	int newY = dY + yPos;
 	Tile tile = tiles[newX][newY];
 	engine->setRefresh(true);
-
+	engine->setState(Engine::STATE::ENEMY_TURN);
 	if (player->canMoveTo(tile))
 	{
 		std::vector<Entity*> entities = engine->getEntities();
@@ -129,11 +169,11 @@ void PlayerAI::moveOrAttack(int dX, int dY, movementDirection dir)
 			EnemyAI* enemy = entity->getEnemyAI();
 			DestroyComponent* destroyComponent = entity->getDestroyComponent();
 			ItemComponent* itemComponent = entity->getItemComponent();
-			if (destroyComponent == NULL && itemComponent != NULL)
+			if (newX == entity->getXPos() && newY == entity->getYPos() && destroyComponent == NULL && itemComponent != NULL)
 			{
-				break;
+				engine->addToLog("You see a " + entity->getName() + " here.", TCOD_grey);
 			}
-			if (newX == entity->getXPos() && newY == entity->getYPos() && destroyComponent->isAlive())
+			else if (newX == entity->getXPos() && newY == entity->getYPos() && destroyComponent->isAlive())
 			{
 				AttackComponent* attackComponent = player->getAttackComponent();
 				int damage = attackComponent->getDamage();
@@ -184,6 +224,42 @@ void PlayerAI::progressCharacter()
 	Stuff for character progression.
 	Increase stats, increase attributes... etc.
 	*/
+}
+
+void PlayerAI::modifyStatsOnItemEquip(ItemComponent* item)
+{
+	Player* player = engine->getPlayer();
+	AttackComponent* attackComponent = player->getAttackComponent();
+	DestroyComponent* destroyComponent = player->getDestroyComponent();
+
+	attackComponent->adjustMinimumAttackPower(item->getMinimumDamage());
+	attackComponent->adjustMaximumAttackPower(item->getMaximumDamage());
+
+	destroyComponent->adjustArmor(item->getArmor());
+	destroyComponent->adjustMaximumHealth(item->getHealth());
+	destroyComponent->adjustMaximumMana(item->getMana());
+	destroyComponent->adjustMaximumStamina(item->getStamina());
+	destroyComponent->adjustDodge(item->getDodge());
+	destroyComponent->adjustBlock(item->getBlock());
+	destroyComponent->ajustParry(item->getParry());
+}
+
+void PlayerAI::modifyStatsOnItemDeEquip(ItemComponent* item)
+{
+	Player* player = engine->getPlayer();
+	AttackComponent* attackComponent = player->getAttackComponent();
+	DestroyComponent* destroyComponent = player->getDestroyComponent();
+
+	attackComponent->adjustMinimumAttackPower(-item->getMinimumDamage());
+	attackComponent->adjustMaximumAttackPower(-item->getMaximumDamage());
+
+	destroyComponent->adjustArmor(-item->getArmor());
+	destroyComponent->adjustMaximumHealth(-item->getHealth());
+	destroyComponent->adjustMaximumMana(-item->getMana());
+	destroyComponent->adjustMaximumStamina(-item->getStamina());
+	destroyComponent->adjustDodge(-item->getDodge());
+	destroyComponent->adjustBlock(-item->getBlock());
+	destroyComponent->ajustParry(-item->getParry());
 }
 
 int PlayerAI::takeDamage(int val)
