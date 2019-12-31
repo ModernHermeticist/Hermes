@@ -42,11 +42,20 @@ public:
 	void adjustCurrentHealth(int val);
 	void adjustMaximumHealth(int val);
 
+	int standardHealthAdjustment(int val);
+	int standardHealthAdjustment(int val, int _endurance);
+
 	void adjustCurrentStamina(int val);
 	void adjustMaximumStamina(int val);
 
+	int standardStaminaAdjustment(int val);
+	int standardStaminaAdjustment(int val, int _endurance);
+
 	void adjustCurrentMana(int val);
 	void adjustMaximumMana(int val);
+
+	int standardManaAdjustment(int val);
+	int standardManaAdjustment(int val, int _intelligence);
 
 	void setStrength(int val);
 	void setAgility(int val);
@@ -75,11 +84,20 @@ public:
 	void setDodge(float val);
 	void adjustDodge(float val);
 
+	float standardDodgeAdjustment(float val);
+	float standardDodgeAdjustment(float val, int _agility, int _luck);
+
 	void setBlock(float val);
 	void adjustBlock(float val);
 
+	float standardBlockAdjustment(float val);
+	float standardBlockAdjustment(float val, int _strength, int _luck);
+
 	void setParry(float val);
 	void ajustParry(float val);
+
+	float standardParryAdjustment(float val);
+	float standardParryAdjustment(float val, int _agility, int _luck);
 
 	void die(Entity* owner);
 

@@ -355,16 +355,54 @@ void drawProgressionWindow(std::vector<int> selections, std::vector<TCODColor> s
 	std::stringstream ss;
 	con->printf(CELL_COLUMNS / 2 - (int)s.size() / 2, 1, s.c_str());
 	con->setColorControl(TCOD_COLCTRL_1, TCODColor::grey, TCODColor::black);
-	s = "%cHealth:       " + std::to_string(destroyComponent->getCurrentHealth()) + '/' +
-		std::to_string(destroyComponent->getMaximumHealth()) + "%c";
+	if (selections[2] > 0)
+	{
+		con->setColorControl(TCOD_COLCTRL_1, TCODColor::gold, TCODColor::black);
+		s = "%cHealth:       " + std::to_string(destroyComponent->getCurrentHealth()) + '/' +
+			std::to_string(destroyComponent->getMaximumHealth()) + " --> " +
+			std::to_string(destroyComponent->getCurrentHealth()) + '/' +
+			std::to_string(destroyComponent->standardHealthAdjustment(destroyComponent->getMaximumHealth(), selections[2])) + "%c";
+	}
+	else
+	{
+		s = "%cHealth:       " + std::to_string(destroyComponent->getCurrentHealth()) + '/' +
+			std::to_string(destroyComponent->getMaximumHealth()) + "%c";
+	}
 	con->printf(1, 3, s.c_str(), TCOD_COLCTRL_1, TCOD_COLCTRL_STOP);
-	s = "%cStamina:      " + std::to_string(destroyComponent->getCurrentStamina()) + '/' +
-		std::to_string(destroyComponent->getMaximumStamina()) + "%c";
+
+	con->setColorControl(TCOD_COLCTRL_1, TCODColor::grey, TCODColor::black);
+	if (selections[2] > 0)
+	{
+		con->setColorControl(TCOD_COLCTRL_1, TCODColor::gold, TCODColor::black);
+		s = "%cStamina:       " + std::to_string(destroyComponent->getCurrentStamina()) + '/' +
+			std::to_string(destroyComponent->getMaximumStamina()) + " --> " +
+			std::to_string(destroyComponent->getCurrentStamina()) + '/' +
+			std::to_string(destroyComponent->standardStaminaAdjustment(destroyComponent->getMaximumStamina(), selections[2])) + "%c";
+	}
+	else
+	{
+		s = "%cStamina:      " + std::to_string(destroyComponent->getCurrentStamina()) + '/' +
+			std::to_string(destroyComponent->getMaximumStamina()) + "%c";
+	}
 	con->printf(1, 4, s.c_str(), TCOD_COLCTRL_1, TCOD_COLCTRL_STOP);
-	s = "%cMana:         " + std::to_string(destroyComponent->getCurrentMana()) + '/' +
-		std::to_string(destroyComponent->getMaximumMana()) + "%c";
+
+	con->setColorControl(TCOD_COLCTRL_1, TCODColor::grey, TCODColor::black);
+	if (selections[4] > 0)
+	{
+		con->setColorControl(TCOD_COLCTRL_1, TCODColor::gold, TCODColor::black);
+		s = "%cMana:       " + std::to_string(destroyComponent->getCurrentMana()) + '/' +
+			std::to_string(destroyComponent->getMaximumMana()) + " --> " +
+			std::to_string(destroyComponent->getCurrentMana()) + '/' +
+			std::to_string(destroyComponent->standardManaAdjustment(destroyComponent->getMaximumMana(), selections[4])) + "%c";
+	}
+	else
+	{
+		s = "%cMana:         " + std::to_string(destroyComponent->getCurrentMana()) + '/' +
+			std::to_string(destroyComponent->getMaximumMana()) + "%c";
+	}
 	con->printf(1, 5, s.c_str(), TCOD_COLCTRL_1, TCOD_COLCTRL_STOP);
 
+	con->setColorControl(TCOD_COLCTRL_1, TCODColor::grey, TCODColor::black);
 	s = "%cDamage:       " + std::to_string(attackComponent->getMinimumAttackPower()) + '-' +
 		std::to_string(attackComponent->getMaximumAttackPower()) + "%c";
 	con->printf(1, 6, s.c_str(), TCOD_COLCTRL_1, TCOD_COLCTRL_STOP);
