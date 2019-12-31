@@ -5,7 +5,7 @@ EquipmentComponent::EquipmentComponent()
 
 }
 EquipmentComponent::~EquipmentComponent()
-{
+{	
 	/*
 	if (leftHand != NULL) delete leftHand;
 	if (rightHand != NULL) delete rightHand;

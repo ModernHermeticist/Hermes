@@ -23,8 +23,8 @@ Entity::~Entity()
 	if (enemyAI != NULL) delete enemyAI;
 	if (attackComponent != NULL) delete attackComponent;
 	if (destroyComponent != NULL) delete destroyComponent;
-	if (inventoryComponent != NULL) delete inventoryComponent;
 	if (itemComponent != NULL) delete itemComponent;
+	if (inventoryComponent != NULL) delete inventoryComponent;
 };
 
 void Entity::Update()

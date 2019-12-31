@@ -21,8 +21,8 @@ Player::~Player()
 	delete playerAI;
 	delete attackComponent;
 	delete destroyComponent;
-	delete inventoryComponent;
 	delete equipmentComponent;
+	delete inventoryComponent;
 }
 
 void Player::Update()
