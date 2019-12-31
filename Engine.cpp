@@ -137,7 +137,7 @@ void Engine::removeEntity(Entity* entity)
 
 void Engine::updateEntities()
 {
-	int numOfEntities = entities.size();
+	int numOfEntities = (int)entities.size();
 	for (int i = 0; i < numOfEntities; i++)
 	{
 		Entity* entity = entities[i];

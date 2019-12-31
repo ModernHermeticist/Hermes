@@ -162,7 +162,7 @@ void drawCharacterWindow()
 	TCODConsole* con = new TCODConsole(borderWidth, borderHeight);
 	drawBorder(con, borderHeight, borderWidth, borderColor);
 	std::string s = "Character Sheet";
-	con->printf(CELL_COLUMNS / 2 - s.size() / 2, 1, s.c_str());
+	con->printf(CELL_COLUMNS / 2 - (int)s.size() / 2, 1, s.c_str());
 	s = "Name:         " + player->getName();
 	con->printf(1, 2, s.c_str());
 	s = "Health:       " + std::to_string(destroyComponent->getCurrentHealth()) + '/' +
@@ -294,7 +294,7 @@ void drawInventoryWindow()
 	Player* player = engine->getPlayer();
 	InventoryComponent* inventoryComponent = player->getInventoryComponent();
 	std::vector<Entity*> storage = inventoryComponent->getStorage();
-	int size = storage.size();
+	int size = (int)storage.size();
 
 	int borderWidth = CELL_COLUMNS;
 	int borderHeight = CELL_ROWS;
@@ -303,7 +303,7 @@ void drawInventoryWindow()
 	drawBorder(con, borderHeight, borderWidth, borderColor);
 	std::string s = "Inventory";
 	std::stringstream ss;
-	con->printf(CELL_COLUMNS / 2 - s.size() / 2, 1, s.c_str());
+	con->printf(CELL_COLUMNS / 2 - (int)s.size() / 2, 1, s.c_str());
 	con->printf(1, CELL_ROWS - 2, "Use item: (letter)    Equip item: (shift+letter)    Drop item: (ctrl+letter)");
 	if (storage.size() > 0)
 	{
@@ -340,7 +340,7 @@ void drawBorder(TCODConsole* con, int borderHeight, int borderWidth, TCODColor b
 	}
 }
 
-void drawProgressionWindow()
+void drawProgressionWindow(std::vector<int> selections, std::vector<TCODColor> selectionColorizer)
 {
 	Player* player = engine->getPlayer();
 	AttackComponent* attackComponent = player->getAttackComponent();
@@ -353,7 +353,7 @@ void drawProgressionWindow()
 	drawBorder(con, borderHeight, borderWidth, borderColor);
 	std::string s = "Progression";
 	std::stringstream ss;
-	con->printf(CELL_COLUMNS / 2 - s.size() / 2, 1, s.c_str());
+	con->printf(CELL_COLUMNS / 2 - (int)s.size() / 2, 1, s.c_str());
 	con->setColorControl(TCOD_COLCTRL_1, TCODColor::grey, TCODColor::black);
 	s = "%cHealth:       " + std::to_string(destroyComponent->getCurrentHealth()) + '/' +
 		std::to_string(destroyComponent->getMaximumHealth()) + "%c";
@@ -377,18 +377,35 @@ void drawProgressionWindow()
 	s = "%cParry:        " + std::to_string(destroyComponent->getParry()) + "%c";
 	con->printf(1, 10, s.c_str(), TCOD_COLCTRL_1, TCOD_COLCTRL_STOP);
 
-	s = "Strength:     " + std::to_string(destroyComponent->getStrength());
-	con->printf(1, 11, s.c_str());
-	s = "Agility:      " + std::to_string(destroyComponent->getAgility());
-	con->printf(1, 12, s.c_str());
-	s = "Endurance:    " + std::to_string(destroyComponent->getEndurance());
-	con->printf(1, 13, s.c_str());
-	s = "Luck:         " + std::to_string(destroyComponent->getLuck());
-	con->printf(1, 14, s.c_str());
-	s = "Intelligence: " + std::to_string(destroyComponent->getIntelligence());
-	con->printf(1, 15, s.c_str());
-	s = "Wisdom:       " + std::to_string(destroyComponent->getWisdom());
-	con->printf(1, 16, s.c_str());
+	con->setColorControl(TCOD_COLCTRL_1, selectionColorizer[0], TCODColor::black);
+	if (selections[0] > 0) s = "%cStrength:     " + std::to_string(destroyComponent->getStrength()) + " +" + std::to_string(selections[0]) + "%c";
+	else s = "%cStrength:     " + std::to_string(destroyComponent->getStrength()) + "%c";
+	con->printf(1, 11, s.c_str(), TCOD_COLCTRL_1, TCOD_COLCTRL_STOP);
+
+	con->setColorControl(TCOD_COLCTRL_1, selectionColorizer[1], TCODColor::black);
+	if (selections[1] > 0) s = "%cAgility:      " + std::to_string(destroyComponent->getAgility()) + " +" + std::to_string(selections[1]) + "%c";
+	else s = "%cAgility:      " + std::to_string(destroyComponent->getAgility()) + "%c";
+	con->printf(1, 12, s.c_str(), TCOD_COLCTRL_1, TCOD_COLCTRL_STOP);
+
+	con->setColorControl(TCOD_COLCTRL_1, selectionColorizer[2], TCODColor::black);
+	if (selections[2] > 0) s = "%cEndurance:    " + std::to_string(destroyComponent->getEndurance()) + " +" + std::to_string(selections[2]) + "%c";
+	else s = "%cEndurance:    " + std::to_string(destroyComponent->getEndurance()) + "%c";
+	con->printf(1, 13, s.c_str(), TCOD_COLCTRL_1, TCOD_COLCTRL_STOP);
+
+	con->setColorControl(TCOD_COLCTRL_1, selectionColorizer[3], TCODColor::black);
+	if (selections[3] > 0) s = "%cLuck:         " + std::to_string(destroyComponent->getLuck()) + " +" + std::to_string(selections[3]) + "%c";
+	else s = "%cLuck:         " + std::to_string(destroyComponent->getLuck()) + "%c";
+	con->printf(1, 14, s.c_str(), TCOD_COLCTRL_1, TCOD_COLCTRL_STOP);
+
+	con->setColorControl(TCOD_COLCTRL_1, selectionColorizer[4], TCODColor::black);
+	if (selections[4] > 0) s = "%cIntelligence: " + std::to_string(destroyComponent->getIntelligence()) + " +" + std::to_string(selections[4]) + "%c";
+	else s = "%cIntelligence: " + std::to_string(destroyComponent->getIntelligence()) + "%c";
+	con->printf(1, 15, s.c_str(), TCOD_COLCTRL_1, TCOD_COLCTRL_STOP);
+
+	con->setColorControl(TCOD_COLCTRL_1, selectionColorizer[5], TCODColor::black);
+	if (selections[5] > 0) s = "%cWisdom:       " + std::to_string(destroyComponent->getWisdom()) + " +" + std::to_string(selections[5]) + "%c";
+	else s = "%cWisdom:       " + std::to_string(destroyComponent->getWisdom()) + "%c";
+	con->printf(1, 16, s.c_str(), TCOD_COLCTRL_1, TCOD_COLCTRL_STOP);
 
 	TCODConsole::blit(con, 0, 0, borderWidth, borderHeight, TCODConsole::root, 0, 0);
 	delete con;

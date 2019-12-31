@@ -4,7 +4,7 @@ PlayerAI::PlayerAI()
 {
 	characterLevel = 1;
 	currentExperience = 0;
-	maximumExperience = 10;
+	maximumExperience = 1;
 }
 
 PlayerAI::~PlayerAI()
@@ -162,7 +162,7 @@ void PlayerAI::moveOrAttack(int dX, int dY, movementDirection dir)
 		engine->setRefresh(true);
 		engine->setState(Engine::STATE::ENEMY_TURN);
 		std::vector<Entity*> entities = engine->getEntities();
-		int numOfEntities = entities.size();
+		int numOfEntities = (int)entities.size();
 		for (int i = 0; i < numOfEntities; i++)
 		{
 			Entity* entity = entities[i];
@@ -215,14 +215,61 @@ int PlayerAI::getMaximumExperience() { return maximumExperience; }
 
 void PlayerAI::progressCharacter()
 {
+	bool confirmed = false;
+	std::vector<int> statSelections = { 0,0,0,0,0,0 };
+	std::vector<TCODColor> selectionColorizer = { TCODColor::green, TCODColor::white, TCODColor::white,
+													TCODColor::white, TCODColor::white, TCODColor::white };
+	int selectionPointer = 0;
 	currentExperience -= maximumExperience;
-	maximumExperience = round(maximumExperience * 1.5);
+	maximumExperience = (int)round(maximumExperience * 1.5);
 	characterLevel += 1;
-	engine->setRefresh(false);
-	engine->setState(Engine::STATE::SHOW_PROGRESSION_SCREEN);
 	TCODConsole::root->clear();
-	drawProgressionWindow();
+	drawProgressionWindow(statSelections, selectionColorizer);
 	TCODConsole::flush();
+	while (!confirmed)
+	{
+		bool redraw = false;
+		TCOD_key_t key;
+		TCODSystem::waitForEvent(TCOD_EVENT_KEY_PRESS, &key, NULL, true);
+		if (key.vk == TCODK_ESCAPE)
+		{
+			confirmed = true;
+		}
+		if (key.vk == TCODK_DOWN && selectionPointer < 5)
+		{
+			selectionColorizer[selectionPointer] = TCODColor::white;
+			selectionPointer++;
+			selectionColorizer[selectionPointer] = TCODColor::green;
+			redraw = true;
+		}
+		if (key.vk == TCODK_UP && selectionPointer > 0)
+		{
+			selectionColorizer[selectionPointer] = TCODColor::white;
+			selectionPointer--;
+			selectionColorizer[selectionPointer] = TCODColor::green;
+			redraw = true;
+		}
+		if (key.vk == TCODK_RIGHT && availableStatPoints > 0)
+		{
+			statSelections[selectionPointer]++;
+			availableStatPoints--;
+			redraw = true;
+		}
+		if (key.vk == TCODK_LEFT && statSelections[selectionPointer] > 0)
+		{
+			statSelections[selectionPointer]--;
+			availableStatPoints++;
+			redraw = true;
+		}
+
+
+		if (redraw)
+		{
+			TCODConsole::root->clear();
+			drawProgressionWindow(statSelections, selectionColorizer);
+			TCODConsole::flush();
+		}
+	}
 	engine->addToLog("You have attained level " + std::to_string(characterLevel) + "!", TCOD_gold);
 	/*TODO*/ 
 	/*

@@ -8,6 +8,6 @@ void drawLogWindow();
 void drawBorder(TCODConsole* con, int borderHeight, int borderWidth, TCODColor borderColor);
 void drawCharacterWindow();
 void drawInventoryWindow();
-void drawProgressionWindow();
+void drawProgressionWindow(std::vector<int> selections, std::vector<TCODColor> selectionColorizer);
 
 #endif

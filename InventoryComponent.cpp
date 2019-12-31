@@ -60,4 +60,4 @@ Entity* InventoryComponent::getItemAtLocation(int location)
 
 void InventoryComponent::clearStorage() { storage.clear(); }
 
-int InventoryComponent::getCurrentStorageSize() { return storage.size(); }
+int InventoryComponent::getCurrentStorageSize() { return (int)storage.size(); }

@@ -1,4 +1,2 @@
-﻿  PlayerAI.cpp
-E:\Hermes\Hermes\Hermes\PlayerAI.cpp(165,38): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-E:\Hermes\Hermes\Hermes\PlayerAI.cpp(219,27): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
-  Hermes.vcxproj -> E:\Hermes\Hermes\x64\Debug\Hermes.exe
+﻿  gui.cpp
+  Hermes.vcxproj -> D:\c\Hermes\x64\Debug\Hermes.exe

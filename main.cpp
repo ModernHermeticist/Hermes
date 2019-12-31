@@ -4,9 +4,9 @@ Engine* engine;
 
 int main() 
 {
-	srand(time(NULL));
+	srand((unsigned int)time(NULL));
 	TCODSystem::forceFullscreenResolution(SCREEN_WIDTH, SCREEN_HEIGHT);
-	TCODConsole::initRoot(CELL_COLUMNS, CELL_ROWS, "Hermes", true, TCOD_RENDERER_GLSL);
+	TCODConsole::initRoot(CELL_COLUMNS, CELL_ROWS, "Hermes", false, TCOD_RENDERER_GLSL);
 	TCODConsole::setCustomFont("sirhenry.png", TCOD_FONT_LAYOUT_ASCII_INCOL);
 
 	engine = new Engine(CELL_COLUMNS, CELL_ROWS, MAIN_WINDOW_WIDTH, MAIN_WINDOW_HEIGHT);
@@ -66,17 +66,6 @@ int main()
 			engine->setRefresh(true);
 			engine->setState(Engine::STATE::PLAYER_TURN);
 			key.vk = (TCOD_keycode_t)0;
-		}
-
-		currentGameState = engine->getState();
-		if (currentGameState == Engine::STATE::SHOW_PROGRESSION_SCREEN && key.vk != 0)
-		{
-			if (key.vk == TCODK_ESCAPE)
-			{
-				engine->setRefresh(true);
-				engine->setState(Engine::STATE::PLAYER_TURN);
-				key.vk = (TCOD_keycode_t)0;
-			}
 		}
 
 		if (engine->getRefresh())

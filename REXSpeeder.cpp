@@ -91,7 +91,7 @@ namespace xp {
 //===========================================================================================================//
 	void RexImage::save(std::string const & filename)
 	{
-		int num_layers = layers.size();
+		int num_layers = (int)layers.size();
 
 		try {
 			gzFile gz = s_gzopen(filename.c_str(), "wb");

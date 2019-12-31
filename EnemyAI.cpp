@@ -36,7 +36,7 @@ void EnemyAI::moveOrAttack(Entity* owner, Player* target)
 		int dY = targetY - yPos;
 		int stepDX = (dX > 0 ? 1 : -1);
 		int stepDY = (dY > 0 ? 1 : -1);
-		float distance = sqrtf(dX * dX + dY * dY);
+		float distance = sqrtf((float)dX * (float)dX + (float)dY * (float)dY);
 		if (distance >= 2)
 		{
 			dX = (int)(round(dX / distance));
