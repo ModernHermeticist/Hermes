@@ -6,8 +6,11 @@ class Entity;
 class DestroyComponent
 {
 public:
-	DestroyComponent(int _maximumHealth, int _maximumStamina, int _maximumMana, int _armor, float _block, float _dodge, float _parry);
-	DestroyComponent(int _maximumHealth, int _maximumStamina, int _maximumMana, int _experienceValue, int _armor, float _block, float _dodge, float _parry);
+	DestroyComponent(int _maximumHealth, int _maximumStamina, int _maximumMana, 
+		int _armor, float _block, float _dodge, float _parry, int _strength,
+		int _agility, int _endurance, int _luck, int _intelligence, int _wisdom);
+	DestroyComponent(int _maximumHealth, int _maximumStamina, int _maximumMana, 
+		int _experienceValue, int _armor, float _block, float _dodge, float _parry);
 	~DestroyComponent();
 
 	int getExperienceValue();
@@ -28,7 +31,7 @@ public:
 	float getParry();
 
 	void setCurrentHealth(int val);
-	void setMaximumHealtH(int val);
+	void setMaximumHealth(int val);
 
 	void setCurrentStamina(int val);
 	void setMaximumStamina(int val);
@@ -44,6 +47,27 @@ public:
 
 	void adjustCurrentMana(int val);
 	void adjustMaximumMana(int val);
+
+	void setStrength(int val);
+	void setAgility(int val);
+	void setEndurance(int val);
+	void setLuck(int val);
+	void setIntelligence(int val);
+	void setWisdom(int val);
+
+	void adjustStrength(int val);
+	void adjustAgility(int val);
+	void adjustEndurance(int val);
+	void adjustLuck(int val);
+	void adjustIntelligence(int val);
+	void adjustWisdom(int val);
+
+	int getStrength();
+	int getAgility();
+	int getEndurance();
+	int getLuck();
+	int getIntelligence();
+	int getWisdom();
 
 	void setArmor(int val);
 	void adjustArmor(int val);
@@ -72,6 +96,13 @@ private:
 
 	int currentMana;
 	int maximumMana;
+
+	int strength;
+	int agility;
+	int endurance;
+	int luck;
+	int intelligence;
+	int wisdom;
 
 	int armor;
 	float dodge;

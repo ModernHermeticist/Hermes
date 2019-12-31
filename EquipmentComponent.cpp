@@ -6,6 +6,7 @@ EquipmentComponent::EquipmentComponent()
 }
 EquipmentComponent::~EquipmentComponent()
 {
+	/*
 	if (leftHand != NULL) delete leftHand;
 	if (rightHand != NULL) delete rightHand;
 	if (chest != NULL) delete chest;
@@ -21,6 +22,7 @@ EquipmentComponent::~EquipmentComponent()
 	if (leftEarring != NULL) delete leftEarring;
 	if (rightEarring != NULL) delete rightEarring;
 	if (neck != NULL) delete neck;
+	*/
 }
 
 void EquipmentComponent::setLeftHand(Entity* _leftHand) { leftHand = _leftHand; }

@@ -1,5 +1,5 @@
-#ifndef CONSTANTS_H
-#define H
+﻿#ifndef CONSTANTS_H
+#define CONSTANTS_H
 
 const int SCREEN_WIDTH = 1920;
 const int SCREEN_HEIGHT = 1080;
@@ -23,6 +23,7 @@ const int TOP_FORK_WALL = 194;
 const int BOTTOM_FORK_WALL = 193;
 const int LEFT_FORK_WALL = 195;
 const int RIGHT_FORK_WALL = 180;
+
 
 const int WATER = '~';
 

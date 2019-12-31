@@ -54,21 +54,29 @@ int main()
 		}
 
 		currentGameState = engine->getState();
-		if (currentGameState == Engine::STATE::SHOW_INVENTORY_SCREEN && key.vk != 0)
+		if (currentGameState == Engine::STATE::SHOW_INVENTORY_SCREEN && key.vk != 0 && key.vk != TCODK_SHIFT && key.vk != TCODK_CONTROL && key.vk != TCODK_ALT)
 		{
-			if (key.vk != TCODK_ESCAPE)
+			if (key.vk == TCODK_CHAR)
 			{
-				engine->getPlayer()->getPlayerAI()->equipItem(key.c);
-				/*
-				if (key.lctrl && key.c != NULL)
+				if (key.lctrl)
 					engine->getPlayer()->getPlayerAI()->dropItem(key.c);
-				else if (key.shift && key.c == 'a')
-					engine->getPlayer()->getPlayerAI()->equipItem(key.c);
-					*/
+				else if (key.shift)
+					engine->getPlayer()->getPlayerAI()->equipItem(key.c);	
 			}
 			engine->setRefresh(true);
 			engine->setState(Engine::STATE::PLAYER_TURN);
 			key.vk = (TCOD_keycode_t)0;
+		}
+
+		currentGameState = engine->getState();
+		if (currentGameState == Engine::STATE::SHOW_PROGRESSION_SCREEN && key.vk != 0)
+		{
+			if (key.vk == TCODK_ESCAPE)
+			{
+				engine->setRefresh(true);
+				engine->setState(Engine::STATE::PLAYER_TURN);
+				key.vk = (TCOD_keycode_t)0;
+			}
 		}
 
 		if (engine->getRefresh())

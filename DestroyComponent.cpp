@@ -1,7 +1,8 @@
 #include "main.h"
 
-DestroyComponent::DestroyComponent(int _maximumHealth, int _maximumStamina, int _maximumMana, 
-	int _armor, float _block, float _dodge, float _parry)
+DestroyComponent::DestroyComponent(int _maximumHealth, int _maximumStamina, int _maximumMana,
+	int _armor, float _block, float _dodge, float _parry, int _strength,
+	int _agility, int _endurance, int _luck, int _intelligence, int _wisdom)
 {
 	maximumHealth = _maximumHealth;
 	currentHealth = maximumHealth;
@@ -13,6 +14,13 @@ DestroyComponent::DestroyComponent(int _maximumHealth, int _maximumStamina, int 
 	currentMana = maximumMana;
 
 	experienceValue = 0;
+
+	strength = _strength;
+	agility = _agility;
+	endurance = _endurance;
+	luck = _luck;
+	intelligence = _intelligence;
+	wisdom = _wisdom;
 
 	armor = _armor;
 	block = _block;
@@ -33,6 +41,13 @@ DestroyComponent::DestroyComponent(int _maximumHealth, int _maximumStamina, int 
 
 	maximumMana = _maximumMana;
 	currentMana = maximumMana;
+
+	strength = 0;
+	agility = 0;
+	endurance = 0;
+	luck = 0;
+	intelligence = 0;
+	wisdom = 0;
 
 	experienceValue = _experienceValue;
 
@@ -62,7 +77,7 @@ int DestroyComponent::getCurrentMana() { return currentMana; }
 int DestroyComponent::getMaximumMana() { return maximumMana; }
 
 void DestroyComponent::setCurrentHealth(int val) { currentHealth = val; }
-void DestroyComponent::setMaximumHealtH(int val) { maximumHealth = val; }
+void DestroyComponent::setMaximumHealth(int val) { maximumHealth = val; }
 
 void DestroyComponent::setCurrentStamina(int val) { currentStamina = val; }
 void DestroyComponent::setMaximumStamina(int val) { maximumStamina = val; }
@@ -78,6 +93,27 @@ void DestroyComponent::adjustMaximumStamina(int val) { maximumStamina += val; }
 
 void DestroyComponent::adjustCurrentMana(int val) { currentMana += val; }
 void DestroyComponent::adjustMaximumMana(int val) { maximumMana += val; }
+
+void DestroyComponent::setStrength(int val) { strength = val; }
+void DestroyComponent::setAgility(int val) { agility = val; }
+void DestroyComponent::setEndurance(int val) { endurance = val; }
+void DestroyComponent::setLuck(int val) { luck = val; }
+void DestroyComponent::setIntelligence(int val) { intelligence = val; }
+void DestroyComponent::setWisdom(int val) { wisdom = val; }
+
+void DestroyComponent::adjustStrength(int val) { strength += val; }
+void DestroyComponent::adjustAgility(int val) { agility += val; }
+void DestroyComponent::adjustEndurance(int val) { endurance += val; }
+void DestroyComponent::adjustLuck(int val) { luck += val; }
+void DestroyComponent::adjustIntelligence(int val) { intelligence += val; }
+void DestroyComponent::adjustWisdom(int val) { wisdom += val; }
+
+int DestroyComponent::getStrength() { return strength; }
+int DestroyComponent::getAgility() { return agility; }
+int DestroyComponent::getEndurance() { return endurance; }
+int DestroyComponent::getLuck() { return luck; }
+int DestroyComponent::getIntelligence() { return intelligence; }
+int DestroyComponent::getWisdom() { return wisdom; }
 
 int DestroyComponent::getArmor() { return armor; }
 

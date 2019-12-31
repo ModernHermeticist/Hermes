@@ -8,5 +8,6 @@ void drawLogWindow();
 void drawBorder(TCODConsole* con, int borderHeight, int borderWidth, TCODColor borderColor);
 void drawCharacterWindow();
 void drawInventoryWindow();
+void drawProgressionWindow();
 
 #endif

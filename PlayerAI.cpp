@@ -157,10 +157,10 @@ void PlayerAI::moveOrAttack(int dX, int dY, movementDirection dir)
 	int newX = dX + xPos;
 	int newY = dY + yPos;
 	Tile tile = tiles[newX][newY];
-	engine->setRefresh(true);
-	engine->setState(Engine::STATE::ENEMY_TURN);
 	if (player->canMoveTo(tile))
 	{
+		engine->setRefresh(true);
+		engine->setState(Engine::STATE::ENEMY_TURN);
 		std::vector<Entity*> entities = engine->getEntities();
 		int numOfEntities = entities.size();
 		for (int i = 0; i < numOfEntities; i++)
@@ -215,9 +215,14 @@ int PlayerAI::getMaximumExperience() { return maximumExperience; }
 
 void PlayerAI::progressCharacter()
 {
-	currentExperience = 0;
+	currentExperience -= maximumExperience;
 	maximumExperience = round(maximumExperience * 1.5);
 	characterLevel += 1;
+	engine->setRefresh(false);
+	engine->setState(Engine::STATE::SHOW_PROGRESSION_SCREEN);
+	TCODConsole::root->clear();
+	drawProgressionWindow();
+	TCODConsole::flush();
 	engine->addToLog("You have attained level " + std::to_string(characterLevel) + "!", TCOD_gold);
 	/*TODO*/ 
 	/*

@@ -34,6 +34,8 @@ public:
 	void heal(int val);
 
 private:
+	int availableStatPoints = 5;
+
 	int characterLevel;
 	int currentExperience;
 	int maximumExperience;

@@ -11,7 +11,7 @@ Engine::Engine(int _screen_width, int _screen_height, int _world_width, int _wor
 	TCODSystem::checkForEvent(TCOD_EVENT_KEY_PRESS, &lastKey, NULL);
 	PlayerAI* playerAI = new PlayerAI();
 	AttackComponent* attackComponent = new AttackComponent(1, 5);
-	DestroyComponent* destroyComponent = new DestroyComponent(25, 10, 10, 1, 0.0, 0.0, 0.0);
+	DestroyComponent* destroyComponent = new DestroyComponent(25, 10, 10, 1, 0.0, 0.0, 0.0, 3,1,2,1,1,1);
 	InventoryComponent* inventoryComponent = new InventoryComponent(10);
 	EquipmentComponent* equipmentComponent = new EquipmentComponent();
 	player = new Player(0, 0, '@', "Ana", playerAI, attackComponent, destroyComponent, inventoryComponent, equipmentComponent);
@@ -40,14 +40,14 @@ void Engine::loadMapFile(std::string fileName)
 	{
 		for (int j = 0; j < fileMap.getHeight(); j++)
 		{
-			xp::RexTile t = *fileMap.getTile(0, i, j);
-			xp::RexTile eT = *fileMap.getTile(1, i, j);
-			xp::RexTile iT = *fileMap.getTile(2, i, j);
-			TCODColor c = TCOD_black;
-			c.r = t.fore_red;
-			c.b = t.fore_blue;
-			c.g = t.fore_green;
-			Tile newTile = Tile(i, j, t.character, c, TCOD_black);
+			xp::RexTile tile = *fileMap.getTile(0, i, j);
+			xp::RexTile entityTile = *fileMap.getTile(1, i, j);
+			xp::RexTile itemTile = *fileMap.getTile(2, i, j);
+			TCODColor color = TCOD_black;
+			color.r = tile.fore_red;
+			color.g = tile.fore_green;
+			color.b = tile.fore_blue;
+			Tile newTile = Tile(i, j, tile.character, color, TCOD_black);
 			int sprite = newTile.getSprite();
 			map->getTCODMap()->setProperties(i, j, true, true);
 			if (isImpassibleSprite(sprite))
@@ -58,21 +58,21 @@ void Engine::loadMapFile(std::string fileName)
 					map->getTCODMap()->setProperties(i, j, false, false);
 			}
 
-			if (eT.character != 0 && eT.character != 32)
+			if (entityTile.character != 0 && entityTile.character != 32)
 			{
 				TCODColor cF = TCOD_black;
-				cF.r = eT.fore_red;
-				cF.b = eT.fore_blue;
-				cF.g = eT.fore_green;
+				cF.r = entityTile.fore_red;
+				cF.b = entityTile.fore_blue;
+				cF.g = entityTile.fore_green;
 				TCODColor cB = TCOD_black;
-				cB.r = eT.back_red;
-				cB.b = eT.back_blue;
-				cB.g = eT.back_green;
-				if (eT.character == '@')
+				cB.r = entityTile.back_red;
+				cB.b = entityTile.back_blue;
+				cB.g = entityTile.back_green;
+				if (entityTile.character == '@')
 				{
 					player->setXPos(i);
 					player->setYPos(j);
-					player->setSprite(eT.character);
+					player->setSprite(entityTile.character);
 					player->setSpriteForeground(cF);
 					player->setSpriteBackground(cB);
 				}
@@ -81,23 +81,23 @@ void Engine::loadMapFile(std::string fileName)
 					EnemyAI* enemyAI = new EnemyAI();
 					AttackComponent* attackComponent = new AttackComponent(1, 3);
 					DestroyComponent* destroyComponent = new DestroyComponent(10, 2, 0, 2, 0, 0, 0, 0);
-					Entity* entity = new Entity(i, j, eT.character, cF, cB, "Kobold Whelp", enemyAI, attackComponent, destroyComponent, NULL, NULL);
+					Entity* entity = new Entity(i, j, entityTile.character, cF, cB, "Kobold Whelp", enemyAI, attackComponent, destroyComponent, NULL, NULL);
 					entities.push_back(entity);
 				}
 			}
-			if (iT.character != 0 && iT.character != 32)
+			if (itemTile.character != 0 && itemTile.character != 32)
 			{
 				TCODColor cF = TCOD_black;
-				cF.r = iT.fore_red;
-				cF.b = iT.fore_blue;
-				cF.g = iT.fore_green;
+				cF.r = itemTile.fore_red;
+				cF.b = itemTile.fore_blue;
+				cF.g = itemTile.fore_green;
 				TCODColor cB = TCOD_black;
-				cB.r = iT.back_red;
-				cB.b = iT.back_blue;
-				cB.g = iT.back_green;
+				cB.r = itemTile.back_red;
+				cB.b = itemTile.back_blue;
+				cB.g = itemTile.back_green;
 
 				ItemComponent* itemComponent = new ItemComponent(0, 2,0,0,0,0,0,0,0,EquipmentComponent::EQUIPMENTSLOT::rightHand);
-				Entity* entity = new Entity(i, j, iT.character, cF, cB, "Limirail, Blade of the Ninth Moon", NULL, NULL, NULL, NULL, itemComponent);
+				Entity* entity = new Entity(i, j, itemTile.character, cF, cB, "Limirail, Blade of the Ninth Moon", NULL, NULL, NULL, NULL, itemComponent);
 				entities.push_back(entity);
 			}
 			map->setTile(i, j, newTile);
