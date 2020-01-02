@@ -10,6 +10,7 @@
 # Precompiled Headers
 *.gch
 *.pch
+*.ipch
 
 # Compiled Dynamic libraries
 *.so
@@ -37,5 +38,6 @@
 *.idb
 *.pdb
 *.log
-x64/Debug/Hermes.tlog/link.write.1.tlog
 *.tlog
+
+*.db
