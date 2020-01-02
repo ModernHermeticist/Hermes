@@ -71,3 +71,5 @@ EquipmentComponent::EQUIPMENTSLOT ItemComponent::getSlot() { return slot; }
 
 bool ItemComponent::isEquipped() { return equipped; }
 void ItemComponent::setEquipped(bool val) { equipped = val; }
+
+ConsumableComponent* ItemComponent::getConsumableComponent() { return consumableComponent ;}

@@ -136,6 +136,7 @@
     <ClCompile Include="AttackComponent.cpp" />
     <ClCompile Include="ConsumableComponent.cpp" />
     <ClCompile Include="DestroyComponent.cpp" />
+    <ClCompile Include="EffectComponent.cpp" />
     <ClCompile Include="EnemyAI.cpp" />
     <ClCompile Include="Engine.cpp" />
     <ClCompile Include="Entity.cpp" />
@@ -161,6 +162,7 @@
     <ClInclude Include="Entity.h" />
     <ClInclude Include="EquipmentComponent.h" />
     <ClInclude Include="gui.h" />
+    <ClInclude Include="EffectComponent.h" />
     <ClInclude Include="InventoryComponent.h" />
     <ClInclude Include="ItemComponent.h" />
     <ClInclude Include="LogEntry.h" />

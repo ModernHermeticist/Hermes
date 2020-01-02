@@ -30,6 +30,8 @@ public:
 	bool isEquipped();
 	void setEquipped(bool val);
 
+	ConsumableComponent* getConsumableComponent();
+
 private:
 	int minimumDamage;
 	int maximumDamage;

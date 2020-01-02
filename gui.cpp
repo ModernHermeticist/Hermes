@@ -307,13 +307,15 @@ void drawInventoryWindow()
 	con->printf(1, CELL_ROWS - 2, "Use item: (letter)    Equip item: (shift+letter)    Drop item: (ctrl+letter)");
 	if (storage.size() > 0)
 	{
+		char label = 97;
 		for (int i = 0; i < size; i++)
 		{
-			char label = 97 + i;
+			label += i;
 			if (storage[i]->getItemComponent()->isEquipped())
 				ss << label << ") " << storage[i]->getName() << " (e)";
 			else ss << label << ") " << storage[i]->getName();
 			con->printf(1, i + 2, ss.str().c_str());
+			ss.str(std::string());
 		}
 	}
 

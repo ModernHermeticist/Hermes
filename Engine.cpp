@@ -14,6 +14,12 @@ Engine::Engine(int _screen_width, int _screen_height, int _world_width, int _wor
 	DestroyComponent* destroyComponent = new DestroyComponent(25, 10, 10, 1, 0.0, 0.0, 0.0, 3,1,2,1,1,1);
 	InventoryComponent* inventoryComponent = new InventoryComponent(10);
 	EquipmentComponent* equipmentComponent = new EquipmentComponent();
+	Entity* potion = new Entity(0, 0, 'p', TCODColor::green, TCODColor::black, "Health Potion", NULL, NULL, NULL, NULL,
+		new ItemComponent(
+			new ConsumableComponent(
+				ConsumableComponent::Consumable_Type::POTION,
+				new EffectComponent(5, EffectComponent::Effect_Type::HEAL))));
+	inventoryComponent->addToStorage(potion);
 	player = new Player(0, 0, '@', "Player", playerAI, attackComponent, destroyComponent, inventoryComponent, equipmentComponent);
 	map = new Map(screen_width, screen_height);
 	fovRadius = 10;

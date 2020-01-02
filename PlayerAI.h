@@ -32,6 +32,8 @@ public:
 	void modifyStatsOnItemEquip(ItemComponent* item);
 	void modifyStatsOnItemDeEquip(ItemComponent* item);
 
+	void useItem(int c);
+
 	int takeDamage(int val);
 	void heal(int val);
 

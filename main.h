@@ -16,6 +16,7 @@
 #include "Tile.h"
 #include "Map.h"
 #include "EquipmentComponent.h"
+#include "EffectComponent.h"
 #include "ConsumableComponent.h"
 #include "ItemComponent.h"
 #include "InventoryComponent.h"

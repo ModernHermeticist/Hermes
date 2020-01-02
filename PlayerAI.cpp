@@ -370,6 +370,27 @@ void PlayerAI::modifyStatsOnItemDeEquip(ItemComponent* item)
 	destroyComponent->adjustFinalParryByItem(-item->getParry());
 }
 
+void PlayerAI::useItem(int c)
+{
+	Player* player = engine->getPlayer();
+	InventoryComponent* inventoryComponent = player->getInventoryComponent();
+	Entity* entity = inventoryComponent->getItemAtLocation(c);
+	ItemComponent* itemComponent = entity->getItemComponent();
+	ConsumableComponent* consumableComponent = itemComponent->getConsumableComponent();
+	if (consumableComponent == NULL) return;
+
+	EffectComponent* effectComponent = consumableComponent->getEffectComponent();
+	if (effectComponent == NULL) return;
+
+	EffectComponent::Effect_Type effectType = effectComponent->getEffectType();
+	if (effectType == EffectComponent::Effect_Type::HEAL)
+	{
+		heal(effectComponent->getEffectValue());
+		inventoryComponent->removeFromStorage(entity);
+		engine->removeEntity(entity);
+	}
+}
+
 int PlayerAI::takeDamage(int val)
 {
 	Player* player = engine->getPlayer();
