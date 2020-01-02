@@ -41,21 +41,24 @@ public:
 
 	void adjustCurrentHealth(int val);
 	void adjustMaximumHealth(int val);
+	void adjustFinalMaximumHealthByItem(int val);
 
-	int standardHealthAdjustment(int val);
-	int standardHealthAdjustment(int val, int _endurance);
+	int standardHealthAdjustment();
+	int standardHealthAdjustmentPreview(int val);
 
 	void adjustCurrentStamina(int val);
 	void adjustMaximumStamina(int val);
+	void adjustFinalMaximumStaminaByItem(int val);
 
-	int standardStaminaAdjustment(int val);
-	int standardStaminaAdjustment(int val, int _endurance);
+	int standardStaminaAdjustment();
+	int standardStaminaAdjustmentPreview(int val);
 
 	void adjustCurrentMana(int val);
 	void adjustMaximumMana(int val);
+	void adjustFinalMaximumManaByItem(int val);
 
-	int standardManaAdjustment(int val);
-	int standardManaAdjustment(int val, int _intelligence);
+	int standardManaAdjustment();
+	int standardManaAdjustmentPreview(int val);
 
 	void setStrength(int val);
 	void setAgility(int val);
@@ -71,6 +74,13 @@ public:
 	void adjustIntelligence(int val);
 	void adjustWisdom(int val);
 
+	void adjustFinalStrengthByItem(int val);
+	void adjustFinalAgilityByItem(int val);
+	void adjustFinalEnduranceByItem(int val);
+	void adjustFinalLuckByItem(int val);
+	void adjustFinalIntelligenceByItem(int val);
+	void adjustFinallWisdomByItem(int val);
+
 	int getStrength();
 	int getAgility();
 	int getEndurance();
@@ -80,24 +90,31 @@ public:
 
 	void setArmor(int val);
 	void adjustArmor(int val);
+	void adjustFinalArmorByItem(int val);
 
 	void setDodge(float val);
 	void adjustDodge(float val);
+	void adjustFinalDodgeByItem(float val);
 
-	float standardDodgeAdjustment(float val);
-	float standardDodgeAdjustment(float val, int _agility, int _luck);
+	float standardDodgeAdjustment();
+	float standardDodgeAdjustmentPreview(int _agi, int _luck);
 
 	void setBlock(float val);
 	void adjustBlock(float val);
+	void adjustFinalBlockByItem(float val);
 
-	float standardBlockAdjustment(float val);
-	float standardBlockAdjustment(float val, int _strength, int _luck);
+	float standardBlockAdjustment();
+	float standardBlockAdjustmentPreview(int _str, int _luck);
 
 	void setParry(float val);
 	void ajustParry(float val);
+	void adjustFinalParryByItem(float val);
 
-	float standardParryAdjustment(float val);
-	float standardParryAdjustment(float val, int _agility, int _luck);
+	float standardParryAdjustment();
+	float standardParryAdjustmentPreview(int _agi, int _luck);
+
+	void applyBaseStatsToFinal();
+	void applyOtherBaseStatsToFinal();
 
 	void die(Entity* owner);
 
@@ -109,23 +126,51 @@ private:
 	int currentHealth;
 	int maximumHealth;
 
+	int baseMaximumHealth;
+	int finalMaximumHealth;
+
 	int currentStamina;
 	int maximumStamina;
+
+	int baseMaximumStamina;
+	int finalMaximumStamina;
 
 	int currentMana;
 	int maximumMana;
 
-	int strength;
-	int agility;
-	int endurance;
-	int luck;
-	int intelligence;
-	int wisdom;
+	int baseMaximumMana;
+	int finalMaximumMana;
 
-	int armor;
-	float dodge;
-	float block;
-	float parry;
+	int baseStrength;
+	int finalStrength;
+
+	int baseAgility;
+	int finalAgility;
+
+	int baseEndurance;
+	int finalEndurance;
+
+	int baseLuck;
+	int finalLuck;
+
+	int baseIntelligence;
+	int finalIntelligence;
+
+	int baseWisdom;
+	int finalWisdom;
+
+	int baseArmor;
+	int finalArmor;
+
+	float baseDodge;
+	float finalDodge;
+
+	float baseBlock;
+	float finalBlock;
+
+	float baseParry;
+	float finalParry;
+
 
 	bool alive;
 

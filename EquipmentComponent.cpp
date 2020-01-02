@@ -82,6 +82,26 @@ Entity* EquipmentComponent::getItemAtSlot(EQUIPMENTSLOT slot)
 	return entity;
 }
 
+std::vector<Entity*> EquipmentComponent::getAllItemSlots()
+{
+	std::vector<Entity*> allItemSlots;
+	allItemSlots.push_back(head);
+	allItemSlots.push_back(chest);
+	allItemSlots.push_back(neck);
+	allItemSlots.push_back(shoulders);
+	allItemSlots.push_back(hands);
+	allItemSlots.push_back(waist);
+	allItemSlots.push_back(legs);
+	allItemSlots.push_back(feet);
+	allItemSlots.push_back(leftRing);
+	allItemSlots.push_back(rightRing);
+	allItemSlots.push_back(leftEarring);
+	allItemSlots.push_back(rightEarring);
+	allItemSlots.push_back(leftHand);
+	allItemSlots.push_back(rightHand);
+	return allItemSlots;
+}
+
 void EquipmentComponent::setItemAtSlot(Entity* item, EQUIPMENTSLOT slot)
 {
 	switch (slot)

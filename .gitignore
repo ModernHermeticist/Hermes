@@ -30,3 +30,12 @@
 *.exe
 *.out
 *.app
+*.log
+*.ilk
+*.tlog
+*.lastbuildstate
+*.idb
+*.pdb
+*.log
+x64/Debug/Hermes.tlog/link.write.1.tlog
+*.tlog

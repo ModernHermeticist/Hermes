@@ -361,7 +361,7 @@ void drawProgressionWindow(std::vector<int> selections, std::vector<TCODColor> s
 		s = "%cHealth:       " + std::to_string(destroyComponent->getCurrentHealth()) + '/' +
 			std::to_string(destroyComponent->getMaximumHealth()) + " --> " +
 			std::to_string(destroyComponent->getCurrentHealth()) + '/' +
-			std::to_string(destroyComponent->standardHealthAdjustment(destroyComponent->getMaximumHealth(), selections[2])) + "%c";
+			std::to_string(destroyComponent->standardHealthAdjustmentPreview(selections[2])) + "%c";
 	}
 	else
 	{
@@ -374,10 +374,10 @@ void drawProgressionWindow(std::vector<int> selections, std::vector<TCODColor> s
 	if (selections[2] > 0)
 	{
 		con->setColorControl(TCOD_COLCTRL_1, TCODColor::gold, TCODColor::black);
-		s = "%cStamina:       " + std::to_string(destroyComponent->getCurrentStamina()) + '/' +
+		s = "%cStamina:      " + std::to_string(destroyComponent->getCurrentStamina()) + '/' +
 			std::to_string(destroyComponent->getMaximumStamina()) + " --> " +
 			std::to_string(destroyComponent->getCurrentStamina()) + '/' +
-			std::to_string(destroyComponent->standardStaminaAdjustment(destroyComponent->getMaximumStamina(), selections[2])) + "%c";
+			std::to_string(destroyComponent->standardStaminaAdjustmentPreview(selections[2])) + "%c";
 	}
 	else
 	{
@@ -390,10 +390,10 @@ void drawProgressionWindow(std::vector<int> selections, std::vector<TCODColor> s
 	if (selections[4] > 0)
 	{
 		con->setColorControl(TCOD_COLCTRL_1, TCODColor::gold, TCODColor::black);
-		s = "%cMana:       " + std::to_string(destroyComponent->getCurrentMana()) + '/' +
+		s = "%cMana:         " + std::to_string(destroyComponent->getCurrentMana()) + '/' +
 			std::to_string(destroyComponent->getMaximumMana()) + " --> " +
 			std::to_string(destroyComponent->getCurrentMana()) + '/' +
-			std::to_string(destroyComponent->standardManaAdjustment(destroyComponent->getMaximumMana(), selections[4])) + "%c";
+			std::to_string(destroyComponent->standardManaAdjustmentPreview(selections[4])) + "%c";
 	}
 	else
 	{
@@ -403,17 +403,57 @@ void drawProgressionWindow(std::vector<int> selections, std::vector<TCODColor> s
 	con->printf(1, 5, s.c_str(), TCOD_COLCTRL_1, TCOD_COLCTRL_STOP);
 
 	con->setColorControl(TCOD_COLCTRL_1, TCODColor::grey, TCODColor::black);
-	s = "%cDamage:       " + std::to_string(attackComponent->getMinimumAttackPower()) + '-' +
-		std::to_string(attackComponent->getMaximumAttackPower()) + "%c";
+	if (selections[0] > 0)
+	{
+		con->setColorControl(TCOD_COLCTRL_1, TCODColor::gold, TCODColor::black);
+		s = "%cDamage:       " + std::to_string(attackComponent->getMinimumAttackPower()) + '-' +
+			std::to_string(attackComponent->getMaximumAttackPower()) + " --> " +
+			std::to_string(attackComponent->standardMinimumAttackPowerAdjustmentPreview(selections[0])) + '-' +
+			std::to_string(attackComponent->standardMaximumAttackPowerAdjustmentPreview(selections[0])) + "%c";
+	}
+	else
+	{
+		s = "%cDamage:       " + std::to_string(attackComponent->getMinimumAttackPower()) + '-' +
+			std::to_string(attackComponent->getMaximumAttackPower()) + "%c";
+	}
 	con->printf(1, 6, s.c_str(), TCOD_COLCTRL_1, TCOD_COLCTRL_STOP);
+
+	con->setColorControl(TCOD_COLCTRL_1, TCODColor::grey, TCODColor::black);
 	s = "%cArmor:        " + std::to_string(destroyComponent->getArmor()) + "%c";
 	con->printf(1, 7, s.c_str(), TCOD_COLCTRL_1, TCOD_COLCTRL_STOP);
-	s = "%cBlock:        " + std::to_string(destroyComponent->getBlock()) + "%c";
-	con->printf(1, 8, s.c_str(), TCOD_COLCTRL_1, TCOD_COLCTRL_STOP);
-	s = "%cDodge:        " + std::to_string(destroyComponent->getDodge()) + "%c";
-	con->printf(1, 9, s.c_str(), TCOD_COLCTRL_1, TCOD_COLCTRL_STOP);
-	s = "%cParry:        " + std::to_string(destroyComponent->getParry()) + "%c";
-	con->printf(1, 10, s.c_str(), TCOD_COLCTRL_1, TCOD_COLCTRL_STOP);
+
+	if (selections[1] > 0 || selections[3] > 0)
+	{
+		con->setColorControl(TCOD_COLCTRL_1, TCODColor::gold, TCODColor::black);
+		s = "%cDodge:        " + std::to_string(destroyComponent->getDodge()) + " --> " +
+			std::to_string(destroyComponent->standardDodgeAdjustmentPreview(selections[1], selections[3])) + "%c";
+		con->printf(1, 9, s.c_str(), TCOD_COLCTRL_1, TCOD_COLCTRL_STOP);
+		s = "%cParry:        " + std::to_string(destroyComponent->getParry()) + " --> " +
+			std::to_string(destroyComponent->standardParryAdjustmentPreview(selections[1], selections[3])) + "%c";
+		con->printf(1, 10, s.c_str(), TCOD_COLCTRL_1, TCOD_COLCTRL_STOP);
+	}
+	else
+	{
+		s = "%cDodge:        " + std::to_string(destroyComponent->getDodge()) + "%c";
+		con->printf(1, 9, s.c_str(), TCOD_COLCTRL_1, TCOD_COLCTRL_STOP);
+		s = "%cParry:        " + std::to_string(destroyComponent->getParry()) + "%c";
+		con->printf(1, 10, s.c_str(), TCOD_COLCTRL_1, TCOD_COLCTRL_STOP);
+	}
+
+	con->setColorControl(TCOD_COLCTRL_1, TCODColor::grey, TCODColor::black);
+	if (selections[0] > 0 || selections[3] > 0)
+	{
+		con->setColorControl(TCOD_COLCTRL_1, TCODColor::gold, TCODColor::black);
+		s = "%cBlock:        " + std::to_string(destroyComponent->getBlock()) + " --> " +
+			std::to_string(destroyComponent->standardBlockAdjustmentPreview(selections[0], selections[3])) + "%c";
+		con->printf(1, 8, s.c_str(), TCOD_COLCTRL_1, TCOD_COLCTRL_STOP);
+	}
+	else
+	{
+		s = "%cBlock:        " + std::to_string(destroyComponent->getBlock()) + "%c";
+		con->printf(1, 8, s.c_str(), TCOD_COLCTRL_1, TCOD_COLCTRL_STOP);
+	}
+
 
 	con->setColorControl(TCOD_COLCTRL_1, selectionColorizer[0], TCODColor::black);
 	if (selections[0] > 0) s = "%cStrength:     " + std::to_string(destroyComponent->getStrength()) + " +" + std::to_string(selections[0]) + "%c";
@@ -444,6 +484,10 @@ void drawProgressionWindow(std::vector<int> selections, std::vector<TCODColor> s
 	if (selections[5] > 0) s = "%cWisdom:       " + std::to_string(destroyComponent->getWisdom()) + " +" + std::to_string(selections[5]) + "%c";
 	else s = "%cWisdom:       " + std::to_string(destroyComponent->getWisdom()) + "%c";
 	con->printf(1, 16, s.c_str(), TCOD_COLCTRL_1, TCOD_COLCTRL_STOP);
+
+	con->setColorControl(TCOD_COLCTRL_1, selectionColorizer[6], TCODColor::black);
+	s = "%cConfirm%c";
+	con->printf(1, 17, s.c_str(), TCOD_COLCTRL_1, TCOD_COLCTRL_STOP);
 
 	TCODConsole::blit(con, 0, 0, borderWidth, borderHeight, TCODConsole::root, 0, 0);
 	delete con;

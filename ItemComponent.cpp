@@ -13,6 +13,7 @@ ItemComponent::ItemComponent()
 	parry = NULL;
 	slot = EquipmentComponent::EQUIPMENTSLOT::none;
 	equipped = false;
+	consumableComponent = NULL;
 }
 
 ItemComponent::ItemComponent(int _minimumDamage, int _maximumDamage, int _armor, int _health, int _stamina,
@@ -29,6 +30,23 @@ ItemComponent::ItemComponent(int _minimumDamage, int _maximumDamage, int _armor,
 	parry = _parry;
 	slot = _slot;
 	equipped = false;
+	consumableComponent = NULL;
+}
+
+ItemComponent::ItemComponent(ConsumableComponent* _consumableComponent)
+{
+	minimumDamage = NULL;
+	maximumDamage = NULL;
+	armor = NULL;
+	health = NULL;
+	stamina = NULL;
+	mana = NULL;
+	dodge = NULL;
+	block = NULL;
+	parry = NULL;
+	slot = EquipmentComponent::EQUIPMENTSLOT::none;
+	equipped = false;
+	consumableComponent = _consumableComponent;
 }
 
 ItemComponent::~ItemComponent()

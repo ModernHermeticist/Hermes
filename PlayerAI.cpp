@@ -218,10 +218,11 @@ void PlayerAI::progressCharacter()
 	bool confirmed = false;
 	std::vector<int> statSelections = { 0,0,0,0,0,0 };
 	std::vector<TCODColor> selectionColorizer = { TCODColor::green, TCODColor::white, TCODColor::white,
-													TCODColor::white, TCODColor::white, TCODColor::white };
+													TCODColor::white, TCODColor::white, TCODColor::white, TCODColor::white };
 	int selectionPointer = 0;
 	currentExperience -= maximumExperience;
 	maximumExperience = (int)round(maximumExperience * 1.5);
+	availableStatPoints += 5;
 	characterLevel += 1;
 	TCODConsole::root->clear();
 	drawProgressionWindow(statSelections, selectionColorizer);
@@ -235,7 +236,7 @@ void PlayerAI::progressCharacter()
 		{
 			confirmed = true;
 		}
-		if (key.vk == TCODK_DOWN && selectionPointer < 5)
+		if (key.vk == TCODK_DOWN && selectionPointer < 6)
 		{
 			selectionColorizer[selectionPointer] = TCODColor::white;
 			selectionPointer++;
@@ -261,6 +262,12 @@ void PlayerAI::progressCharacter()
 			availableStatPoints++;
 			redraw = true;
 		}
+		if (key.vk == TCODK_ENTER && availableStatPoints == 0)
+		{
+			applyStatPoints(statSelections);
+			recalculateStats();
+			confirmed = true;
+		}
 
 
 		if (redraw)
@@ -271,11 +278,60 @@ void PlayerAI::progressCharacter()
 		}
 	}
 	engine->addToLog("You have attained level " + std::to_string(characterLevel) + "!", TCOD_gold);
-	/*TODO*/ 
-	/*
-	Stuff for character progression.
-	Increase stats, increase attributes... etc.
-	*/
+}
+
+void PlayerAI::applyStatPoints(std::vector<int> statSelections)
+{
+	Player* player = engine->getPlayer();
+	DestroyComponent* destroyComponent = player->getDestroyComponent();
+
+	destroyComponent->adjustStrength(statSelections[0]);
+	destroyComponent->adjustAgility(statSelections[1]);
+	destroyComponent->adjustEndurance(statSelections[2]);
+	destroyComponent->adjustLuck(statSelections[3]);
+	destroyComponent->adjustIntelligence(statSelections[4]);
+	destroyComponent->adjustWisdom(statSelections[5]);
+}
+
+void PlayerAI::recalculateStats()
+{
+	Player* player = engine->getPlayer();
+	AttackComponent* attackComponent = player->getAttackComponent();
+	DestroyComponent* destroyComponent = player->getDestroyComponent();
+
+	EquipmentComponent* equipmentComponent = player->getEquipmentComponent();
+	std::vector<Entity*> allItemSlots = equipmentComponent->getAllItemSlots();
+	for (std::vector<Entity*>::iterator it = allItemSlots.begin(); it != allItemSlots.end(); it++)
+	{
+		Entity* item = *it;
+		if (item != NULL)
+		{
+			modifyStatsOnItemDeEquip(item->getItemComponent());
+		}
+	}
+
+	destroyComponent->applyBaseStatsToFinal();
+
+	attackComponent->setMinimumAttackPower(attackComponent->standardMinimumAttackPowerAdjustment());
+	attackComponent->setMaximumAttackPower(attackComponent->standardMaximumAttackPowerAdjustment());
+	destroyComponent->setBlock(destroyComponent->standardBlockAdjustment());
+	destroyComponent->setDodge(destroyComponent->standardDodgeAdjustment());
+	destroyComponent->setParry(destroyComponent->standardParryAdjustment());
+	destroyComponent->setMaximumHealth(destroyComponent->standardHealthAdjustment());
+	destroyComponent->setMaximumStamina(destroyComponent->standardStaminaAdjustment());
+	destroyComponent->setMaximumMana(destroyComponent->standardManaAdjustment());
+
+	destroyComponent->applyOtherBaseStatsToFinal();
+	attackComponent->applyBaseStatsToFinal();
+
+	for (std::vector<Entity*>::iterator it = allItemSlots.begin(); it != allItemSlots.end(); it++)
+	{
+		Entity* item = *it;
+		if (item != NULL)
+		{
+			modifyStatsOnItemEquip(item->getItemComponent());
+		}
+	}
 }
 
 void PlayerAI::modifyStatsOnItemEquip(ItemComponent* item)
@@ -284,16 +340,16 @@ void PlayerAI::modifyStatsOnItemEquip(ItemComponent* item)
 	AttackComponent* attackComponent = player->getAttackComponent();
 	DestroyComponent* destroyComponent = player->getDestroyComponent();
 
-	attackComponent->adjustMinimumAttackPower(item->getMinimumDamage());
-	attackComponent->adjustMaximumAttackPower(item->getMaximumDamage());
+	attackComponent->adjustFinalMinimumAttackPowerByItem(item->getMinimumDamage());
+	attackComponent->adjustFinalMaximumAttackPowerByItem(item->getMaximumDamage());
 
-	destroyComponent->adjustArmor(item->getArmor());
-	destroyComponent->adjustMaximumHealth(item->getHealth());
-	destroyComponent->adjustMaximumMana(item->getMana());
-	destroyComponent->adjustMaximumStamina(item->getStamina());
-	destroyComponent->adjustDodge(item->getDodge());
-	destroyComponent->adjustBlock(item->getBlock());
-	destroyComponent->ajustParry(item->getParry());
+	destroyComponent->adjustFinalArmorByItem(item->getArmor());
+	destroyComponent->adjustFinalMaximumHealthByItem(item->getHealth());
+	destroyComponent->adjustFinalMaximumManaByItem(item->getMana());
+	destroyComponent->adjustFinalMaximumStaminaByItem(item->getStamina());
+	destroyComponent->adjustFinalDodgeByItem(item->getDodge());
+	destroyComponent->adjustFinalBlockByItem(item->getBlock());
+	destroyComponent->adjustFinalParryByItem(item->getParry());
 }
 
 void PlayerAI::modifyStatsOnItemDeEquip(ItemComponent* item)
@@ -302,16 +358,16 @@ void PlayerAI::modifyStatsOnItemDeEquip(ItemComponent* item)
 	AttackComponent* attackComponent = player->getAttackComponent();
 	DestroyComponent* destroyComponent = player->getDestroyComponent();
 
-	attackComponent->adjustMinimumAttackPower(-item->getMinimumDamage());
-	attackComponent->adjustMaximumAttackPower(-item->getMaximumDamage());
+	attackComponent->adjustFinalMinimumAttackPowerByItem(-item->getMinimumDamage());
+	attackComponent->adjustFinalMaximumAttackPowerByItem(-item->getMaximumDamage());
 
-	destroyComponent->adjustArmor(-item->getArmor());
-	destroyComponent->adjustMaximumHealth(-item->getHealth());
-	destroyComponent->adjustMaximumMana(-item->getMana());
-	destroyComponent->adjustMaximumStamina(-item->getStamina());
-	destroyComponent->adjustDodge(-item->getDodge());
-	destroyComponent->adjustBlock(-item->getBlock());
-	destroyComponent->ajustParry(-item->getParry());
+	destroyComponent->adjustFinalArmorByItem(-item->getArmor());
+	destroyComponent->adjustFinalMaximumHealthByItem(-item->getHealth());
+	destroyComponent->adjustFinalMaximumManaByItem(-item->getMana());
+	destroyComponent->adjustFinalMaximumStaminaByItem(-item->getStamina());
+	destroyComponent->adjustFinalDodgeByItem(-item->getDodge());
+	destroyComponent->adjustFinalBlockByItem(-item->getBlock());
+	destroyComponent->adjustFinalParryByItem(-item->getParry());
 }
 
 int PlayerAI::takeDamage(int val)

@@ -26,6 +26,8 @@ public:
 	int getMaximumExperience();
 
 	void progressCharacter();
+	void recalculateStats();
+	void applyStatPoints(std::vector<int> statSelections);
 
 	void modifyStatsOnItemEquip(ItemComponent* item);
 	void modifyStatsOnItemDeEquip(ItemComponent* item);
@@ -34,7 +36,7 @@ public:
 	void heal(int val);
 
 private:
-	int availableStatPoints = 5;
+	int availableStatPoints = 0;
 
 	int characterLevel;
 	int currentExperience;

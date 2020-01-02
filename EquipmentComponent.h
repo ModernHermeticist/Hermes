@@ -44,6 +44,7 @@ public:
 	Entity* getRightEarring();
 	Entity* getNeck();
 
+	std::vector<Entity*> getAllItemSlots();
 	Entity* getItemAtSlot(EQUIPMENTSLOT slot);
 	void setItemAtSlot(Entity* item, EQUIPMENTSLOT slot);
 	void removeItemAtSlot(EQUIPMENTSLOT slot);

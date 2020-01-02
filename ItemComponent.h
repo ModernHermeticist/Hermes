@@ -7,6 +7,7 @@ class ItemComponent
 {
 public:
 	ItemComponent();
+	ItemComponent(ConsumableComponent* _consumableComponent);
 	ItemComponent(int _minimumDamage, int _maximumDamage, int _armor, int _health, int _stamina,
 		int _mana, float _dodge, float _block, float _parry, EquipmentComponent::EQUIPMENTSLOT _slot);
 	~ItemComponent();
@@ -44,6 +45,8 @@ private:
 	float parry;
 
 	EquipmentComponent::EQUIPMENTSLOT slot;
+
+	ConsumableComponent* consumableComponent;
 
 	bool equipped;
 };
