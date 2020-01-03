@@ -62,6 +62,8 @@ int main()
 					engine->getPlayer()->getPlayerAI()->dropItem(key.c);
 				else if (key.shift)
 					engine->getPlayer()->getPlayerAI()->equipItem(key.c);
+				else if (key.lalt)
+					engine->getPlayer()->getPlayerAI()->inspectItem(key.c);
 				else
 				{
 					engine->getPlayer()->getPlayerAI()->useItem(key.c);

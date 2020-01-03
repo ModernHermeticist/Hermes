@@ -148,6 +148,58 @@ void PlayerAI::equipItem(int c)
 	}
 }
 
+void PlayerAI::useItem(int c)
+{
+	Player* player = engine->getPlayer();
+	InventoryComponent* inventoryComponent = player->getInventoryComponent();
+	Entity* entity = inventoryComponent->getItemAtLocation(c);
+	if (entity == NULL)
+	{
+		return;
+	}
+	ItemComponent* itemComponent = entity->getItemComponent();
+	ConsumableComponent* consumableComponent = itemComponent->getConsumableComponent();
+	if (consumableComponent == NULL) return;
+
+	EffectComponent* effectComponent = consumableComponent->getEffectComponent();
+	if (effectComponent == NULL) return;
+
+	EffectComponent::Effect_Type effectType = effectComponent->getEffectType();
+	if (effectType == EffectComponent::Effect_Type::HEAL)
+	{
+		heal(effectComponent->getEffectValue());
+		inventoryComponent->removeFromStorage(entity);
+		engine->removeEntity(entity);
+	}
+}
+
+void PlayerAI::inspectItem(int c)
+{
+	Player* player = engine->getPlayer();
+	InventoryComponent* inventoryComponent = player->getInventoryComponent();
+	EquipmentComponent* equipmentComponent = player->getEquipmentComponent();
+	Entity* entity = inventoryComponent->getItemAtLocation(c);
+	if (entity != NULL)
+	{
+		ItemComponent* itemComponent = entity->getItemComponent();
+		if (itemComponent != NULL)
+		{
+			bool confirmed = false;
+			while (!confirmed)
+			{
+				TCOD_key_t key;
+				TCODSystem::waitForEvent(TCOD_EVENT_KEY_PRESS, &key, NULL, true);
+				if (key.vk == TCODK_ESCAPE)
+				{
+					confirmed = true;
+				}
+				drawInspectionWindow(entity);
+			}
+		}
+	}
+}
+
+
 void PlayerAI::moveOrAttack(int dX, int dY, movementDirection dir)
 {
 	Player* player = engine->getPlayer();
@@ -368,27 +420,6 @@ void PlayerAI::modifyStatsOnItemDeEquip(ItemComponent* item)
 	destroyComponent->adjustFinalDodgeByItem(-item->getDodge());
 	destroyComponent->adjustFinalBlockByItem(-item->getBlock());
 	destroyComponent->adjustFinalParryByItem(-item->getParry());
-}
-
-void PlayerAI::useItem(int c)
-{
-	Player* player = engine->getPlayer();
-	InventoryComponent* inventoryComponent = player->getInventoryComponent();
-	Entity* entity = inventoryComponent->getItemAtLocation(c);
-	ItemComponent* itemComponent = entity->getItemComponent();
-	ConsumableComponent* consumableComponent = itemComponent->getConsumableComponent();
-	if (consumableComponent == NULL) return;
-
-	EffectComponent* effectComponent = consumableComponent->getEffectComponent();
-	if (effectComponent == NULL) return;
-
-	EffectComponent::Effect_Type effectType = effectComponent->getEffectType();
-	if (effectType == EffectComponent::Effect_Type::HEAL)
-	{
-		heal(effectComponent->getEffectValue());
-		inventoryComponent->removeFromStorage(entity);
-		engine->removeEntity(entity);
-	}
 }
 
 int PlayerAI::takeDamage(int val)

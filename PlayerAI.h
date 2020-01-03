@@ -18,6 +18,8 @@ public:
 	void pickUpItem();
 	void dropItem(int c);
 	void equipItem(int c);
+	void useItem(int c);
+	void inspectItem(int c);
 
 	void gainExperience(int val);
 	
@@ -31,8 +33,6 @@ public:
 
 	void modifyStatsOnItemEquip(ItemComponent* item);
 	void modifyStatsOnItemDeEquip(ItemComponent* item);
-
-	void useItem(int c);
 
 	int takeDamage(int val);
 	void heal(int val);

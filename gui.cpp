@@ -354,7 +354,6 @@ void drawProgressionWindow(std::vector<int> selections, std::vector<TCODColor> s
 	TCODConsole* con = new TCODConsole(borderWidth, borderHeight);
 	drawBorder(con, borderHeight, borderWidth, borderColor);
 	std::string s = "Progression";
-	std::stringstream ss;
 	con->printf(CELL_COLUMNS / 2 - (int)s.size() / 2, 1, s.c_str());
 	con->setColorControl(TCOD_COLCTRL_1, TCODColor::grey, TCODColor::black);
 	if (selections[2] > 0)
@@ -490,6 +489,23 @@ void drawProgressionWindow(std::vector<int> selections, std::vector<TCODColor> s
 	con->setColorControl(TCOD_COLCTRL_1, selectionColorizer[6], TCODColor::black);
 	s = "%cConfirm%c";
 	con->printf(1, 17, s.c_str(), TCOD_COLCTRL_1, TCOD_COLCTRL_STOP);
+
+	TCODConsole::blit(con, 0, 0, borderWidth, borderHeight, TCODConsole::root, 0, 0);
+	delete con;
+}
+
+void drawInspectionWindow(Entity* entity)
+{
+	ItemComponent* itemComponent = entity->getItemComponent();
+	int borderWidth = CELL_COLUMNS;
+	int borderHeight = CELL_ROWS;
+	TCODColor borderColor = TCOD_darker_green;
+	TCODConsole* con = new TCODConsole(borderWidth, borderHeight);
+	drawBorder(con, borderHeight, borderWidth, borderColor);
+
+	std::string s = entity->getName();
+	con->printf(CELL_COLUMNS / 2 - (int)s.size() / 2, 1, s.c_str());
+
 
 	TCODConsole::blit(con, 0, 0, borderWidth, borderHeight, TCODConsole::root, 0, 0);
 	delete con;

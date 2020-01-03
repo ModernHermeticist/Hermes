@@ -9,5 +9,6 @@ void drawBorder(TCODConsole* con, int borderHeight, int borderWidth, TCODColor b
 void drawCharacterWindow();
 void drawInventoryWindow();
 void drawProgressionWindow(std::vector<int> selections, std::vector<TCODColor> selectionColorizer);
+void drawInspectionWindow(Entity* entity);
 
 #endif
