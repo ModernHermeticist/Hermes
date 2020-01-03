@@ -1,5 +1,19 @@
 #include "main.h"
 
+Entity::Entity(int _xPos, int _yPos, int _sprite, TCODColor _spriteForeground, TCODColor _spriteBackground, std::string _name)
+{
+	xPos = _xPos;
+	yPos = _yPos;
+	sprite = _sprite;
+	spriteForeground = _spriteForeground;
+	spriteBackground = _spriteBackground;
+	name = _name;
+	enemyAI = NULL;
+	attackComponent = NULL;
+	destroyComponent = NULL;
+	inventoryComponent = NULL;
+	itemComponent = NULL;
+}
 
 Entity::Entity(int _xPos, int _yPos, int _sprite, TCODColor _spriteForeground, TCODColor _spriteBackground, std::string _name,
 	EnemyAI* _enemyAI, AttackComponent* _attackComponent, DestroyComponent* _destroyComponent, 
@@ -11,6 +25,41 @@ Entity::Entity(int _xPos, int _yPos, int _sprite, TCODColor _spriteForeground, T
 	spriteForeground = _spriteForeground;
 	spriteBackground = _spriteBackground;
 	name = _name;
+	enemyAI = _enemyAI;
+	attackComponent = _attackComponent;
+	destroyComponent = _destroyComponent;
+	inventoryComponent = _inventoryComponent;
+	itemComponent = _itemComponent;
+}
+
+Entity::Entity(int _xPos, int _yPos, int _sprite, TCODColor _spriteForeground, TCODColor _spriteBackground, std::string _name,
+	std::string _description, ItemComponent* _itemComponent)
+{
+	xPos = _xPos;
+	yPos = _yPos;
+	sprite = _sprite;
+	spriteForeground = _spriteForeground;
+	spriteBackground = _spriteBackground;
+	name = _name;
+	description = _description;
+	enemyAI = NULL;
+	attackComponent = NULL;
+	destroyComponent = NULL;
+	inventoryComponent = NULL;
+	itemComponent = _itemComponent;
+}
+
+Entity::Entity(int _xPos, int _yPos, int _sprite, TCODColor _spriteForeground, TCODColor _spriteBackground, std::string _name, std::string _description,
+	EnemyAI* _enemyAI, AttackComponent* _attackComponent, DestroyComponent* _destroyComponent,
+	InventoryComponent* _inventoryComponent, ItemComponent* _itemComponent)
+{
+	xPos = _xPos;
+	yPos = _yPos;
+	sprite = _sprite;
+	spriteForeground = _spriteForeground;
+	spriteBackground = _spriteBackground;
+	name = _name;
+	description = _description;
 	enemyAI = _enemyAI;
 	attackComponent = _attackComponent;
 	destroyComponent = _destroyComponent;
@@ -59,6 +108,8 @@ void Entity::setSpriteBackground(TCODColor c){spriteBackground = c;}
 
 std::string Entity::getName() { return name; }
 void Entity::setName(std::string n) { name = n; }
+
+std::string Entity::getDescription() { return description; }
 
 EnemyAI* Entity::getEnemyAI() { return enemyAI; }
 AttackComponent* Entity::getAttackComponent() { return attackComponent; }

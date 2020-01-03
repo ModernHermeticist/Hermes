@@ -10,15 +10,36 @@ Engine::Engine(int _screen_width, int _screen_height, int _world_width, int _wor
 	world_height = _world_height;
 	TCODSystem::checkForEvent(TCOD_EVENT_KEY_PRESS, &lastKey, NULL);
 	PlayerAI* playerAI = new PlayerAI();
-	AttackComponent* attackComponent = new AttackComponent(1, 5);
-	DestroyComponent* destroyComponent = new DestroyComponent(25, 10, 10, 1, 0.0, 0.0, 0.0, 3,1,2,1,1,1);
-	InventoryComponent* inventoryComponent = new InventoryComponent(10);
+	int minimumDamage = 1;
+	int maximumDamage = 5;
+	AttackComponent* attackComponent = new AttackComponent(minimumDamage, maximumDamage);
+	int health = 25;
+	int stamina = 10;
+	int mana = 10;
+	int armor = 0;
+	float block = 0.0;
+	float dodge = 0.0;
+	float parry = 0.0;
+	int strength = 3;
+	int agility = 1;
+	int endurance = 2;
+	int luck = 1;
+	int intelligence = 1;
+	int wisdom = 1;
+	DestroyComponent* destroyComponent = new DestroyComponent(health, stamina, mana, armor, block, dodge, parry, strength, agility,
+																endurance, luck, intelligence, wisdom);
+	int inventoryCapacity = 10;
+	InventoryComponent* inventoryComponent = new InventoryComponent(inventoryCapacity);
 	EquipmentComponent* equipmentComponent = new EquipmentComponent();
-	Entity* potion = new Entity(0, 0, 'p', TCODColor::green, TCODColor::black, "Health Potion", NULL, NULL, NULL, NULL,
-		new ItemComponent(
-			new ConsumableComponent(
-				ConsumableComponent::Consumable_Type::POTION,
-				new EffectComponent(5, EffectComponent::Effect_Type::HEAL))));
+	int xPos = 0;
+	int yPos = 0;
+	int sprite = 'p';
+	TCODColor color = TCODColor::green;
+	std::string name = "Healing Potion";
+	std::string description = "A blood red potion. When uncorked a rich steam can be seen raising from the liquid.";
+	ConsumableComponent::Consumable_Type type = ConsumableComponent::Consumable_Type::POTION;
+	int effectValue = 5;
+	Entity* potion = itemGenerators::generateHealingItem(xPos, yPos, sprite, color, name, description, type, effectValue);
 	inventoryComponent->addToStorage(potion);
 	player = new Player(0, 0, '@', "Player", playerAI, attackComponent, destroyComponent, inventoryComponent, equipmentComponent);
 	map = new Map(screen_width, screen_height);
@@ -103,7 +124,8 @@ void Engine::loadMapFile(std::string fileName)
 				cB.g = itemTile.back_green;
 
 				ItemComponent* itemComponent = new ItemComponent(0, 2,0,0,0,0,0,0,0,EquipmentComponent::EQUIPMENTSLOT::rightHand);
-				Entity* entity = new Entity(i, j, itemTile.character, cF, cB, "Limirail, Blade of the Ninth Moon", NULL, NULL, NULL, NULL, itemComponent);
+				std::string description = "Legendary blade said to have been crafted from the soul of an ancient spirit of power.";
+				Entity* entity = new Entity(i, j, itemTile.character, cF, cB, "Limirail, Blade of the Ninth Moon", description, itemComponent);
 				entities.push_back(entity);
 			}
 			map->setTile(i, j, newTile);

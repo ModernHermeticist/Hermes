@@ -303,8 +303,8 @@ void drawInventoryWindow()
 	drawBorder(con, borderHeight, borderWidth, borderColor);
 	std::string s = "Inventory";
 	std::stringstream ss;
-	con->printf(CELL_COLUMNS / 2 - (int)s.size() / 2, 1, s.c_str());
-	con->printf(1, CELL_ROWS - 2, "Use item: (letter)    Equip item: (shift+letter)    Drop item: (ctrl+letter)");
+	con->printf(1 + ((CELL_COLUMNS - 1) / 2 - (int)s.size() / 2), 1, s.c_str());
+	con->printf(1, CELL_ROWS - 2, "    Use: (letter)    Equip: (shift+letter)    Drop: (ctrl+letter)    Inspect: (alt+letter)");
 	if (storage.size() > 0)
 	{
 		char label = 97;
@@ -505,8 +505,42 @@ void drawInspectionWindow(Entity* entity)
 
 	std::string s = entity->getName();
 	con->printf(CELL_COLUMNS / 2 - (int)s.size() / 2, 1, s.c_str());
-
+	wrapTextWithinBounds(con, entity->getDescription(), 5, 5, 50, 30);
 
 	TCODConsole::blit(con, 0, 0, borderWidth, borderHeight, TCODConsole::root, 0, 0);
 	delete con;
+}
+
+void highlightTile(int xPos, int yPos, int oldX, int oldY, Map* map, Player* player, std::vector<Entity*> entities)
+{
+	Tile** world = map->getWorld();
+	world[oldX][oldY].setVisibleBackground(world[oldX][oldY].getStoreBackground());
+	world[xPos][yPos].setStoreBackground(world[xPos][yPos].getVisibleBackground());
+	world[xPos][yPos].setVisibleBackground(TCODColor::amber);
+}
+
+void resetHighlight(int xPos, int yPos, Map* map)
+{
+	Tile** world = map->getWorld();
+	world[xPos][yPos].setVisibleBackground(world[xPos][yPos].getStoreBackground());
+}
+
+void wrapTextWithinBounds(TCODConsole* con, std::string s, int x_1, int y_1, int x_2, int y_2)
+{
+	std::stringstream ss(s);
+	int positionPointer = 0;
+	int y = 0;
+	do
+	{
+		std::string word;
+		ss >> word;
+		if (positionPointer + word.size() >= x_2)
+		{
+			positionPointer = 0;
+			y++;
+		}
+		con->printf(x_1 + positionPointer, y_1 + y, word.c_str());
+		positionPointer += (int)word.size();
+		positionPointer++;
+	} while (ss);
 }

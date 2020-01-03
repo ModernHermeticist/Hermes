@@ -12,6 +12,7 @@ Tile::Tile()
 	visibleBackground = TCOD_black;
 	exploredForeground = TCOD_black;
 	exploredBackground = TCOD_black;
+	storeBackground = visibleBackground;
 }
 
 Tile::Tile(int _xPos, int _yPos, int _sprite, TCODColor _foreground, TCODColor _background, bool _walkable, bool _blocks)
@@ -23,6 +24,7 @@ Tile::Tile(int _xPos, int _yPos, int _sprite, TCODColor _foreground, TCODColor _
 	visibleBackground = _background;
 	exploredForeground = TCOD_darker_grey;
 	exploredBackground = TCOD_black;
+	storeBackground = visibleBackground;
 	walkable = _walkable;
 	blocks = _blocks;
 	explored = false;
@@ -37,6 +39,7 @@ Tile::Tile(int _xPos, int _yPos, int _sprite, TCODColor _foreground, TCODColor _
 	visibleBackground = _background;
 	exploredForeground = TCOD_darker_grey;
 	exploredBackground = TCOD_black;
+	storeBackground = visibleBackground;
 	walkable = true;
 	blocks = false;
 	explored = false;
@@ -64,6 +67,8 @@ TCODColor Tile::getExploredForeground(){return exploredForeground;}
 
 TCODColor Tile::getExploredBackground(){return exploredBackground;}
 
+TCODColor Tile::getStoreBackground() { return storeBackground; }
+
 void Tile::setWalkable(bool val){walkable = val;}
 
 void Tile::setBlocks(bool val){blocks = val;}
@@ -79,3 +84,5 @@ void Tile::setVisibleBackground(TCODColor color){visibleBackground = color;}
 void Tile::setExploredForeground(TCODColor color){exploredForeground = color;}
 
 void Tile::setExploredBackground(TCODColor color){exploredBackground = color;}
+
+void Tile::setStoreBackground(TCODColor color) { storeBackground = color; }

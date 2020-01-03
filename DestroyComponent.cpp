@@ -137,12 +137,12 @@ void DestroyComponent::adjustFinalMaximumStaminaByItem(int val) { finalMaximumSt
 
 int DestroyComponent::standardStaminaAdjustment()
 {
-	return baseMaximumStamina + floor(finalEndurance / 2);
+	return baseMaximumStamina + (int)floor(finalEndurance / 2);
 }
 
 int DestroyComponent::standardStaminaAdjustmentPreview(int val)
 {
-	return finalMaximumStamina + floor((val + finalEndurance) / 2);
+	return finalMaximumStamina + (int)floor((val + finalEndurance) / 2);
 }
 
 void DestroyComponent::adjustCurrentMana(int val) { currentMana += val; }

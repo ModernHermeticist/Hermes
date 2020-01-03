@@ -62,6 +62,11 @@ void PlayerAI::parseKeyInput()
 			TCODConsole::flush();
 			break;
 		}
+		case 't':
+		{
+			engine->setState(Engine::STATE::SELECTING_TARGET);
+			break;
+		}
 
 
 		default: break;
@@ -112,6 +117,8 @@ void PlayerAI::dropItem(int c)
 		engine->addEntity(entity);
 		engine->addToLog("You drop a " + entity->getName() + '.', TCOD_grey);
 	}
+	engine->setRefresh(true);
+	engine->setState(Engine::STATE::ENEMY_TURN);
 }
 
 void PlayerAI::equipItem(int c)
@@ -146,6 +153,8 @@ void PlayerAI::equipItem(int c)
 			}
 		}
 	}
+	engine->setRefresh(true);
+	engine->setState(Engine::STATE::ENEMY_TURN);
 }
 
 void PlayerAI::useItem(int c)
@@ -171,6 +180,8 @@ void PlayerAI::useItem(int c)
 		inventoryComponent->removeFromStorage(entity);
 		engine->removeEntity(entity);
 	}
+	engine->setRefresh(true);
+	engine->setState(Engine::STATE::ENEMY_TURN);
 }
 
 void PlayerAI::inspectItem(int c)
@@ -187,14 +198,20 @@ void PlayerAI::inspectItem(int c)
 			bool confirmed = false;
 			while (!confirmed)
 			{
+				TCODConsole::root->clear();
+				drawInspectionWindow(entity);
+				TCODConsole::flush();
 				TCOD_key_t key;
 				TCODSystem::waitForEvent(TCOD_EVENT_KEY_PRESS, &key, NULL, true);
 				if (key.vk == TCODK_ESCAPE)
 				{
 					confirmed = true;
+					key.vk = (TCOD_keycode_t)0;
 				}
-				drawInspectionWindow(entity);
 			}
+			TCODConsole::root->clear();
+			drawInventoryWindow();
+			TCODConsole::flush();
 		}
 	}
 }
@@ -445,4 +462,56 @@ void PlayerAI::heal(int val)
 	{
 		destroyComponent->setCurrentHealth(destroyComponent->getMaximumHealth());
 	}
+}
+
+void PlayerAI::selectTarget()
+{
+	Player* player = engine->getPlayer();
+	int pointerX = player->getXPos();
+	int pointerY = player->getYPos() - 1;
+	int oldX = pointerX;
+	int oldY = pointerY;
+
+	bool confirmed = false;
+
+	while (!confirmed)
+	{
+		TCODConsole::root->clear();
+		highlightTile(pointerX, pointerY, oldX, oldY, engine->getMap(), engine->getPlayer(), engine->getEntities());
+		drawUtilityWindow();
+		drawLogWindow();
+		drawMainBorder();
+		drawMainWindow(engine->getMap(), engine->getPlayer(), engine->getEntities());
+		TCODConsole::flush();
+		TCOD_key_t key;
+		TCODSystem::waitForEvent(TCOD_EVENT_KEY_PRESS, &key, NULL, true);
+		oldX = pointerX;
+		oldY = pointerY;
+		if (key.vk == TCODK_ESCAPE || key.vk == TCODK_ENTER) confirmed = true;
+		if (key.vk == TCODK_KP8) pointerY--;
+		else if (key.vk == TCODK_KP2) pointerY++;
+		else if (key.vk == TCODK_KP4) pointerX--;
+		else if (key.vk == TCODK_KP6) pointerX++;
+		else if (key.vk == TCODK_KP1)
+		{
+			pointerX--;
+			pointerY++;
+		}
+		else if (key.vk == TCODK_KP3)
+		{
+			pointerX++;
+			pointerY++;
+		}
+		else if (key.vk == TCODK_KP7)
+		{
+			pointerX--;
+			pointerY--;
+		}
+		else if (key.vk == TCODK_KP9)
+		{
+			pointerX++;
+			pointerY--;
+		}
+	}
+	resetHighlight(pointerX, pointerY, engine->getMap());
 }

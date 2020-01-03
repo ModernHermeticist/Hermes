@@ -9,8 +9,14 @@ public:
 	enum xDirection { left = -1, right = 1};
 	enum yDirection { up = -1, down = 1 };
 
+	Entity(int _xPos, int _yPos, int _sprite, TCODColor _spriteForeground, TCODColor _spriteBackground, std::string _name);
 	Entity(int _xPos, int _yPos, int _sprite, TCODColor _spriteForeground, TCODColor _spriteBackground, std::string _name, 
 		EnemyAI* _enemyAI, AttackComponent* _attackComponent, DestroyComponent* _destroyComponent, 
+		InventoryComponent* _inventoryComponent, ItemComponent* _itemComponent);
+	Entity(int _xPos, int _yPos, int _sprite, TCODColor _spriteForeground, TCODColor _spriteBackground, std::string _name,
+		std::string _description, ItemComponent* _itemComponent);
+	Entity(int _xPos, int _yPos, int _sprite, TCODColor _spriteForeground, TCODColor _spriteBackground, std::string _name, std::string _description,
+		EnemyAI* _enemyAI, AttackComponent* _attackComponent, DestroyComponent* _destroyComponent,
 		InventoryComponent* _inventoryComponent, ItemComponent* _itemComponent);
 	~Entity();
 	void Update();
@@ -34,6 +40,7 @@ public:
 
 	std::string getName();
 	void setName(std::string n);
+	std::string getDescription();
 
 	EnemyAI* getEnemyAI();
 	AttackComponent* getAttackComponent();
@@ -52,6 +59,7 @@ private:
 	TCODColor spriteBackground;
 
 	std::string name;
+	std::string description;
 
 	EnemyAI* enemyAI;
 	AttackComponent* attackComponent;

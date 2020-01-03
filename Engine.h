@@ -4,7 +4,7 @@
 class Engine
 {
 public:
-	enum class STATE{PLAYER_TURN, ENEMY_TURN, SHOW_CHARACTER_SCREEN, SHOW_INVENTORY_SCREEN, SHOW_PROGRESSION_SCREEN};
+	enum class STATE{PLAYER_TURN, ENEMY_TURN, SHOW_CHARACTER_SCREEN, SHOW_INVENTORY_SCREEN, SHOW_PROGRESSION_SCREEN, SELECTING_TARGET};
 
 	Engine(int _screen_width, int _screen_height, int _world_width, int _world_height);
 	~Engine();

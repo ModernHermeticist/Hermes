@@ -26,6 +26,7 @@
 #include "EnemyAI.h"
 #include "Player.h"
 #include "Entity.h"
+#include "ItemGenerators.h"
 #include "gui.h"
 #include "LogEntry.h"
 #include "Engine.h"

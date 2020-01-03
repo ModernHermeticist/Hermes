@@ -144,6 +144,7 @@
     <ClCompile Include="gui.cpp" />
     <ClCompile Include="InventoryComponent.cpp" />
     <ClCompile Include="ItemComponent.cpp" />
+    <ClCompile Include="ItemGenerators.cpp" />
     <ClCompile Include="LogEntry.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Map.cpp" />
@@ -165,6 +166,7 @@
     <ClInclude Include="EffectComponent.h" />
     <ClInclude Include="InventoryComponent.h" />
     <ClInclude Include="ItemComponent.h" />
+    <ClInclude Include="ItemGenerators.h" />
     <ClInclude Include="LogEntry.h" />
     <ClInclude Include="main.h" />
     <ClInclude Include="Map.h" />

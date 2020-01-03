@@ -6,8 +6,8 @@ int main()
 {
 	srand((unsigned int)time(NULL));
 	TCODSystem::forceFullscreenResolution(SCREEN_WIDTH, SCREEN_HEIGHT);
-	TCODConsole::initRoot(CELL_COLUMNS, CELL_ROWS, "Hermes", false, TCOD_RENDERER_GLSL);
-	TCODConsole::setCustomFont("sirhenry.png", TCOD_FONT_LAYOUT_ASCII_INCOL);
+	TCODConsole::setCustomFont("sirhenry.png", TCOD_FONT_LAYOUT_ASCII_INROW);
+	TCODConsole::initRoot(CELL_COLUMNS, CELL_ROWS, "Hermes", true, TCOD_RENDERER_SDL2);
 
 	engine = new Engine(CELL_COLUMNS, CELL_ROWS, MAIN_WINDOW_WIDTH, MAIN_WINDOW_HEIGHT);
 
@@ -69,9 +69,20 @@ int main()
 					engine->getPlayer()->getPlayerAI()->useItem(key.c);
 				}
 			}
+			else if (key.vk == TCODK_ESCAPE)
+			{
+				engine->setRefresh(true);
+				engine->setState(Engine::STATE::PLAYER_TURN);
+			}
+			key.vk = (TCOD_keycode_t)0;
+		}
+		currentGameState = engine->getState();
+		if (currentGameState == Engine::STATE::SELECTING_TARGET)
+		{
+			engine->getPlayer()->getPlayerAI()->selectTarget();
 			engine->setRefresh(true);
 			engine->setState(Engine::STATE::PLAYER_TURN);
-			key.vk = (TCOD_keycode_t)0;
+			// DO THING TO TARGET
 		}
 
 		if (engine->getRefresh())

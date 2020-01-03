@@ -30,25 +30,25 @@ void AttackComponent::adjustFinalMaximumAttackPowerByItem(int val) { finalMaximu
 int AttackComponent::standardMinimumAttackPowerAdjustment()
 {
 	DestroyComponent* destroyComponent = engine->getPlayer()->getDestroyComponent();
-	return baseMinimumAttackPower + floor(destroyComponent->getStrength() / 8);
+	return baseMinimumAttackPower + (int)floor(destroyComponent->getStrength() / 8);
 }
 
 int AttackComponent::standardMinimumAttackPowerAdjustmentPreview(int _strength)
 {
 	DestroyComponent* destroyComponent = engine->getPlayer()->getDestroyComponent();
-	return finalMinimumAttackPower + floor((_strength + destroyComponent->getStrength()) / 8);
+	return finalMinimumAttackPower + (int)floor((_strength + destroyComponent->getStrength()) / 8);
 }
 
 int AttackComponent::standardMaximumAttackPowerAdjustment()
 {
 	DestroyComponent* destroyComponent = engine->getPlayer()->getDestroyComponent();
-	return baseMaximumAttackPower + floor(destroyComponent->getStrength() / 8);
+	return baseMaximumAttackPower + (int)floor(destroyComponent->getStrength() / 8);
 }
 
 int AttackComponent::standardMaximumAttackPowerAdjustmentPreview(int _strength)
 {
 	DestroyComponent* destroyComponent = engine->getPlayer()->getDestroyComponent();
-	return finalMaximumAttackPower + floor((_strength + destroyComponent->getStrength()) / 8);
+	return finalMaximumAttackPower + (int)floor((_strength + destroyComponent->getStrength()) / 8);
 }
 
 void AttackComponent::applyBaseStatsToFinal()
