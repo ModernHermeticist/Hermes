@@ -34,9 +34,11 @@ public:
 
 	TCODColor getSpriteForeground();
 	TCODColor getSpriteBackground();
+	TCODColor getStoreBackground();
 
 	void setSpriteForeground(TCODColor c);
 	void setSpriteBackground(TCODColor c);
+	void setStoreBackground(TCODColor color);
 
 	std::string getName();
 	void setName(std::string n);
@@ -57,6 +59,8 @@ private:
 
 	TCODColor spriteForeground;
 	TCODColor spriteBackground;
+
+	TCODColor storeBackground;
 
 	std::string name;
 	std::string description;

@@ -41,7 +41,7 @@ Engine::Engine(int _screen_width, int _screen_height, int _world_width, int _wor
 	int effectValue = 5;
 	Entity* potion = itemGenerators::generateHealingItem(xPos, yPos, sprite, color, name, description, type, effectValue);
 	inventoryComponent->addToStorage(potion);
-	player = new Player(0, 0, '@', "Player", playerAI, attackComponent, destroyComponent, inventoryComponent, equipmentComponent);
+	player = new Player(0, 0, 2, "Player", playerAI, attackComponent, destroyComponent, inventoryComponent, equipmentComponent);
 	map = new Map(screen_width, screen_height);
 	fovRadius = 10;
 	refresh = false;
@@ -95,7 +95,7 @@ void Engine::loadMapFile(std::string fileName)
 				cB.r = entityTile.back_red;
 				cB.b = entityTile.back_blue;
 				cB.g = entityTile.back_green;
-				if (entityTile.character == '@')
+				if (entityTile.character == 2)
 				{
 					player->setXPos(i);
 					player->setYPos(j);
@@ -190,7 +190,7 @@ std::vector<LogEntry> Engine::getLog()
 void Engine::addToLog(std::string message, TCODColor color)
 {
 	LogEntry lE = LogEntry(message, color);
-	if (log.size() > 6) log.erase(log.begin());
+	if (log.size() > maxLogHistory) log.erase(log.begin());
 	log.push_back(lE);
 }
 
@@ -232,3 +232,16 @@ void Engine::setState(Engine::STATE s) { state = s; }
 
 bool Engine::getRefresh() { return refresh; }
 void Engine::setRefresh(bool val) { refresh = val; }
+
+void Engine::incrementLogPointer() 
+{ 
+	if (logPointer < maxLogHistory && logPointer < (int)log.size()-7)
+		logPointer++; 
+}
+void Engine::decrementLogPointer() 
+{ 
+	if (logPointer > 0)
+		logPointer--; 
+}
+
+int Engine::getLogPointer() { return logPointer; }

@@ -24,18 +24,31 @@ void PlayerAI::parseKeyInput()
 	switch (key.vk)
 	{
 		case TCODK_KP4:   moveOrAttack(-1, 0, movementDirection::WEST); break;
-		case TCODK_LEFT:  moveOrAttack(-1, 0, movementDirection::WEST); break;
 		case TCODK_KP6:   moveOrAttack(1, 0, movementDirection::EAST); break;
-		case TCODK_RIGHT: moveOrAttack(1, 0, movementDirection::EAST); break;
 		case TCODK_KP8:   moveOrAttack(0, -1, movementDirection::NORTH); break;
-		case TCODK_UP:    moveOrAttack(0, -1, movementDirection::NORTH); break;
 		case TCODK_KP2:   moveOrAttack(0, 1, movementDirection::SOUTH); break;
-		case TCODK_DOWN:  moveOrAttack(0, 1, movementDirection::SOUTH); break;
 		case TCODK_KP7:   moveOrAttack(-1, -1, movementDirection::NORTHWEST); break;
 		case TCODK_KP9:   moveOrAttack(1, -1, movementDirection::NORTHEAST); break;
 		case TCODK_KP1:   moveOrAttack(-1, 1, movementDirection::SOUTHWEST); break;
 		case TCODK_KP3:   moveOrAttack(1, 1, movementDirection::SOUTHEAST); break;
 		default: break;
+	}
+
+	switch (key.vk)
+	{
+		case TCODK_UP:
+		{
+			engine->incrementLogPointer();
+			engine->setRefresh(true);
+			break;
+		}
+		case TCODK_DOWN:
+		{
+			engine->decrementLogPointer();
+			engine->setRefresh(true);
+			break;
+		}
+		default:break;
 	}
 
 
@@ -226,10 +239,10 @@ void PlayerAI::moveOrAttack(int dX, int dY, movementDirection dir)
 	int newX = dX + xPos;
 	int newY = dY + yPos;
 	Tile tile = tiles[newX][newY];
+	engine->setRefresh(true);
+	engine->setState(Engine::STATE::ENEMY_TURN);
 	if (player->canMoveTo(tile))
 	{
-		engine->setRefresh(true);
-		engine->setState(Engine::STATE::ENEMY_TURN);
 		std::vector<Entity*> entities = engine->getEntities();
 		int numOfEntities = (int)entities.size();
 		for (int i = 0; i < numOfEntities; i++)
@@ -478,10 +491,7 @@ void PlayerAI::selectTarget()
 	{
 		TCODConsole::root->clear();
 		highlightTile(pointerX, pointerY, oldX, oldY, engine->getMap(), engine->getPlayer(), engine->getEntities());
-		drawUtilityWindow();
-		drawLogWindow();
-		drawMainBorder();
-		drawMainWindow(engine->getMap(), engine->getPlayer(), engine->getEntities());
+		drawUI();
 		TCODConsole::flush();
 		TCOD_key_t key;
 		TCODSystem::waitForEvent(TCOD_EVENT_KEY_PRESS, &key, NULL, true);
@@ -512,6 +522,14 @@ void PlayerAI::selectTarget()
 			pointerX++;
 			pointerY--;
 		}
+		if (!engine->getMap()->isInFov(pointerX,pointerY))
+		{
+			pointerX = oldX;
+			pointerY = oldY;
+		}
 	}
-	resetHighlight(pointerX, pointerY, engine->getMap());
+	resetHighlight(pointerX, pointerY, engine->getMap(), engine->getPlayer(), engine->getEntities());
 }
+
+Entity* PlayerAI::getTarget() { return target; }
+void PlayerAI::setTarget(Entity* newTarget) { target = newTarget; }

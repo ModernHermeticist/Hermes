@@ -19,6 +19,7 @@ const int VERTICAL_WALL = 179;
 const int TOP_RIGHT_CORNER_WALL = 191;
 const int BOTTOM_LEFT_CORNER_WALL = 192;
 const int HORIZONTAL_WALL = 196;
+const int CROSS_WALL = 197;
 const int TOP_FORK_WALL = 194;
 const int BOTTOM_FORK_WALL = 193;
 const int LEFT_FORK_WALL = 195;

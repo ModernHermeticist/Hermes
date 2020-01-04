@@ -7,6 +7,7 @@ Entity::Entity(int _xPos, int _yPos, int _sprite, TCODColor _spriteForeground, T
 	sprite = _sprite;
 	spriteForeground = _spriteForeground;
 	spriteBackground = _spriteBackground;
+	storeBackground = spriteBackground;
 	name = _name;
 	enemyAI = NULL;
 	attackComponent = NULL;
@@ -24,6 +25,7 @@ Entity::Entity(int _xPos, int _yPos, int _sprite, TCODColor _spriteForeground, T
 	sprite = _sprite;
 	spriteForeground = _spriteForeground;
 	spriteBackground = _spriteBackground;
+	storeBackground = spriteBackground;
 	name = _name;
 	enemyAI = _enemyAI;
 	attackComponent = _attackComponent;
@@ -40,6 +42,7 @@ Entity::Entity(int _xPos, int _yPos, int _sprite, TCODColor _spriteForeground, T
 	sprite = _sprite;
 	spriteForeground = _spriteForeground;
 	spriteBackground = _spriteBackground;
+	storeBackground = spriteBackground;
 	name = _name;
 	description = _description;
 	enemyAI = NULL;
@@ -58,6 +61,7 @@ Entity::Entity(int _xPos, int _yPos, int _sprite, TCODColor _spriteForeground, T
 	sprite = _sprite;
 	spriteForeground = _spriteForeground;
 	spriteBackground = _spriteBackground;
+	storeBackground = spriteBackground;
 	name = _name;
 	description = _description;
 	enemyAI = _enemyAI;
@@ -102,9 +106,13 @@ TCODColor Entity::getSpriteForeground(){return spriteForeground;}
 
 TCODColor Entity::getSpriteBackground(){return spriteBackground;}
 
+TCODColor Entity::getStoreBackground() { return storeBackground; }
+
 void Entity::setSpriteForeground(TCODColor c){spriteForeground = c;}
 
 void Entity::setSpriteBackground(TCODColor c){spriteBackground = c;}
+
+void Entity::setStoreBackground(TCODColor c) { storeBackground = c; }
 
 std::string Entity::getName() { return name; }
 void Entity::setName(std::string n) { name = n; }

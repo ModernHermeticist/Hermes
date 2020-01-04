@@ -45,6 +45,11 @@ public:
 	bool getRefresh();
 	void setRefresh(bool val);
 
+	void incrementLogPointer();
+	void decrementLogPointer();
+
+	int getLogPointer();
+
 
 private:
 	int fovRadius;
@@ -55,6 +60,9 @@ private:
 
 	int world_width;
 	int world_height;
+
+	int logPointer = 0;
+	int maxLogHistory = 200;
 
 	STATE state;
 

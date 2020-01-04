@@ -7,7 +7,7 @@ void drawMainBorder()
 	TCODColor borderColor = TCOD_darker_green;
 	TCODConsole* con = new TCODConsole(borderWidth, borderHeight);
 	con->putCharEx(0, 0, TOP_FORK_WALL, borderColor, TCOD_black);
-	con->putCharEx(0, borderHeight-1, LEFT_FORK_WALL, borderColor, TCOD_black);
+	con->putCharEx(0, borderHeight-1, CROSS_WALL, borderColor, TCOD_black);
 	con->putCharEx(borderWidth-1, 0, TOP_RIGHT_CORNER_WALL, borderColor, TCOD_black);
 	con->putCharEx(borderWidth - 1, borderHeight-1, RIGHT_FORK_WALL, borderColor, TCOD_black);
 	for (int i = 1; i < borderWidth-1; i++)
@@ -111,6 +111,34 @@ void drawUtilityWindow()
 	delete con;
 }
 
+void drawTargetWindow()
+{
+	int borderWidth = UTILITY_WINDOW_WIDTH;
+	int borderHeight = LOG_WINDOW_HEIGHT;
+	TCODColor borderColor = TCOD_darker_green;
+	Player* player = engine->getPlayer();
+	PlayerAI* playerAI = player->getPlayerAI();
+	TCODConsole* con = new TCODConsole(borderWidth, borderHeight);
+	std::string s = "Target:";
+	Entity* target = playerAI->getTarget();
+
+	drawBorder(con, borderHeight, borderWidth, borderColor);
+	con->putCharEx(0, 0, LEFT_FORK_WALL, borderColor, TCODColor::black);
+	con->printf(1, 1, s.c_str());
+	if (target != NULL)
+	{
+		s = playerAI->getTarget()->getName();
+	}
+	else
+	{
+		s = "";
+	}
+	wrapTextWithinBounds(con, s, 1, 2, borderWidth - 2, borderHeight - 2);
+
+	TCODConsole::blit(con, 0, 0, borderWidth, borderHeight, TCODConsole::root, 0, CELL_ROWS - borderHeight);
+	delete con;
+}
+
 void drawLogWindow()
 {
 	int borderWidth = LOG_WINDOW_WIDTH;
@@ -134,14 +162,35 @@ void drawLogWindow()
 		con->putCharEx(borderWidth - 1, i, VERTICAL_WALL, borderColor, TCOD_black);
 	}
 
+	con->putCharEx(0, 1, 16 * 2 - 2, borderColor, TCOD_black);
+	con->putCharEx(0, borderHeight - 2, 16 * 2 - 1, borderColor, TCOD_black);
+
 	std::vector<LogEntry> log = engine->getLog();
-	for (int i = 0; i < log.size(); i++)
+	if (log.size() < 7)
 	{
-		LogEntry entry = log[i];
-		std::string s = entry.getEntry();
-		for (int k = 0; k < s.size(); k++)
+		for (int i = 0; i < log.size(); i++)
 		{
-			con->putCharEx(k + 1, i + 1, s[k], entry.getEntryColor(), TCOD_black);
+			LogEntry entry = log[i];
+			std::string s = entry.getEntry();
+			for (int k = 0; k < s.size(); k++)
+			{
+				con->putCharEx(k + 1, i + 1, s[k], entry.getEntryColor(), TCOD_black);
+			}
+		}
+	}
+	else
+	{
+		int logPointer = engine->getLogPointer();
+		int pos = 0;
+		for (int i = log.size() - 7 - logPointer; i < log.size() - logPointer; i++)
+		{
+			LogEntry entry = log[i];
+			std::string s = entry.getEntry();
+			for (int k = 0; k < s.size(); k++)
+			{
+				con->putCharEx(k + 1, pos + 1, s[k], entry.getEntryColor(), TCOD_black);
+			}
+			pos++;
 		}
 	}
 
@@ -516,13 +565,39 @@ void highlightTile(int xPos, int yPos, int oldX, int oldY, Map* map, Player* pla
 	Tile** world = map->getWorld();
 	world[oldX][oldY].setVisibleBackground(world[oldX][oldY].getStoreBackground());
 	world[xPos][yPos].setStoreBackground(world[xPos][yPos].getVisibleBackground());
-	world[xPos][yPos].setVisibleBackground(TCODColor::amber);
+	world[xPos][yPos].setVisibleBackground(TCODColor::celadon);
+	for (std::vector<Entity*>::iterator it = entities.begin(); it != entities.end(); it++)
+	{
+		Entity* entity = *it;
+		if (entity->getXPos() == oldX && entity->getYPos() == oldY)
+		{
+			player->getPlayerAI()->setTarget(NULL);
+			entity->setSpriteBackground(entity->getStoreBackground());
+			continue;
+		}
+		if (entity->getXPos() == xPos && entity->getYPos() == yPos)
+		{
+			player->getPlayerAI()->setTarget(entity);
+			entity->setStoreBackground(entity->getSpriteBackground());
+			entity->setSpriteBackground(TCODColor::celadon);
+		}
+	}
 }
 
-void resetHighlight(int xPos, int yPos, Map* map)
+void resetHighlight(int xPos, int yPos, Map* map, Player* player, std::vector<Entity*> entities)
 {
 	Tile** world = map->getWorld();
 	world[xPos][yPos].setVisibleBackground(world[xPos][yPos].getStoreBackground());
+	for (std::vector<Entity*>::iterator it = entities.begin(); it != entities.end(); it++)
+	{
+		Entity* entity = *it;
+		if (entity->getXPos() == xPos && entity->getYPos() == yPos)
+		{
+			player->getPlayerAI()->setTarget(NULL);
+			entity->setSpriteBackground(entity->getSpriteBackground());
+			return;
+		}
+	}
 }
 
 void wrapTextWithinBounds(TCODConsole* con, std::string s, int x_1, int y_1, int x_2, int y_2)
@@ -543,4 +618,15 @@ void wrapTextWithinBounds(TCODConsole* con, std::string s, int x_1, int y_1, int
 		positionPointer += (int)word.size();
 		positionPointer++;
 	} while (ss);
+}
+
+void drawUI()
+{
+	TCODConsole::root->clear();
+	drawUtilityWindow();
+	drawTargetWindow();
+	drawLogWindow();
+	drawMainBorder();
+	drawMainWindow(engine->getMap(), engine->getPlayer(), engine->getEntities());
+	TCODConsole::flush();
 }

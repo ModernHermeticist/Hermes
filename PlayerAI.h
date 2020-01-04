@@ -39,12 +39,17 @@ public:
 	int takeDamage(int val);
 	void heal(int val);
 
+	Entity* getTarget();
+	void setTarget(Entity* newTarget);
+
 private:
 	int availableStatPoints = 0;
 
 	int characterLevel;
 	int currentExperience;
 	int maximumExperience;
+
+	Entity* target;
 
 
 };
