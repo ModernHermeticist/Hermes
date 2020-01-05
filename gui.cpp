@@ -584,6 +584,58 @@ void highlightTile(int xPos, int yPos, int oldX, int oldY, Map* map, Player* pla
 	}
 }
 
+void highlightAOETiles(int xPos, int yPos, int oldX, int oldY, int range, Map* map, Player* player, std::vector<Entity*> entities)
+{
+	Tile** world = map->getWorld();
+
+	// Reset the backgrounds on the old highlighted area.
+	for (int i = -range; i <= range; i++)
+	{
+		for (int j = -range; j <= range; j++)
+		{
+			world[oldX+i][oldY+j].setVisibleBackground(world[oldX+i][oldY+j].getStoreBackground());
+			for (Entity* entity : entities)
+			{
+				if (entity->getXPos() == oldX + i && entity->getYPos() == oldY + j)
+				{
+					player->getPlayerAI()->setTarget(NULL);
+					entity->setSpriteBackground(entity->getStoreBackground());
+				}
+			}
+		}
+	}
+
+	// Store the original visible background.
+	// Set the backgrounds on the new hightlighted area.
+	for (int i = -range; i <= range; i++)
+	{
+		for (int j = -range; j <= range; j++)
+		{
+			world[xPos + i][yPos + j].setStoreBackground(world[xPos + i][yPos + j].getVisibleBackground());
+			if (i == 0 && j == 0)
+			{
+				world[xPos + i][yPos + j].setVisibleBackground(TCODColor::brass);
+			}
+			else
+				world[xPos + i][yPos + j].setVisibleBackground(TCODColor::celadon);
+			for (Entity* entity : entities)
+			{
+				if (entity->getXPos() == xPos + i && entity->getYPos() == yPos + j)
+				{
+					player->getPlayerAI()->setTarget(entity);
+					entity->setStoreBackground(entity->getSpriteBackground());
+					if (i == 0 && j == 0)
+					{
+						entity->setSpriteBackground(TCODColor::brass);
+					}
+					else
+						entity->setSpriteBackground(TCODColor::celadon);
+				}
+			}
+		}
+	}
+}
+
 void resetHighlight(int xPos, int yPos, Map* map, Player* player, std::vector<Entity*> entities)
 {
 	Tile** world = map->getWorld();
@@ -594,8 +646,28 @@ void resetHighlight(int xPos, int yPos, Map* map, Player* player, std::vector<En
 		if (entity->getXPos() == xPos && entity->getYPos() == yPos)
 		{
 			player->getPlayerAI()->setTarget(NULL);
-			entity->setSpriteBackground(entity->getSpriteBackground());
+			entity->setSpriteBackground(entity->getStoreBackground());
 			return;
+		}
+	}
+}
+
+void resetAOEHighlight(int xPos, int yPos, int range, Map* map, Player* player, std::vector<Entity*> entities)
+{
+	Tile** world = map->getWorld();
+	for (int i = -range; i <= range; i++)
+	{
+		for (int j = -range; j <= range; j++)
+		{
+			world[xPos+i][yPos+j].setVisibleBackground(world[xPos+i][yPos+j].getStoreBackground());
+			for (Entity* entity : entities)
+			{
+				if (entity->getXPos() == xPos + i && entity->getYPos() == yPos + j)
+				{
+					player->getPlayerAI()->setTarget(NULL);
+					entity->setSpriteBackground(entity->getStoreBackground());
+				}
+			}
 		}
 	}
 }

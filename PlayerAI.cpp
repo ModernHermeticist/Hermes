@@ -4,12 +4,13 @@ PlayerAI::PlayerAI()
 {
 	characterLevel = 1;
 	currentExperience = 0;
-	maximumExperience = 1;
+	maximumExperience = 10;
+	target = NULL;
 }
 
 PlayerAI::~PlayerAI()
 {
-
+	if (target != NULL) delete target;
 }
 
 void PlayerAI::update()
@@ -77,7 +78,8 @@ void PlayerAI::parseKeyInput()
 		}
 		case 't':
 		{
-			engine->setState(Engine::STATE::SELECTING_TARGET);
+			engine->getPlayer()->getPlayerAI()->selectTarget();
+			engine->setRefresh(true);
 			break;
 		}
 
@@ -189,6 +191,7 @@ void PlayerAI::useItem(int c)
 	EffectComponent::Effect_Type effectType = effectComponent->getEffectType();
 	if (effectType == EffectComponent::Effect_Type::HEAL)
 	{
+		engine->addToLog("You use the " + entity->getName(), TCODColor::grey);
 		heal(effectComponent->getEffectValue());
 		inventoryComponent->removeFromStorage(entity);
 		engine->removeEntity(entity);
@@ -475,6 +478,7 @@ void PlayerAI::heal(int val)
 	{
 		destroyComponent->setCurrentHealth(destroyComponent->getMaximumHealth());
 	}
+	engine->addToLog("You heal " + std::to_string(val) + " hitpoints.", TCODColor::green);
 }
 
 void PlayerAI::selectTarget()
@@ -490,7 +494,8 @@ void PlayerAI::selectTarget()
 	while (!confirmed)
 	{
 		TCODConsole::root->clear();
-		highlightTile(pointerX, pointerY, oldX, oldY, engine->getMap(), engine->getPlayer(), engine->getEntities());
+		highlightAOETiles(pointerX, pointerY, oldX, oldY, 2, engine->getMap(), engine->getPlayer(), engine->getEntities());
+		//highlightTile(pointerX, pointerY, oldX, oldY, engine->getMap(), engine->getPlayer(), engine->getEntities());
 		drawUI();
 		TCODConsole::flush();
 		TCOD_key_t key;
@@ -528,7 +533,8 @@ void PlayerAI::selectTarget()
 			pointerY = oldY;
 		}
 	}
-	resetHighlight(pointerX, pointerY, engine->getMap(), engine->getPlayer(), engine->getEntities());
+	resetAOEHighlight(pointerX, pointerY, 2, engine->getMap(), engine->getPlayer(), engine->getEntities());
+	//resetHighlight(pointerX, pointerY, engine->getMap(), engine->getPlayer(), engine->getEntities());
 }
 
 Entity* PlayerAI::getTarget() { return target; }
