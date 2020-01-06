@@ -636,7 +636,7 @@ void highlightAOETiles(int xPos, int yPos, int oldX, int oldY, int range, Map* m
 	}
 }
 
-void hightlightLineTiles(int range,  Map* map, Player* player, std::vector<Entity*> entities)
+/*void hightlightLineTiles(int range,  Map* map, Player* player, std::vector<Entity*> entities)
 {
 	Tile** world = map->getWorld();
 	for (int i = startX; i <= endX; i++)
@@ -646,7 +646,7 @@ void hightlightLineTiles(int range,  Map* map, Player* player, std::vector<Entit
 			world[]
 		}
 	}
-}
+}*/
 
 void resetHighlight(int xPos, int yPos, Map* map, Player* player, std::vector<Entity*> entities)
 {

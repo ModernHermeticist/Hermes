@@ -7,7 +7,7 @@ int main()
 	srand((unsigned int)time(NULL));
 	TCODSystem::forceFullscreenResolution(SCREEN_WIDTH, SCREEN_HEIGHT);
 	TCODConsole::setCustomFont("Bisasam_16x16.png", TCOD_FONT_LAYOUT_ASCII_INROW);
-	TCODConsole::initRoot(CELL_COLUMNS, CELL_ROWS, "Hermes", false, TCOD_RENDERER_OPENGL2);
+	TCODConsole::initRoot(CELL_COLUMNS, CELL_ROWS, "Hermes", false, TCOD_RENDERER_SDL2);
 
 	engine = new Engine(CELL_COLUMNS, CELL_ROWS, MAIN_WINDOW_WIDTH, MAIN_WINDOW_HEIGHT);
 
