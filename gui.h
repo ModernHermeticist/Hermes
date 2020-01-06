@@ -13,6 +13,7 @@ void drawProgressionWindow(std::vector<int> selections, std::vector<TCODColor> s
 void drawInspectionWindow(Entity* entity);
 void highlightTile(int xPos, int yPos, int oldX, int oldY, Map* map, Player* player, std::vector<Entity*> entities);
 void highlightAOETiles(int xPos, int yPos, int oldX, int oldY, int range, Map* map, Player* player, std::vector<Entity*> entities);
+void hightlightLineTiles(int startX, int startY, int endX, int endY, Map* map, Player* player, std::vector<Entity*> entities);
 void resetHighlight(int xPos, int yPos, Map* map, Player* player, std::vector<Entity*> entities);
 void resetAOEHighlight(int xPos, int yPos, int range, Map* map, Player* player, std::vector<Entity*> entities);
 

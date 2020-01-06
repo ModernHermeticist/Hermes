@@ -593,7 +593,7 @@ void highlightAOETiles(int xPos, int yPos, int oldX, int oldY, int range, Map* m
 	{
 		for (int j = -range; j <= range; j++)
 		{
-			world[oldX+i][oldY+j].setVisibleBackground(world[oldX+i][oldY+j].getStoreBackground());
+			world[oldX + i][oldY + j].setVisibleBackground(world[oldX + i][oldY + j].getStoreBackground());
 			for (Entity* entity : entities)
 			{
 				if (entity->getXPos() == oldX + i && entity->getYPos() == oldY + j)
@@ -632,6 +632,18 @@ void highlightAOETiles(int xPos, int yPos, int oldX, int oldY, int range, Map* m
 						entity->setSpriteBackground(TCODColor::celadon);
 				}
 			}
+		}
+	}
+}
+
+void hightlightLineTiles(int range,  Map* map, Player* player, std::vector<Entity*> entities)
+{
+	Tile** world = map->getWorld();
+	for (int i = startX; i <= endX; i++)
+	{
+		for (int j = startY; j <= endY; j++)
+		{
+			world[]
 		}
 	}
 }
