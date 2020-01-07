@@ -636,17 +636,50 @@ void highlightAOETiles(int xPos, int yPos, int oldX, int oldY, int range, Map* m
 	}
 }
 
-/*void hightlightLineTiles(int range,  Map* map, Player* player, std::vector<Entity*> entities)
+void highlightLineTiles(int startX, int startY, int endX, int endY, 
+							int oldStartX, int oldStartY, int oldEndX, int oldEndY,
+							Map* map, Player* player, std::vector<Entity*> entities)
 {
+	int oldDX = oldEndX - oldStartX;
+	int oldDY = oldEndY - oldStartY;
+	int dx = endX - startX;
+	int dy = endY - startY;
 	Tile** world = map->getWorld();
-	for (int i = startX; i <= endX; i++)
+	for (int i = 0; i <= oldDX; i++)
 	{
-		for (int j = startY; j <= endY; j++)
+		for (int j = 0; j <= oldDY; j++)
 		{
-			world[]
+			world[oldStartX + i][oldStartY + j].setVisibleBackground(world[oldStartX + i][oldStartY + j].getStoreBackground());
 		}
 	}
-}*/
+
+	for (int i = 0; i <= oldDX; i++)
+	{
+		for (int j = 0; j <= oldDY; j++)
+		{
+			world[oldStartX + i][oldStartY + j].setStoreBackground(world[oldStartX + i][oldStartY + j].getVisibleBackground());
+			world[oldStartX + i][oldStartY + j].setVisibleBackground(TCODColor::celadon);
+		}
+	}
+}
+
+void resetLineHighlight(int startX, int startY, int endX, int endY,
+						int oldStartX, int oldStartY, int oldEndX, int oldEndY,
+						Map* map, Player* player, std::vector<Entity*> entities)
+{
+	int oldDX = oldEndX - oldStartX;
+	int oldDY = oldEndY - oldStartY;
+	int dx = endX - startX;
+	int dy = endY - startY;
+	Tile** world = map->getWorld();
+	for (int i = 0; i <= oldDX; i++)
+	{
+		for (int j = 0; j <= oldDY; j++)
+		{
+			world[oldStartX + i][oldStartY + j].setVisibleBackground(world[oldStartX + i][oldStartY + j].getStoreBackground());
+		}
+	}
+}
 
 void resetHighlight(int xPos, int yPos, Map* map, Player* player, std::vector<Entity*> entities)
 {

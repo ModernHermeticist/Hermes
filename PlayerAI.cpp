@@ -494,7 +494,8 @@ void PlayerAI::selectTarget()
 	while (!confirmed)
 	{
 		TCODConsole::root->clear();
-		highlightAOETiles(pointerX, pointerY, oldX, oldY, 2, engine->getMap(), engine->getPlayer(), engine->getEntities());
+		highlightLineTiles(pointerX, pointerY, pointerX+3, pointerY+3, oldX, oldY, oldX+3, oldY+3, engine->getMap(), engine->getPlayer(), engine->getEntities());
+		//highlightAOETiles(pointerX, pointerY, oldX, oldY, 2, engine->getMap(), engine->getPlayer(), engine->getEntities());
 		//highlightTile(pointerX, pointerY, oldX, oldY, engine->getMap(), engine->getPlayer(), engine->getEntities());
 		drawUI();
 		TCODConsole::flush();
@@ -533,7 +534,8 @@ void PlayerAI::selectTarget()
 			pointerY = oldY;
 		}
 	}
-	resetAOEHighlight(pointerX, pointerY, 2, engine->getMap(), engine->getPlayer(), engine->getEntities());
+	resetLineHighlight(pointerX, pointerY, pointerX + 3, pointerY + 3, oldX, oldY, oldX + 3, oldY + 3, engine->getMap(), engine->getPlayer(), engine->getEntities());
+	//resetAOEHighlight(pointerX, pointerY, 2, engine->getMap(), engine->getPlayer(), engine->getEntities());
 	//resetHighlight(pointerX, pointerY, engine->getMap(), engine->getPlayer(), engine->getEntities());
 }
 
