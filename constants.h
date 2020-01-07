@@ -26,6 +26,17 @@ const int LEFT_FORK_WALL = 195;
 const int RIGHT_FORK_WALL = 180;
 
 
+
+const int NORTH = 0;
+const int NORTHEAST = 1;
+const int EAST = 2;
+const int SOUTHEAST = 3;
+const int SOUTH = 4;
+const int SOUTHWEST = 5;
+const int WEST = 6;
+const int NORTHWEST = 7;
+
+
 const int WATER = '~';
 
 #endif

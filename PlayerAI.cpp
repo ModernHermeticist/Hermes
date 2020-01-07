@@ -488,13 +488,15 @@ void PlayerAI::selectTarget()
 	int pointerY = player->getYPos() - 1;
 	int oldX = pointerX;
 	int oldY = pointerY;
+	int cardinalDirection = 0;
+	int oldCardinalDirection = cardinalDirection;
 
 	bool confirmed = false;
 
 	while (!confirmed)
 	{
 		TCODConsole::root->clear();
-		highlightLineTiles(pointerX, pointerY, pointerX+3, pointerY+3, oldX, oldY, oldX+3, oldY+3, engine->getMap(), engine->getPlayer(), engine->getEntities());
+		//highlightLineTiles(cardinalDirection, oldCardinalDirection, 3, engine->getMap(), engine->getPlayer(), engine->getEntities());
 		//highlightAOETiles(pointerX, pointerY, oldX, oldY, 2, engine->getMap(), engine->getPlayer(), engine->getEntities());
 		//highlightTile(pointerX, pointerY, oldX, oldY, engine->getMap(), engine->getPlayer(), engine->getEntities());
 		drawUI();
@@ -503,6 +505,17 @@ void PlayerAI::selectTarget()
 		TCODSystem::waitForEvent(TCOD_EVENT_KEY_PRESS, &key, NULL, true);
 		oldX = pointerX;
 		oldY = pointerY;
+		oldCardinalDirection = cardinalDirection;
+		if (key.vk == TCODK_LEFT)
+		{
+			if (cardinalDirection == 0) cardinalDirection = 7;
+			else cardinalDirection--;
+		}
+		if (key.vk == TCODK_RIGHT)
+		{
+			if (cardinalDirection == 7) cardinalDirection = 0;
+			else cardinalDirection++;
+		}
 		if (key.vk == TCODK_ESCAPE || key.vk == TCODK_ENTER) confirmed = true;
 		if (key.vk == TCODK_KP8) pointerY--;
 		else if (key.vk == TCODK_KP2) pointerY++;
@@ -534,7 +547,7 @@ void PlayerAI::selectTarget()
 			pointerY = oldY;
 		}
 	}
-	resetLineHighlight(pointerX, pointerY, pointerX + 3, pointerY + 3, oldX, oldY, oldX + 3, oldY + 3, engine->getMap(), engine->getPlayer(), engine->getEntities());
+	//resetLineHighlight(cardinalDirection, 3, engine->getMap(), engine->getPlayer(), engine->getEntities());
 	//resetAOEHighlight(pointerX, pointerY, 2, engine->getMap(), engine->getPlayer(), engine->getEntities());
 	//resetHighlight(pointerX, pointerY, engine->getMap(), engine->getPlayer(), engine->getEntities());
 }

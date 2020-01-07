@@ -158,6 +158,7 @@
     <ClCompile Include="PlayerAI.cpp" />
     <ClCompile Include="REXSpeeder.cpp" />
     <ClCompile Include="Tile.cpp" />
+    <ClCompile Include="UtilityFunctions.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AttackComponent.h" />
@@ -180,6 +181,7 @@
     <ClInclude Include="PlayerAI.h" />
     <ClInclude Include="REXSpeeder.h" />
     <ClInclude Include="Tile.h" />
+    <ClInclude Include="UtilityFunctions.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

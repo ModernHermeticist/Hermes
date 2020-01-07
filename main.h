@@ -13,6 +13,7 @@
 #include <libtcod.hpp>
 #include "REXSpeeder.h"
 
+#include "UtilityFunctions.h"
 #include "Tile.h"
 #include "Map.h"
 #include "EquipmentComponent.h"
