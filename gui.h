@@ -15,7 +15,7 @@ void highlightTile(int xPos, int yPos, int oldX, int oldY, Map* map, Player* pla
 void highlightAOETiles(int xPos, int yPos, int oldX, int oldY, int range, Map* map, Player* player, std::vector<Entity*> entities);
 void highlightLineTiles(int cardinalDirection, int oldCardinalDirection, int range,
 	Map* map, Player* player, std::vector<Entity*> entities);
-void highlightConeTiles(int cardinalDirection, int oldCardinalDirection, int range,
+void highlightConeTiles(int cardinalDirection, int oldCardinalDirection, int range, int width,
 	Map* map, Player* player, std::vector<Entity*> entities);
 void resetHighlight(int xPos, int yPos, Map* map, Player* player, std::vector<Entity*> entities);
 void resetAOEHighlight(int xPos, int yPos, int range, Map* map, Player* player, std::vector<Entity*> entities);
