@@ -1,6 +1,8 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 
+class Engine;
+
 class Player
 {
 public:
@@ -8,7 +10,7 @@ public:
 		AttackComponent* _attackComponent, DestroyComponent* _destroyComponent, 
 		InventoryComponent* _inventoryComponent, EquipmentComponent* _equipmentComponent);
 	~Player();
-	void Update();
+	Engine::STATE Update();
 
 	int getXPos();
 	int getYPos();
