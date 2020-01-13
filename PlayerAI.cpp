@@ -548,6 +548,7 @@ void PlayerAI::selectTarget()
 			pointerY = oldY;
 		}
 	}
+	resetConeHighlight(cardinalDirection, 3, 0, engine->getMap(), engine->getPlayer(), engine->getEntities());
 	//resetLineHighlight(cardinalDirection, 3, engine->getMap(), engine->getPlayer(), engine->getEntities());
 	//resetAOEHighlight(pointerX, pointerY, 2, engine->getMap(), engine->getPlayer(), engine->getEntities());
 	//resetHighlight(pointerX, pointerY, engine->getMap(), engine->getPlayer(), engine->getEntities());

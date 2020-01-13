@@ -669,16 +669,86 @@ void highlightConeTiles(int cardinalDirection, int oldCardinalDirection, int ran
 	int yPos = player->getYPos();
 	std::vector<int> oldXY = utilityfunctions::getCardinalDirectionXYValues(oldCardinalDirection);
 	std::vector<int> newXY = utilityfunctions::getCardinalDirectionXYValues(cardinalDirection);
-	int rangeX = newXY[0];
-	int rangeY = newXY[1];
-	int oldRangeX = oldXY[0];
-	int oldRangeY = oldXY[1];
+	int xComponent = newXY[0];
+	int yComponent = newXY[1];
+	int oldXComponent = oldXY[0];
+	int oldYComponent = oldXY[1];
 	//3,5,7
-	for (int i = 0; i < range; i++)
+
+	if (oldXComponent == 0)
 	{
-		for (int j = -1 * (i+width); j < i + 1 + width; j++)
+		for (int i = 0; i < range; i++)
 		{
-			world[xPos + j][yPos + -(i + 1)].setVisibleBackground(TCODColor::celadon);
+			for (int j = -1 * (i + width); j < i + 1 + width; j++)
+			{
+				world[xPos + j][yPos + oldYComponent * (i + 1)].setVisibleBackground(world[xPos + j][yPos + oldYComponent * (i + 1)].getStoreBackground());
+			}
+		}
+	}
+
+	else if (oldYComponent == 0)
+	{
+		for (int i = 0; i < range; i++)
+		{
+			for (int j = -1 * (i + width); j < i + 1 + width; j++)
+			{
+				world[xPos + oldXComponent * (i + 1)][yPos + j].setVisibleBackground(world[xPos + oldXComponent * (i + 1)][yPos + j].getStoreBackground());
+			}
+		}
+	}
+
+	if (xComponent == 0)
+	{
+		for (int i = 0; i < range; i++)
+		{
+			for (int j = -1 * (i + width); j < i + 1 + width; j++)
+			{
+				world[xPos + j][yPos + yComponent * (i + 1)].setVisibleBackground(TCODColor::celadon);
+			}
+		}
+	}
+
+	else if (yComponent == 0)
+	{
+		for (int i = 0; i < range; i++)
+		{
+			for (int j = -1 * (i + width); j < i + 1 + width; j++)
+			{
+				world[xPos + xComponent * (i + 1)][yPos + j].setVisibleBackground(TCODColor::celadon);
+			}
+		}
+	}
+}
+
+void resetConeHighlight(int cardinalDirection, int range, int width,
+	Map* map, Player* player, std::vector<Entity*> entities)
+{
+	Tile** world = map->getWorld();
+	int xPos = player->getXPos();
+	int yPos = player->getYPos();
+
+	std::vector<int> xy = utilityfunctions::getCardinalDirectionXYValues(cardinalDirection);
+	int xComponent = xy[0];
+	int yComponent = xy[1];
+	if (xComponent == 0)
+	{
+		for (int i = 0; i < range; i++)
+		{
+			for (int j = -1 * (i + width); j < i + 1 + width; j++)
+			{
+				world[xPos + j][yPos + yComponent * (i + 1)].setVisibleBackground(world[xPos + j][yPos + yComponent * (i + 1)].getStoreBackground());
+			}
+		}
+	}
+
+	else if (yComponent == 0)
+	{
+		for (int i = 0; i < range; i++)
+		{
+			for (int j = -1 * (i + width); j < i + 1 + width; j++)
+			{
+				world[xPos + xComponent * (i + 1)][yPos + j].setVisibleBackground(world[xPos + xComponent * (i + 1)][yPos + j].getStoreBackground());
+			}
 		}
 	}
 }
@@ -689,23 +759,11 @@ void resetLineHighlight(int cardinalDirection, int range,
 	Tile** world = map->getWorld();
 	int xPos = player->getXPos();
 	int yPos = player->getYPos();
-	int oldRangeX = 0;
-	int oldRangeY = 0;
 
-	switch (cardinalDirection)
-	{
-		case NORTH: oldRangeX = 0; oldRangeY = -1; break;
-		case SOUTH: oldRangeX = 0; oldRangeY = 1; break;
-		case EAST: oldRangeX = 1; oldRangeY = 0; break;
-		case WEST: oldRangeX = -1; oldRangeY = 0; break;
-		case NORTHWEST: oldRangeX = -1; oldRangeY = -1; break;
-		case NORTHEAST: oldRangeX = 1; oldRangeY = -1; break;
-		case SOUTHWEST: oldRangeX = -1; oldRangeY = 1; break;
-		case SOUTHEAST: oldRangeX = 1; oldRangeY = 1; break;
-	}
+	std::vector<int> xy = utilityfunctions::getCardinalDirectionXYValues(cardinalDirection);
 	for (int i = 0; i <= range; i++)
 	{
-		world[xPos + oldRangeX * (1 + i)][yPos + oldRangeY * (1 + i)].setVisibleBackground(world[xPos + oldRangeX * (1 + i)][yPos + oldRangeY * (1 + i)].getStoreBackground());
+		world[xPos + xy[0] * (1 + i)][yPos + xy[1] * (1 + i)].setVisibleBackground(world[xPos + xy[0] * (1 + i)][yPos + xy[1] * (1 + i)].getStoreBackground());
 	}
 
 }
