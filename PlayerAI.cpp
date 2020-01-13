@@ -24,17 +24,16 @@ Engine::STATE PlayerAI::parseKeyInput()
 {
 	TCOD_key_t key = engine->getLastKey();
 	Engine::STATE newState = engine->getState();
-	bool movedOrAttacked = false;
 	switch (key.vk)
 	{
-		case TCODK_KP4:   movedOrAttacked = moveOrAttack(-1, 0, movementDirection::WEST); break;
-		case TCODK_KP6:   movedOrAttacked = moveOrAttack(1, 0, movementDirection::EAST); break;
-		case TCODK_KP8:   movedOrAttacked = moveOrAttack(0, -1, movementDirection::NORTH); break;
-		case TCODK_KP2:   movedOrAttacked = moveOrAttack(0, 1, movementDirection::SOUTH); break;
-		case TCODK_KP7:   movedOrAttacked = moveOrAttack(-1, -1, movementDirection::NORTHWEST); break;
-		case TCODK_KP9:   movedOrAttacked = moveOrAttack(1, -1, movementDirection::NORTHEAST); break;
-		case TCODK_KP1:   movedOrAttacked = moveOrAttack(-1, 1, movementDirection::SOUTHWEST); break;
-		case TCODK_KP3:   movedOrAttacked = moveOrAttack(1, 1, movementDirection::SOUTHEAST); break;
+		case TCODK_KP4:   newState = moveOrAttack(-1, 0, movementDirection::WEST); break;
+		case TCODK_KP6:   newState = moveOrAttack(1, 0, movementDirection::EAST); break;
+		case TCODK_KP8:   newState = moveOrAttack(0, -1, movementDirection::NORTH); break;
+		case TCODK_KP2:   newState = moveOrAttack(0, 1, movementDirection::SOUTH); break;
+		case TCODK_KP7:   newState = moveOrAttack(-1, -1, movementDirection::NORTHWEST); break;
+		case TCODK_KP9:   newState = moveOrAttack(1, -1, movementDirection::NORTHEAST); break;
+		case TCODK_KP1:   newState = moveOrAttack(-1, 1, movementDirection::SOUTHWEST); break;
+		case TCODK_KP3:   newState = moveOrAttack(1, 1, movementDirection::SOUTHEAST); break;
 		case TCODK_UP:
 		{
 			engine->incrementLogPointer();
@@ -50,12 +49,6 @@ Engine::STATE PlayerAI::parseKeyInput()
 		default:break;
 	}
 
-	if (movedOrAttacked)
-	{
-		newState = Engine::STATE::ENEMY_TURN;
-		return newState;
-	}
-
 	switch (key.c)
 	{
 		case 'c':
@@ -65,7 +58,7 @@ Engine::STATE PlayerAI::parseKeyInput()
 		}
 		case 'g':
 		{
-			pickUpItem();
+			newState = Engine::STATE::PICK_UP_ITEM;
 			break;
 		}
 		case 'i':
@@ -93,7 +86,6 @@ Engine::STATE PlayerAI::pickUpItem()
 	InventoryComponent* inventoryComponent = player->getInventoryComponent();
 	int xPos = player->getXPos();
 	int yPos = player->getYPos();
-	engine->setRefresh(true);
 	for (std::vector<Entity*>::iterator it = entities.begin(); it != entities.end(); it++)
 	{
 		Entity* entity = *it;
@@ -103,7 +95,7 @@ Engine::STATE PlayerAI::pickUpItem()
 			if (inventoryComponent->getCurrentStorageSize() == inventoryComponent->getStorageCapacity())
 			{
 				engine->addToLog("Inventory is full.", TCOD_grey);
-				return Engine::STATE::PLAYER_TURN;
+				return engine->getState();
 			}
 			else
 			{
@@ -115,6 +107,7 @@ Engine::STATE PlayerAI::pickUpItem()
 		}
 	}
 	engine->addToLog("There is nothing here to pick up.", TCOD_grey);
+	return engine->getState();
 }
 
 Engine::STATE PlayerAI::dropItem(int c)
@@ -193,11 +186,10 @@ Engine::STATE PlayerAI::useItem(int c)
 		inventoryComponent->removeFromStorage(entity);
 		engine->removeEntity(entity);
 	}
-	engine->setRefresh(true);
 	return Engine::STATE::ENEMY_TURN;
 }
 
-void PlayerAI::inspectItem(int c)
+Engine::STATE PlayerAI::inspectItem(int c)
 {
 	Player* player = engine->getPlayer();
 	InventoryComponent* inventoryComponent = player->getInventoryComponent();
@@ -222,15 +214,14 @@ void PlayerAI::inspectItem(int c)
 					key.vk = (TCOD_keycode_t)0;
 				}
 			}
-			TCODConsole::root->clear();
-			drawInventoryWindow();
-			TCODConsole::flush();
+			return Engine::STATE::SHOW_INVENTORY_SCREEN;
 		}
 	}
+	return engine->getState();
 }
 
 
-bool PlayerAI::moveOrAttack(int dX, int dY, movementDirection dir)
+Engine::STATE PlayerAI::moveOrAttack(int dX, int dY, movementDirection dir)
 {
 	Player* player = engine->getPlayer();
 	int xPos = player->getXPos();
@@ -239,7 +230,6 @@ bool PlayerAI::moveOrAttack(int dX, int dY, movementDirection dir)
 	int newX = dX + xPos;
 	int newY = dY + yPos;
 	Tile tile = tiles[newX][newY];
-	engine->setRefresh(true);
 	if (player->canMoveTo(tile))
 	{
 		std::vector<Entity*> entities = engine->getEntities();
@@ -264,38 +254,39 @@ bool PlayerAI::moveOrAttack(int dX, int dY, movementDirection dir)
 				if (retVal[1] == -1)
 				{
 					engine->addToLog(entity->getName() + " dies!", TCOD_darker_red);
-					gainExperience(destroyComponent->getExperienceValue());
+					return gainExperience(destroyComponent->getExperienceValue());
 				}
 				engine->setComputeFov(true);
-				return true;
+				return Engine::STATE::ENEMY_TURN;
 			}
 		}
 		engine->setComputeFov(true);
 		player->updatePosition(dX, dY);
-		return true;
+		return Engine::STATE::ENEMY_TURN;
 	}
 	else
 	{
 		engine->addToLog("You cannot move there.", TCOD_grey);
-		return false;
+		return Engine::STATE::PLAYER_TURN;
 	}
 }
 
-void PlayerAI::gainExperience(int val)
+Engine::STATE PlayerAI::gainExperience(int val)
 {
 	currentExperience += val; 
 	engine->addToLog("You gain " + std::to_string(val) + " experience!", TCOD_gold);
 	if (currentExperience >= maximumExperience)
 	{
-		progressCharacter();
+		return Engine::STATE::PROGRESS_CHARACTER;
 	}
+	return Engine::STATE::ENEMY_TURN;
 }
 
 int PlayerAI::getCharacterLevel() { return characterLevel; }
 int PlayerAI::getCurrentExperience() { return currentExperience; }
 int PlayerAI::getMaximumExperience() { return maximumExperience; }
 
-void PlayerAI::progressCharacter()
+Engine::STATE PlayerAI::progressCharacter()
 {
 	bool confirmed = false;
 	std::vector<int> statSelections = { 0,0,0,0,0,0 };
@@ -360,6 +351,7 @@ void PlayerAI::progressCharacter()
 		}
 	}
 	engine->addToLog("You have attained level " + std::to_string(characterLevel) + "!", TCOD_gold);
+	return Engine::STATE::ENEMY_TURN;
 }
 
 void PlayerAI::applyStatPoints(std::vector<int> statSelections)
@@ -493,8 +485,8 @@ void PlayerAI::selectTarget()
 	while (!confirmed)
 	{
 		TCODConsole::root->clear();
-		highlightConeTiles(cardinalDirection, oldCardinalDirection, 3, 0, engine->getMap(), engine->getPlayer(), engine->getEntities());
-		//highlightLineTiles(cardinalDirection, oldCardinalDirection, 3, engine->getMap(), engine->getPlayer(), engine->getEntities());
+		//highlightConeTiles(cardinalDirection, oldCardinalDirection, 3, 0, engine->getMap(), engine->getPlayer(), engine->getEntities());
+		highlightLineTiles(cardinalDirection, oldCardinalDirection, 3, engine->getMap(), engine->getPlayer(), engine->getEntities());
 		//highlightAOETiles(pointerX, pointerY, oldX, oldY, 2, engine->getMap(), engine->getPlayer(), engine->getEntities());
 		//highlightTile(pointerX, pointerY, oldX, oldY, engine->getMap(), engine->getPlayer(), engine->getEntities());
 		drawUI();
@@ -545,7 +537,7 @@ void PlayerAI::selectTarget()
 			pointerY = oldY;
 		}
 	}
-	//resetLineHighlight(cardinalDirection, 3, engine->getMap(), engine->getPlayer(), engine->getEntities());
+	resetLineHighlight(cardinalDirection, 3, engine->getMap(), engine->getPlayer(), engine->getEntities());
 	//resetAOEHighlight(pointerX, pointerY, 2, engine->getMap(), engine->getPlayer(), engine->getEntities());
 	//resetHighlight(pointerX, pointerY, engine->getMap(), engine->getPlayer(), engine->getEntities());
 }

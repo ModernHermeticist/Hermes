@@ -32,13 +32,13 @@ int main()
 			engine->setRefresh(true);
 		}
 
-		if (currentGameState == Engine::STATE::ENEMY_TURN)
+		else if (currentGameState == Engine::STATE::ENEMY_TURN)
 		{
 			newGameState = engine->updateEntities();
 			engine->setRefresh(true);
 		}
 		
-		if (currentGameState == Engine::STATE::SHOW_CHARACTER_SCREEN)
+		else if (currentGameState == Engine::STATE::SHOW_CHARACTER_SCREEN)
 		{
 			TCODConsole::root->clear();
 			drawCharacterWindow();
@@ -56,48 +56,72 @@ int main()
 			newGameState = Engine::STATE::PLAYER_TURN;
 		}
 
-		if (currentGameState == Engine::STATE::SHOW_INVENTORY_SCREEN)
+		else if (currentGameState == Engine::STATE::SHOW_INVENTORY_SCREEN)
 		{
 			TCODConsole::root->clear();
 			drawInventoryWindow();
 			TCODConsole::flush();
-			while (true)
+			bool show = true;
+			while (show)
 			{
 				TCOD_key_t key;
 				TCODSystem::waitForEvent(TCOD_EVENT_KEY_PRESS, &key, NULL, true);
+				engine->setLastKey(key);
 				if (key.vk == TCODK_CHAR)
 				{
 					if (key.lctrl)
 					{
 						newGameState = engine->getPlayer()->getPlayerAI()->dropItem(key.c);
 						engine->setRefresh(true);
+						show = false;
 					}
 					else if (key.shift)
 					{
 						newGameState = engine->getPlayer()->getPlayerAI()->equipItem(key.c);
 						engine->setRefresh(true);
+						show = false;
 					}
-					/*else if (key.lalt)
+					else if (key.lalt)
 					{
-						newGameState = engine->getPlayer()->getPlayerAI()->inspectItem(key.c);
-						engine->setRefresh(true);
-					}*/
+						newGameState = Engine::STATE::INSPECT_ITEM;
+						show = false;
+					}
 					else
 					{
 						newGameState = engine->getPlayer()->getPlayerAI()->useItem(key.c);
 						engine->setRefresh(true);
+						show = false;
 					}
 				}
 				else if (key.vk == TCODK_ESCAPE)
 				{
 					engine->setRefresh(true);
 					newGameState = Engine::STATE::PLAYER_TURN;
+					show = false;
 				}
 			}
 		}
 
+		else if (currentGameState == Engine::STATE::PICK_UP_ITEM)
+		{
+			newGameState = engine->getPlayer()->getPlayerAI()->pickUpItem();
+			engine->setRefresh(true);
+		}
 
-		if (engine->getRefresh())
+		else if (currentGameState == Engine::STATE::INSPECT_ITEM)
+		{
+			newGameState = engine->getPlayer()->getPlayerAI()->inspectItem(engine->getLastKey().c);
+			engine->setRefresh(true);
+		}
+
+		else if (currentGameState == Engine::STATE::PROGRESS_CHARACTER)
+		{
+			newGameState = engine->getPlayer()->getPlayerAI()->progressCharacter();
+			engine->setRefresh(true);
+		}
+
+		bool refresh = engine->getRefresh();
+		if (refresh)
 		{
 			if (engine->getComputeFov())
 			{

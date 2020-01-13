@@ -16,20 +16,20 @@ public:
 
 	Engine::STATE parseKeyInput();
 
-	bool moveOrAttack(int dX, int dY, movementDirection dir);
+	Engine::STATE moveOrAttack(int dX, int dY, movementDirection dir);
 	Engine::STATE pickUpItem();
 	Engine::STATE dropItem(int c);
 	Engine::STATE equipItem(int c);
 	Engine::STATE useItem(int c);
-	void inspectItem(int c);
+	Engine::STATE inspectItem(int c);
 
-	void gainExperience(int val);
+	Engine::STATE gainExperience(int val);
 	
 	int getCharacterLevel();
 	int getCurrentExperience();
 	int getMaximumExperience();
 
-	void progressCharacter();
+	Engine::STATE progressCharacter();
 	void recalculateStats();
 	void applyStatPoints(std::vector<int> statSelections);
 
