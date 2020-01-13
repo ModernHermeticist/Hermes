@@ -163,7 +163,7 @@ void Engine::removeEntity(Entity* entity)
 	}
 }
 
-void Engine::updateEntities()
+Engine::STATE Engine::updateEntities()
 {
 	int numOfEntities = (int)entities.size();
 	for (int i = 0; i < numOfEntities; i++)
@@ -171,6 +171,7 @@ void Engine::updateEntities()
 		Entity* entity = entities[i];
 		entity->Update();
 	}
+	return Engine::STATE::PLAYER_TURN;
 }
 
 int Engine::getWorldWidth()

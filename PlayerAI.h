@@ -1,6 +1,8 @@
 #ifndef PLAYERAI_H
 #define PLAYERAI_H
 
+#include "Engine.h"
+
 class PlayerAI
 {
 public:
@@ -10,24 +12,24 @@ public:
 	PlayerAI();
 	~PlayerAI();
 
-	void update();
+	Engine::STATE update();
 
-	void parseKeyInput();
+	Engine::STATE parseKeyInput();
 
-	void moveOrAttack(int dX, int dY, movementDirection dir);
-	void pickUpItem();
-	void dropItem(int c);
-	void equipItem(int c);
-	void useItem(int c);
-	void inspectItem(int c);
+	Engine::STATE moveOrAttack(int dX, int dY, movementDirection dir);
+	Engine::STATE pickUpItem();
+	Engine::STATE dropItem(int c);
+	Engine::STATE equipItem(int c);
+	Engine::STATE useItem(int c);
+	Engine::STATE inspectItem(int c);
 
-	void gainExperience(int val);
+	Engine::STATE gainExperience(int val);
 	
 	int getCharacterLevel();
 	int getCurrentExperience();
 	int getMaximumExperience();
 
-	void progressCharacter();
+	Engine::STATE progressCharacter();
 	void recalculateStats();
 	void applyStatPoints(std::vector<int> statSelections);
 

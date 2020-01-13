@@ -13,30 +13,27 @@ PlayerAI::~PlayerAI()
 	if (target != NULL) delete target;
 }
 
-void PlayerAI::update()
+Engine::STATE PlayerAI::update()
 {
-	parseKeyInput();
+	Engine::STATE newState = engine->getState();
+	newState = parseKeyInput();
+	return newState;
 }
 
-void PlayerAI::parseKeyInput()
+Engine::STATE PlayerAI::parseKeyInput()
 {
 	TCOD_key_t key = engine->getLastKey();
-
+	Engine::STATE newState = engine->getState();
 	switch (key.vk)
 	{
-		case TCODK_KP4:   moveOrAttack(-1, 0, movementDirection::WEST); break;
-		case TCODK_KP6:   moveOrAttack(1, 0, movementDirection::EAST); break;
-		case TCODK_KP8:   moveOrAttack(0, -1, movementDirection::NORTH); break;
-		case TCODK_KP2:   moveOrAttack(0, 1, movementDirection::SOUTH); break;
-		case TCODK_KP7:   moveOrAttack(-1, -1, movementDirection::NORTHWEST); break;
-		case TCODK_KP9:   moveOrAttack(1, -1, movementDirection::NORTHEAST); break;
-		case TCODK_KP1:   moveOrAttack(-1, 1, movementDirection::SOUTHWEST); break;
-		case TCODK_KP3:   moveOrAttack(1, 1, movementDirection::SOUTHEAST); break;
-		default: break;
-	}
-
-	switch (key.vk)
-	{
+		case TCODK_KP4:   newState = moveOrAttack(-1, 0, movementDirection::WEST); break;
+		case TCODK_KP6:   newState = moveOrAttack(1, 0, movementDirection::EAST); break;
+		case TCODK_KP8:   newState = moveOrAttack(0, -1, movementDirection::NORTH); break;
+		case TCODK_KP2:   newState = moveOrAttack(0, 1, movementDirection::SOUTH); break;
+		case TCODK_KP7:   newState = moveOrAttack(-1, -1, movementDirection::NORTHWEST); break;
+		case TCODK_KP9:   newState = moveOrAttack(1, -1, movementDirection::NORTHEAST); break;
+		case TCODK_KP1:   newState = moveOrAttack(-1, 1, movementDirection::SOUTHWEST); break;
+		case TCODK_KP3:   newState = moveOrAttack(1, 1, movementDirection::SOUTHEAST); break;
 		case TCODK_UP:
 		{
 			engine->incrementLogPointer();
@@ -52,28 +49,21 @@ void PlayerAI::parseKeyInput()
 		default:break;
 	}
 
-
 	switch (key.c)
 	{
 		case 'c':
 		{
-			engine->setState(Engine::STATE::SHOW_CHARACTER_SCREEN);
-			TCODConsole::root->clear();
-			drawCharacterWindow();
-			TCODConsole::flush();
+			newState = Engine::STATE::SHOW_CHARACTER_SCREEN;
 			break;
 		}
 		case 'g':
 		{
-			pickUpItem();
+			newState = Engine::STATE::PICK_UP_ITEM;
 			break;
 		}
 		case 'i':
 		{
-			engine->setState(Engine::STATE::SHOW_INVENTORY_SCREEN);
-			TCODConsole::root->clear();
-			drawInventoryWindow();
-			TCODConsole::flush();
+			newState = Engine::STATE::SHOW_INVENTORY_SCREEN;
 			break;
 		}
 		case 't':
@@ -86,16 +76,16 @@ void PlayerAI::parseKeyInput()
 
 		default: break;
 	}
+	return newState;
 }
 
-void PlayerAI::pickUpItem()
+Engine::STATE PlayerAI::pickUpItem()
 {
 	std::vector<Entity*> entities = engine->getEntities();
 	Player* player = engine->getPlayer();
 	InventoryComponent* inventoryComponent = player->getInventoryComponent();
 	int xPos = player->getXPos();
 	int yPos = player->getYPos();
-	engine->setRefresh(true);
 	for (std::vector<Entity*>::iterator it = entities.begin(); it != entities.end(); it++)
 	{
 		Entity* entity = *it;
@@ -105,21 +95,22 @@ void PlayerAI::pickUpItem()
 			if (inventoryComponent->getCurrentStorageSize() == inventoryComponent->getStorageCapacity())
 			{
 				engine->addToLog("Inventory is full.", TCOD_grey);
-				return;
+				return engine->getState();
 			}
 			else
 			{
 				inventoryComponent->addToStorage(entity);
 				engine->removeEntity(entity);
 				engine->addToLog("You pick up a " + entity->getName(), TCOD_grey);
-				return;
+				return Engine::STATE::ENEMY_TURN;
 			}
 		}
 	}
 	engine->addToLog("There is nothing here to pick up.", TCOD_grey);
+	return engine->getState();
 }
 
-void PlayerAI::dropItem(int c)
+Engine::STATE PlayerAI::dropItem(int c)
 {
 	Player* player = engine->getPlayer();
 	InventoryComponent* inventoryComponent = player->getInventoryComponent();
@@ -131,12 +122,12 @@ void PlayerAI::dropItem(int c)
 		entity->setYPos(player->getYPos());
 		engine->addEntity(entity);
 		engine->addToLog("You drop a " + entity->getName() + '.', TCOD_grey);
+		return Engine::STATE::ENEMY_TURN;
 	}
-	engine->setRefresh(true);
-	engine->setState(Engine::STATE::ENEMY_TURN);
+	return engine->getState();
 }
 
-void PlayerAI::equipItem(int c)
+Engine::STATE PlayerAI::equipItem(int c)
 {
 	Player* player = engine->getPlayer();
 	InventoryComponent* inventoryComponent = player->getInventoryComponent();
@@ -168,25 +159,24 @@ void PlayerAI::equipItem(int c)
 			}
 		}
 	}
-	engine->setRefresh(true);
-	engine->setState(Engine::STATE::ENEMY_TURN);
+	return Engine::STATE::ENEMY_TURN;
 }
 
-void PlayerAI::useItem(int c)
+Engine::STATE PlayerAI::useItem(int c)
 {
 	Player* player = engine->getPlayer();
 	InventoryComponent* inventoryComponent = player->getInventoryComponent();
 	Entity* entity = inventoryComponent->getItemAtLocation(c);
 	if (entity == NULL)
 	{
-		return;
+		return engine->getState();
 	}
 	ItemComponent* itemComponent = entity->getItemComponent();
 	ConsumableComponent* consumableComponent = itemComponent->getConsumableComponent();
-	if (consumableComponent == NULL) return;
+	if (consumableComponent == NULL) return engine->getState();
 
 	EffectComponent* effectComponent = consumableComponent->getEffectComponent();
-	if (effectComponent == NULL) return;
+	if (effectComponent == NULL) return engine->getState();
 
 	EffectComponent::Effect_Type effectType = effectComponent->getEffectType();
 	if (effectType == EffectComponent::Effect_Type::HEAL)
@@ -196,11 +186,10 @@ void PlayerAI::useItem(int c)
 		inventoryComponent->removeFromStorage(entity);
 		engine->removeEntity(entity);
 	}
-	engine->setRefresh(true);
-	engine->setState(Engine::STATE::ENEMY_TURN);
+	return Engine::STATE::ENEMY_TURN;
 }
 
-void PlayerAI::inspectItem(int c)
+Engine::STATE PlayerAI::inspectItem(int c)
 {
 	Player* player = engine->getPlayer();
 	InventoryComponent* inventoryComponent = player->getInventoryComponent();
@@ -225,15 +214,14 @@ void PlayerAI::inspectItem(int c)
 					key.vk = (TCOD_keycode_t)0;
 				}
 			}
-			TCODConsole::root->clear();
-			drawInventoryWindow();
-			TCODConsole::flush();
+			return Engine::STATE::SHOW_INVENTORY_SCREEN;
 		}
 	}
+	return engine->getState();
 }
 
 
-void PlayerAI::moveOrAttack(int dX, int dY, movementDirection dir)
+Engine::STATE PlayerAI::moveOrAttack(int dX, int dY, movementDirection dir)
 {
 	Player* player = engine->getPlayer();
 	int xPos = player->getXPos();
@@ -242,8 +230,6 @@ void PlayerAI::moveOrAttack(int dX, int dY, movementDirection dir)
 	int newX = dX + xPos;
 	int newY = dY + yPos;
 	Tile tile = tiles[newX][newY];
-	engine->setRefresh(true);
-	engine->setState(Engine::STATE::ENEMY_TURN);
 	if (player->canMoveTo(tile))
 	{
 		std::vector<Entity*> entities = engine->getEntities();
@@ -268,37 +254,39 @@ void PlayerAI::moveOrAttack(int dX, int dY, movementDirection dir)
 				if (retVal[1] == -1)
 				{
 					engine->addToLog(entity->getName() + " dies!", TCOD_darker_red);
-					gainExperience(destroyComponent->getExperienceValue());
+					return gainExperience(destroyComponent->getExperienceValue());
 				}
 				engine->setComputeFov(true);
-				return;
+				return Engine::STATE::ENEMY_TURN;
 			}
 		}
 		engine->setComputeFov(true);
 		player->updatePosition(dX, dY);
-		return;
+		return Engine::STATE::ENEMY_TURN;
 	}
 	else
 	{
 		engine->addToLog("You cannot move there.", TCOD_grey);
+		return Engine::STATE::PLAYER_TURN;
 	}
 }
 
-void PlayerAI::gainExperience(int val)
+Engine::STATE PlayerAI::gainExperience(int val)
 {
 	currentExperience += val; 
 	engine->addToLog("You gain " + std::to_string(val) + " experience!", TCOD_gold);
 	if (currentExperience >= maximumExperience)
 	{
-		progressCharacter();
+		return Engine::STATE::PROGRESS_CHARACTER;
 	}
+	return Engine::STATE::ENEMY_TURN;
 }
 
 int PlayerAI::getCharacterLevel() { return characterLevel; }
 int PlayerAI::getCurrentExperience() { return currentExperience; }
 int PlayerAI::getMaximumExperience() { return maximumExperience; }
 
-void PlayerAI::progressCharacter()
+Engine::STATE PlayerAI::progressCharacter()
 {
 	bool confirmed = false;
 	std::vector<int> statSelections = { 0,0,0,0,0,0 };
@@ -363,6 +351,7 @@ void PlayerAI::progressCharacter()
 		}
 	}
 	engine->addToLog("You have attained level " + std::to_string(characterLevel) + "!", TCOD_gold);
+	return Engine::STATE::ENEMY_TURN;
 }
 
 void PlayerAI::applyStatPoints(std::vector<int> statSelections)
@@ -496,8 +485,8 @@ void PlayerAI::selectTarget()
 	while (!confirmed)
 	{
 		TCODConsole::root->clear();
-		highlightConeTiles(cardinalDirection, oldCardinalDirection, 3, 0, engine->getMap(), engine->getPlayer(), engine->getEntities());
-		//highlightLineTiles(cardinalDirection, oldCardinalDirection, 3, engine->getMap(), engine->getPlayer(), engine->getEntities());
+		//highlightConeTiles(cardinalDirection, oldCardinalDirection, 3, 0, engine->getMap(), engine->getPlayer(), engine->getEntities());
+		highlightLineTiles(cardinalDirection, oldCardinalDirection, 3, engine->getMap(), engine->getPlayer(), engine->getEntities());
 		//highlightAOETiles(pointerX, pointerY, oldX, oldY, 2, engine->getMap(), engine->getPlayer(), engine->getEntities());
 		//highlightTile(pointerX, pointerY, oldX, oldY, engine->getMap(), engine->getPlayer(), engine->getEntities());
 		drawUI();

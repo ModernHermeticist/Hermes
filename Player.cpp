@@ -25,9 +25,11 @@ Player::~Player()
 	delete inventoryComponent;
 }
 
-void Player::Update()
+Engine::STATE Player::Update()
 {
-	playerAI->update();
+	Engine::STATE newState = engine->getState();
+	newState = playerAI->update();
+	return newState;
 }
 
 int Player::getXPos() { return xPos; }
