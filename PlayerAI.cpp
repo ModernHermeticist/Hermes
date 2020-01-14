@@ -485,8 +485,8 @@ void PlayerAI::selectTarget()
 	while (!confirmed)
 	{
 		TCODConsole::root->clear();
-		//highlightConeTiles(cardinalDirection, oldCardinalDirection, 3, 0, engine->getMap(), engine->getPlayer(), engine->getEntities());
-		highlightLineTiles(cardinalDirection, oldCardinalDirection, 3, engine->getMap(), engine->getPlayer(), engine->getEntities());
+		highlightConeTiles(cardinalDirection, oldCardinalDirection, 3, 0, engine->getMap(), engine->getPlayer(), engine->getEntities());
+		//highlightLineTiles(cardinalDirection, oldCardinalDirection, 3, engine->getMap(), engine->getPlayer(), engine->getEntities());
 		//highlightAOETiles(pointerX, pointerY, oldX, oldY, 2, engine->getMap(), engine->getPlayer(), engine->getEntities());
 		//highlightTile(pointerX, pointerY, oldX, oldY, engine->getMap(), engine->getPlayer(), engine->getEntities());
 		drawUI();

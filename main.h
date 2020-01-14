@@ -23,6 +23,8 @@
 #include "InventoryComponent.h"
 #include "AttackComponent.h"
 #include "DestroyComponent.h"
+#include "ClassComponent.h"
+#include "RaceComponent.h"
 #include "PlayerAI.h"
 #include "EnemyAI.h"
 #include "Player.h"
