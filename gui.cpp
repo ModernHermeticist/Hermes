@@ -697,6 +697,14 @@ void highlightConeTiles(int cardinalDirection, int oldCardinalDirection, int ran
 		}
 	}
 
+	else if (xComponent != 0 && yComponent != 0)
+	{
+		for (int i = 0; i < range; i++)
+		{
+			world[(xPos + xComponent) * (i + 1)][(yPos + yComponent) * (i + 1)].setVisibleBackground(world[(xPos + xComponent) * (i + 1)][(yPos + yComponent) * (i + 1)].getStoreBackground());
+		}
+	}
+
 	if (xComponent == 0)
 	{
 		for (int i = 0; i < range; i++)
@@ -716,6 +724,14 @@ void highlightConeTiles(int cardinalDirection, int oldCardinalDirection, int ran
 			{
 				world[xPos + xComponent * (i + 1)][yPos + j].setVisibleBackground(TCODColor::celadon);
 			}
+		}
+	}
+
+	else if (xComponent != 0 && yComponent != 0)
+	{
+		for (int i = 0; i < range; i++)
+		{
+			world[(xPos + xComponent) * (i + 1)][(yPos + yComponent) * (i + 1)].setVisibleBackground(TCODColor::celadon);
 		}
 	}
 }

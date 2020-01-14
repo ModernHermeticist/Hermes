@@ -1,5 +1,5 @@
-#ifndef CLASSCOMPONENT_H
-#define CLASSCOMPONENT_H
+#ifndef CCOMPONENT_H
+#define CCOMPONENT_H
 
 class ClassComponent
 {
@@ -9,6 +9,6 @@ public:
 
 private:
 	std::string name;
-}
+};
 
 #endif
