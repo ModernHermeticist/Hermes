@@ -26,6 +26,8 @@ void resetLineHighlight(int cardinalDirection, int range,
 
 void wrapTextWithinBounds(TCODConsole* con, std::string s, int x_1, int y_1, int x_2, int y_2);
 
+void animateCellOnTimer(int xPos, int yPos, Map* map, Player* player, std::vector<Entity*> entities);
+
 void drawUI();
 
 #endif

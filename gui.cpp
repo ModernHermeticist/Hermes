@@ -701,16 +701,11 @@ void highlightConeTiles(int cardinalDirection, int oldCardinalDirection, int ran
 
 	else if (xComponent != 0 && yComponent != 0)
 	{
-		for (int i = 0; i < range; i++)
+		for (int i = 0; i < range+1; i++)
 		{
-			for (int j = 0; j < i+1; j++)
+			for (int j = 0; j < range - i + 1; j++)
 			{
-				world[xPos + (xComponent + (j * xComponent))][yPos + yComponent].setVisibleBackground(TCODColor::celadon);
-				world[xPos + xComponent][yPos + (yComponent + (j * yComponent))].setVisibleBackground(TCODColor::celadon);
-			}
-			for (int j = 0; j < i; j++)
-			{
-				world[xPos + (xComponent + (j * xComponent))][yPos + (yComponent + (j * yComponent))].setVisibleBackground(TCODColor::celadon);
+				world[xPos + (xComponent + ((range - i - j) * xComponent))][yPos + (yComponent + ((i)*yComponent))].setVisibleBackground(TCODColor::celadon);
 			}
 		}
 	}
@@ -751,16 +746,12 @@ void resetConeHighlight(int cardinalDirection, int range, int width,
 
 	else if (xComponent != 0 && yComponent != 0)
 	{
-		for (int i = 0; i < range; i++)
+		for (int i = 0; i < range+1; i++)
 		{
-			for (int j = 0; j < i + 1; j++)
+			for (int j = 0; j < range - i + 1; j++)
 			{
-				world[xPos + (xComponent + (j * xComponent))][yPos + yComponent].setVisibleBackground(world[xPos + (xComponent + (j * xComponent))][yPos + yComponent].getStoreBackground());
-				world[xPos + xComponent][yPos + (yComponent + (j * yComponent))].setVisibleBackground(world[xPos + xComponent][yPos + (yComponent + (j * yComponent))].getStoreBackground());
-			}
-			for (int j = 0; j < i; j++)
-			{
-				world[xPos + (xComponent + (j * xComponent))][yPos + (yComponent + (j * yComponent))].setVisibleBackground(world[xPos + (xComponent + (j * xComponent))][yPos + (yComponent + (j * yComponent))].getStoreBackground());
+				world[xPos + (xComponent + ((range - i - j) * xComponent))][yPos + (yComponent + ((i)*yComponent))]
+					.setVisibleBackground(world[xPos + (xComponent + ((range - i - j) * xComponent))][yPos + (yComponent + ((i)*yComponent))].getStoreBackground());
 			}
 		}
 	}
@@ -835,6 +826,22 @@ void wrapTextWithinBounds(TCODConsole* con, std::string s, int x_1, int y_1, int
 		positionPointer += (int)word.size();
 		positionPointer++;
 	} while (ss);
+}
+
+void animateCellOnTimer(int xPos, int yPos, Map* map, Player* player, std::vector<Entity*> entities)
+{
+	std::time_t result = std::time(nullptr);
+	std::localtime(&result);
+	if (result > engine->getTime() + 1 && player->getSpriteBackground() == TCODColor::black)
+	{
+		player->setSpriteBackground(TCODColor::brass);
+		engine->setTime(result);
+	}
+	else if (result > engine->getTime() + 1 && player->getSpriteBackground() == TCODColor::brass)
+	{
+		player->setSpriteBackground(TCODColor::black);
+		engine->setTime(result);
+	}
 }
 
 void drawUI()

@@ -8,6 +8,7 @@
 
 #include <stdlib.h>
 #include <time.h>
+#include <ctime>
 
 
 #include <libtcod.hpp>

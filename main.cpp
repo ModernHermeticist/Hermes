@@ -20,6 +20,8 @@ int main()
 	while (!TCODConsole::isWindowClosed())
 	{
 		engine->setRefresh(false);
+		animateCellOnTimer(engine->getPlayer()->getXPos(), engine->getPlayer()->getYPos(), engine->getMap(), engine->getPlayer(), engine->getEntities());
+		engine->setRefresh(true);
 		Engine::STATE currentGameState = engine->getState();
 		Engine::STATE newGameState = currentGameState;
 		if (currentGameState == Engine::STATE::PLAYER_TURN)

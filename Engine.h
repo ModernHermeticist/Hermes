@@ -55,6 +55,9 @@ public:
 
 	int getLogPointer();
 
+	std::time_t getTime();
+	void setTime(std::time_t time);
+
 
 private:
 	int fovRadius;
@@ -82,6 +85,8 @@ private:
 	std::vector<LogEntry> log;
 
 	TCOD_key_t lastKey;
+
+	std::time_t time;
 };
 
 extern Engine* engine;
