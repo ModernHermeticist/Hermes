@@ -673,37 +673,9 @@ void highlightConeTiles(int cardinalDirection, int oldCardinalDirection, int ran
 	int yComponent = newXY[1];
 	int oldXComponent = oldXY[0];
 	int oldYComponent = oldXY[1];
-	//3,5,7
 
-	if (oldXComponent == 0)
-	{
-		for (int i = 0; i < range; i++)
-		{
-			for (int j = -1 * (i + width); j < i + 1 + width; j++)
-			{
-				world[xPos + j][yPos + oldYComponent * (i + 1)].setVisibleBackground(world[xPos + j][yPos + oldYComponent * (i + 1)].getStoreBackground());
-			}
-		}
-	}
-
-	else if (oldYComponent == 0)
-	{
-		for (int i = 0; i < range; i++)
-		{
-			for (int j = -1 * (i + width); j < i + 1 + width; j++)
-			{
-				world[xPos + oldXComponent * (i + 1)][yPos + j].setVisibleBackground(world[xPos + oldXComponent * (i + 1)][yPos + j].getStoreBackground());
-			}
-		}
-	}
-
-	else if (xComponent != 0 && yComponent != 0)
-	{
-		for (int i = 0; i < range; i++)
-		{
-			world[(xPos + xComponent) * (i + 1)][(yPos + yComponent) * (i + 1)].setVisibleBackground(world[(xPos + xComponent) * (i + 1)][(yPos + yComponent) * (i + 1)].getStoreBackground());
-		}
-	}
+	resetConeHighlight(oldCardinalDirection, range, width,
+		map, player, entities);
 
 	if (xComponent == 0)
 	{
@@ -731,7 +703,15 @@ void highlightConeTiles(int cardinalDirection, int oldCardinalDirection, int ran
 	{
 		for (int i = 0; i < range; i++)
 		{
-			world[(xPos + xComponent) * (i + 1)][(yPos + yComponent) * (i + 1)].setVisibleBackground(TCODColor::celadon);
+			for (int j = 0; j < i+1; j++)
+			{
+				world[xPos + (xComponent + (j * xComponent))][yPos + yComponent].setVisibleBackground(TCODColor::celadon);
+				world[xPos + xComponent][yPos + (yComponent + (j * yComponent))].setVisibleBackground(TCODColor::celadon);
+			}
+			for (int j = 0; j < i; j++)
+			{
+				world[xPos + (xComponent + (j * xComponent))][yPos + (yComponent + (j * yComponent))].setVisibleBackground(TCODColor::celadon);
+			}
 		}
 	}
 }
@@ -746,6 +726,7 @@ void resetConeHighlight(int cardinalDirection, int range, int width,
 	std::vector<int> xy = utilityfunctions::getCardinalDirectionXYValues(cardinalDirection);
 	int xComponent = xy[0];
 	int yComponent = xy[1];
+
 	if (xComponent == 0)
 	{
 		for (int i = 0; i < range; i++)
@@ -764,6 +745,22 @@ void resetConeHighlight(int cardinalDirection, int range, int width,
 			for (int j = -1 * (i + width); j < i + 1 + width; j++)
 			{
 				world[xPos + xComponent * (i + 1)][yPos + j].setVisibleBackground(world[xPos + xComponent * (i + 1)][yPos + j].getStoreBackground());
+			}
+		}
+	}
+
+	else if (xComponent != 0 && yComponent != 0)
+	{
+		for (int i = 0; i < range; i++)
+		{
+			for (int j = 0; j < i + 1; j++)
+			{
+				world[xPos + (xComponent + (j * xComponent))][yPos + yComponent].setVisibleBackground(world[xPos + (xComponent + (j * xComponent))][yPos + yComponent].getStoreBackground());
+				world[xPos + xComponent][yPos + (yComponent + (j * yComponent))].setVisibleBackground(world[xPos + xComponent][yPos + (yComponent + (j * yComponent))].getStoreBackground());
+			}
+			for (int j = 0; j < i; j++)
+			{
+				world[xPos + (xComponent + (j * xComponent))][yPos + (yComponent + (j * yComponent))].setVisibleBackground(world[xPos + (xComponent + (j * xComponent))][yPos + (yComponent + (j * yComponent))].getStoreBackground());
 			}
 		}
 	}
