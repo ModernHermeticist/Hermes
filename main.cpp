@@ -22,12 +22,13 @@ int main()
 		engine->setRefresh(false);
 		animateCellOnTimer(engine->getPlayer()->getXPos(), engine->getPlayer()->getYPos(), engine->getMap(), engine->getPlayer(), engine->getEntities());
 		engine->setRefresh(true);
+		drawUI();
 		Engine::STATE currentGameState = engine->getState();
 		Engine::STATE newGameState = currentGameState;
 		if (currentGameState == Engine::STATE::PLAYER_TURN)
 		{ 
 			TCOD_key_t key;
-			TCODSystem::waitForEvent(TCOD_EVENT_KEY_PRESS, &key, NULL, true);
+			TCODSystem::checkForEvent(TCOD_EVENT_KEY_PRESS, &key, NULL);
 			if (key.vk == TCODK_ESCAPE) break;
 			engine->setLastKey(key);
 			newGameState = engine->getPlayer()->Update();

@@ -832,15 +832,30 @@ void animateCellOnTimer(int xPos, int yPos, Map* map, Player* player, std::vecto
 {
 	std::time_t result = std::time(nullptr);
 	std::localtime(&result);
-	if (result > engine->getTime() + 1 && player->getSpriteBackground() == TCODColor::black)
+	if (result >= engine->getTime() + 1 && player->getSpriteBackground() == TCODColor::black)
 	{
 		player->setSpriteBackground(TCODColor::brass);
 		engine->setTime(result);
 	}
-	else if (result > engine->getTime() + 1 && player->getSpriteBackground() == TCODColor::brass)
+	else if (result >= engine->getTime() + 1 && player->getSpriteBackground() == TCODColor::brass)
 	{
 		player->setSpriteBackground(TCODColor::black);
 		engine->setTime(result);
+	}
+}
+
+void animateAuraAroundCell(int xPos, int yPos)
+{
+	std::time_t result = std::time(nullptr);
+	std::localtime(&result);
+	Tile** world = engine->getMap()->getWorld();
+	if (result >= engine->getTime() + 1)
+	{
+		//if ()
+		for (int i = -1; i <= 1; i++)
+		{
+			world[xPos + i][yPos - 1].setVisibleBackground(TCODColor::darkRed);
+		}
 	}
 }
 
