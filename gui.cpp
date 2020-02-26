@@ -828,28 +828,55 @@ void wrapTextWithinBounds(TCODConsole* con, std::string s, int x_1, int y_1, int
 	} while (ss);
 }
 
-void animateCellOnTimer(int xPos, int yPos, Map* map, Player* player, std::vector<Entity*> entities)
+void animateCellOnTimer(int xPos, int yPos, Map* map, Player* player, std::vector<Entity*> entities, float scale)
 {
-	std::time_t result = std::time(nullptr);
-	std::localtime(&result);
-	if (result >= engine->getTime() + 1 && player->getSpriteBackground() == TCODColor::black)
+	auto t1 = engine->getTime();
+	auto t2 = engine->Clock.now();
+
+	auto dT = std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1).count();
+	std::cout << "Time passed: " << dT << std::endl;
+
+	Tile** world = engine->getMap()->getWorld();
+	if (dT >= scale * 10)
 	{
-		player->setSpriteBackground(TCODColor::brass);
-		engine->setTime(result);
-	}
-	else if (result >= engine->getTime() + 1 && player->getSpriteBackground() == TCODColor::brass)
-	{
-		player->setSpriteBackground(TCODColor::black);
-		engine->setTime(result);
+		int currentSprite = player->getSprite();
+		engine->setTime(t2);
+		if (player->getAnimateForward())
+		{
+			switch (currentSprite)
+			{
+			case TORCH1: player->setSprite(TORCH2); break;
+			case TORCH2: player->setSprite(TORCH3); break;
+			case TORCH3: player->setSprite(TORCH4); break;
+			case TORCH4: player->setSprite(TORCH5); break;
+			case TORCH5: player->setSprite(TORCH6); break;
+			case TORCH6: player->setSprite(TORCH7); player->setAnimateForward(false); break;
+			}
+		}
+		else
+		{
+			switch (currentSprite)
+			{
+			case TORCH7: player->setSprite(TORCH6); break;
+			case TORCH6: player->setSprite(TORCH5); break;
+			case TORCH5: player->setSprite(TORCH4); break;
+			case TORCH4: player->setSprite(TORCH3); break;
+			case TORCH3: player->setSprite(TORCH2); break;
+			case TORCH2: player->setSprite(TORCH1); player->setAnimateForward(true); break;
+			}
+		}
 	}
 }
 
 void animateAuraAroundCell(int xPos, int yPos)
 {
-	std::time_t result = std::time(nullptr);
-	std::localtime(&result);
+	auto t1 = engine->getTime();
+	auto t2 = engine->Clock.now();
+
+	auto dT = std::chrono::duration_cast<std::chrono::seconds>(t2 - t1).count();
+
 	Tile** world = engine->getMap()->getWorld();
-	if (result >= engine->getTime() + 1)
+	if (dT >= 1)
 	{
 		//if ()
 		for (int i = -1; i <= 1; i++)

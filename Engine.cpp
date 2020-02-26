@@ -4,7 +4,7 @@
 
 Engine::Engine(int _screen_width, int _screen_height, int _world_width, int _world_height)
 {
-	time = std::time(nullptr);
+	time = Clock.now();
 	screen_width = _screen_width;
 	screen_height = _screen_height;
 	world_width = _world_width;
@@ -42,7 +42,8 @@ Engine::Engine(int _screen_width, int _screen_height, int _world_width, int _wor
 	int effectValue = 5;
 	Entity* potion = itemGenerators::generateHealingItem(xPos, yPos, sprite, color, name, description, type, effectValue);
 	inventoryComponent->addToStorage(potion);
-	player = new Player(0, 0, 2, "Player", playerAI, attackComponent, destroyComponent, inventoryComponent, equipmentComponent);
+	player = new Player(0, 0, TORCH1, "Player", playerAI, attackComponent, destroyComponent, inventoryComponent, equipmentComponent);
+	//player = new Player(0, 0, 2, "Player", playerAI, attackComponent, destroyComponent, inventoryComponent, equipmentComponent);
 	map = new Map(screen_width, screen_height);
 	fovRadius = 10;
 	refresh = false;
@@ -100,7 +101,7 @@ void Engine::loadMapFile(std::string fileName)
 				{
 					player->setXPos(i);
 					player->setYPos(j);
-					player->setSprite(entityTile.character);
+					player->setSprite(TORCH1);
 					player->setSpriteForeground(cF);
 					player->setSpriteBackground(cB);
 				}
@@ -248,5 +249,5 @@ void Engine::decrementLogPointer()
 
 int Engine::getLogPointer() { return logPointer; }
 
-std::time_t Engine::getTime() { return time; }
-void Engine::setTime(std::time_t _time) { time = _time; }
+std::chrono::steady_clock::time_point Engine::getTime() { return time; }
+void Engine::setTime(std::chrono::steady_clock::time_point _time) { time = _time; }

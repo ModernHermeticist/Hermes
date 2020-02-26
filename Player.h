@@ -20,12 +20,16 @@ public:
 
 	int getSprite();
 
+
 	TCODColor getSpriteForeground();
 	TCODColor getSpriteBackground();
 
 	void setSprite(int s);
 	void setSpriteForeground(TCODColor c);
 	void setSpriteBackground(TCODColor c);
+
+	bool getAnimateForward();
+	void setAnimateForward(bool _animateForward);
 
 	std::string getName();
 	void setName(std::string n);
@@ -49,6 +53,7 @@ private:
 
 	int xPos;
 	int yPos;
+	bool animateForward = true;
 
 	int sprite;
 	TCODColor spriteForeground;

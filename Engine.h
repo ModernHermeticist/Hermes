@@ -55,8 +55,10 @@ public:
 
 	int getLogPointer();
 
-	std::time_t getTime();
-	void setTime(std::time_t time);
+	std::chrono::steady_clock::time_point getTime();
+	void setTime(std::chrono::steady_clock::time_point _time);
+
+	std::chrono::high_resolution_clock Clock;
 
 
 private:
@@ -86,7 +88,7 @@ private:
 
 	TCOD_key_t lastKey;
 
-	std::time_t time;
+	std::chrono::steady_clock::time_point time;
 };
 
 extern Engine* engine;

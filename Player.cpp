@@ -50,6 +50,9 @@ void Player::setSprite(int s) { sprite = s; }
 void Player::setSpriteForeground(TCODColor c) { spriteForeground = c; }
 void Player::setSpriteBackground(TCODColor c) { spriteBackground = c; }
 
+bool Player::getAnimateForward() { return animateForward; }
+void Player::setAnimateForward(bool _animateForward) { animateForward = _animateForward; }
+
 std::string Player::getName() { return name; }
 void Player::setName(std::string n) { name = n; }
 

@@ -9,6 +9,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include <ctime>
+#include <chrono>
 
 
 #include <libtcod.hpp>

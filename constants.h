@@ -39,4 +39,13 @@ const int NORTHWEST = 7;
 
 const int WATER = '~';
 
+
+const int TORCH1 = 256;
+const int TORCH2 = 257;
+const int TORCH3 = 258;
+const int TORCH4 = 259;
+const int TORCH5 = 260;
+const int TORCH6 = 261;
+const int TORCH7 = 262;
+
 #endif
