@@ -15,6 +15,7 @@
 #include <libtcod.hpp>
 #include "REXSpeeder.h"
 
+#include "AnimatorComponent.h"
 #include "UtilityFunctions.h"
 #include "Tile.h"
 #include "Map.h"

@@ -139,6 +139,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AnimatorComponent.cpp" />
     <ClCompile Include="AttackComponent.cpp" />
     <ClCompile Include="ClassComponent.cpp" />
     <ClCompile Include="ConsumableComponent.cpp" />
@@ -163,6 +164,7 @@
     <ClCompile Include="UtilityFunctions.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AnimatorComponent.h" />
     <ClInclude Include="AttackComponent.h" />
     <ClInclude Include="ClassComponent.h" />
     <ClInclude Include="constants.h" />

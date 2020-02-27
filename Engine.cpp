@@ -42,7 +42,7 @@ Engine::Engine(int _screen_width, int _screen_height, int _world_width, int _wor
 	int effectValue = 5;
 	Entity* potion = itemGenerators::generateHealingItem(xPos, yPos, sprite, color, name, description, type, effectValue);
 	inventoryComponent->addToStorage(potion);
-	player = new Player(0, 0, TORCH1, "Player", playerAI, attackComponent, destroyComponent, inventoryComponent, equipmentComponent);
+	player = new Player(0, 0, 1, "Player", playerAI, attackComponent, destroyComponent, inventoryComponent, equipmentComponent);
 	//player = new Player(0, 0, 2, "Player", playerAI, attackComponent, destroyComponent, inventoryComponent, equipmentComponent);
 	map = new Map(screen_width, screen_height);
 	fovRadius = 10;
@@ -86,7 +86,17 @@ void Engine::loadMapFile(std::string fileName)
 				if (sprite != WATER)
 					map->getTCODMap()->setProperties(i, j, false, false);
 			}
-
+			if (tile.character == '!')
+			{
+				AnimatorComponent* animatorComponent = new AnimatorComponent(TORCH1, TORCH4, 25);
+				Entity* entity = new Entity(i, j, TORCH1, TCODColor::white, TCODColor::black, "Torch", animatorComponent);
+				entity->getAnimatorComponent()->setParent(entity);
+				entities.push_back(entity);
+			}
+			else
+			{
+				map->setTile(i, j, newTile);
+			}
 			if (entityTile.character != 0 && entityTile.character != 32)
 			{
 				TCODColor cF = TCOD_black;
@@ -101,7 +111,7 @@ void Engine::loadMapFile(std::string fileName)
 				{
 					player->setXPos(i);
 					player->setYPos(j);
-					player->setSprite(TORCH1);
+					player->setSprite(entityTile.character);
 					player->setSpriteForeground(cF);
 					player->setSpriteBackground(cB);
 				}
@@ -130,7 +140,6 @@ void Engine::loadMapFile(std::string fileName)
 				Entity* entity = new Entity(i, j, itemTile.character, cF, cB, "Limirail, Blade of the Ninth Moon", description, itemComponent);
 				entities.push_back(entity);
 			}
-			map->setTile(i, j, newTile);
 		}
 	}
 }
@@ -174,6 +183,21 @@ Engine::STATE Engine::updateEntities()
 		entity->Update();
 	}
 	return Engine::STATE::PLAYER_TURN;
+}
+
+void Engine::updateEntityAnimations()
+{
+	int numOfEntities = (int)entities.size();
+	for (int i = 0; i < numOfEntities; i++)
+	{
+		Entity* entity = entities[i];
+		AnimatorComponent* animatorComponent = entity->getAnimatorComponent();
+		if (animatorComponent != NULL)
+		{
+			std::cout << "Animating: " << i << std::endl;
+			animatorComponent->animateCellOnTimer();
+		}
+	}
 }
 
 int Engine::getWorldWidth()

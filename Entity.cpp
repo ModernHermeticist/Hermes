@@ -16,6 +16,17 @@ Entity::Entity(int _xPos, int _yPos, int _sprite, TCODColor _spriteForeground, T
 	itemComponent = NULL;
 }
 
+Entity::Entity(int _xPos, int _yPos, int _sprite, TCODColor _spriteForeground, TCODColor _spriteBackground, std::string _name, AnimatorComponent* _animatorComponent)
+{
+	xPos = _xPos;
+	yPos = _yPos;
+	sprite = _sprite;
+	spriteForeground = _spriteForeground;
+	spriteBackground = _spriteBackground;
+	name = _name;
+	animatorComponent = _animatorComponent;
+}
+
 Entity::Entity(int _xPos, int _yPos, int _sprite, TCODColor _spriteForeground, TCODColor _spriteBackground, std::string _name,
 	EnemyAI* _enemyAI, AttackComponent* _attackComponent, DestroyComponent* _destroyComponent, 
 	InventoryComponent* _inventoryComponent, ItemComponent* _itemComponent)
@@ -78,12 +89,13 @@ Entity::~Entity()
 	if (destroyComponent != NULL) delete destroyComponent;
 	if (itemComponent != NULL) delete itemComponent;
 	if (inventoryComponent != NULL) delete inventoryComponent;
+	if (animatorComponent != NULL) delete animatorComponent;
 };
 
 void Entity::Update()
 {
 	if (this->getItemComponent() != NULL) { return; }
-	if (!this->destroyComponent->isAlive()) { return; }
+	if (destroyComponent != NULL && !this->destroyComponent->isAlive()) { return; }
 	if (enemyAI != NULL) enemyAI->update(this);
 }
 
@@ -124,3 +136,4 @@ AttackComponent* Entity::getAttackComponent() { return attackComponent; }
 DestroyComponent* Entity::getDestroyComponent() { return destroyComponent; }
 InventoryComponent* Entity::getInventoryComponent() { return inventoryComponent; }
 ItemComponent* Entity::getItemComponent() { return itemComponent; }
+AnimatorComponent* Entity::getAnimatorComponent() { return animatorComponent; }

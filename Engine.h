@@ -28,6 +28,8 @@ public:
 
 	Engine::STATE updateEntities();
 
+	void updateEntityAnimations();
+
 	int getWorldWidth();
 	int getWorldHeight();
 

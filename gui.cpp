@@ -847,19 +847,13 @@ void animateCellOnTimer(int xPos, int yPos, Map* map, Player* player, std::vecto
 			{
 			case TORCH1: player->setSprite(TORCH2); break;
 			case TORCH2: player->setSprite(TORCH3); break;
-			case TORCH3: player->setSprite(TORCH4); break;
-			case TORCH4: player->setSprite(TORCH5); break;
-			case TORCH5: player->setSprite(TORCH6); break;
-			case TORCH6: player->setSprite(TORCH7); player->setAnimateForward(false); break;
+			case TORCH3: player->setSprite(TORCH4); player->setAnimateForward(false); break;
 			}
 		}
 		else
 		{
 			switch (currentSprite)
 			{
-			case TORCH7: player->setSprite(TORCH6); break;
-			case TORCH6: player->setSprite(TORCH5); break;
-			case TORCH5: player->setSprite(TORCH4); break;
 			case TORCH4: player->setSprite(TORCH3); break;
 			case TORCH3: player->setSprite(TORCH2); break;
 			case TORCH2: player->setSprite(TORCH1); player->setAnimateForward(true); break;

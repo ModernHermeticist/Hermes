@@ -7,7 +7,7 @@ int main()
 	srand((unsigned int)time(NULL));
 	TCODSystem::forceFullscreenResolution(SCREEN_WIDTH, SCREEN_HEIGHT);
 	TCODConsole::setCustomFont("Bisasam_16x16.png", TCOD_FONT_LAYOUT_ASCII_INROW, 16, 17);
-	TCODConsole::initRoot(CELL_COLUMNS, CELL_ROWS, "Hermes", true, TCOD_RENDERER_SDL2);
+	TCODConsole::initRoot(CELL_COLUMNS, CELL_ROWS, "Hermes", false, TCOD_RENDERER_SDL2);
 	TCODSystem::setFps(60);
 
 	engine = new Engine(CELL_COLUMNS, CELL_ROWS, MAIN_WINDOW_WIDTH, MAIN_WINDOW_HEIGHT);
@@ -20,10 +20,7 @@ int main()
 	
 	while (!TCODConsole::isWindowClosed())
 	{
-		engine->setRefresh(false);
-		animateCellOnTimer(engine->getPlayer()->getXPos(), engine->getPlayer()->getYPos(), engine->getMap(), engine->getPlayer(), engine->getEntities(), 5);
-		engine->setRefresh(true);
-		drawUI();
+		//engine->setRefresh(false);
 		Engine::STATE currentGameState = engine->getState();
 		Engine::STATE newGameState = currentGameState;
 		if (currentGameState == Engine::STATE::PLAYER_TURN)
@@ -123,18 +120,13 @@ int main()
 			newGameState = engine->getPlayer()->getPlayerAI()->progressCharacter();
 			engine->setRefresh(true);
 		}
-
-		bool refresh = engine->getRefresh();
-		if (refresh)
+		engine->updateEntityAnimations();
+		if (engine->getComputeFov())
 		{
-			if (engine->getComputeFov())
-			{
-				engine->getMap()->computeFov();
-				engine->setComputeFov(false);
-			}
-
-			drawUI();
+			engine->getMap()->computeFov();
+			engine->setComputeFov(false);
 		}
+		drawUI();
 		engine->setState(newGameState);
 	}
 	delete engine;
