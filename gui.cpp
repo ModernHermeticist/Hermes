@@ -114,7 +114,7 @@ void drawUtilityWindow()
 void drawTargetWindow()
 {
 	int borderWidth = UTILITY_WINDOW_WIDTH;
-	int borderHeight = LOG_WINDOW_HEIGHT;
+	int borderHeight = GENERAL_LOG_WINDOW_HEIGHT;
 	TCODColor borderColor = TCOD_darker_green;
 	Player* player = engine->getPlayer();
 	PlayerAI* playerAI = player->getPlayerAI();
@@ -139,10 +139,10 @@ void drawTargetWindow()
 	delete con;
 }
 
-void drawLogWindow()
+void drawGeneralLogWindow()
 {
-	int borderWidth = LOG_WINDOW_WIDTH;
-	int borderHeight = LOG_WINDOW_HEIGHT;
+	int borderWidth = GENERAL_LOG_WINDOW_WIDTH;
+	int borderHeight = GENERAL_LOG_WINDOW_HEIGHT;
 	TCODColor borderColor = TCOD_darker_green;
 	TCODConsole* con = new TCODConsole(borderWidth, borderHeight);
 
@@ -165,7 +165,7 @@ void drawLogWindow()
 	con->putCharEx(0, 1, 16 * 2 - 2, borderColor, TCOD_black);
 	con->putCharEx(0, borderHeight - 2, 16 * 2 - 1, borderColor, TCOD_black);
 
-	std::vector<LogEntry> log = engine->getLog();
+	std::vector<LogEntry> log = engine->getGeneralLog();
 	if (log.size() < 7)
 	{
 		for (int i = 0; i < log.size(); i++)
@@ -180,7 +180,7 @@ void drawLogWindow()
 	}
 	else
 	{
-		int logPointer = engine->getLogPointer();
+		int logPointer = engine->getGeneralLogPointer();
 		int pos = 0;
 		for (int i = log.size() - 7 - logPointer; i < log.size() - logPointer; i++)
 		{
@@ -194,7 +194,67 @@ void drawLogWindow()
 		}
 	}
 
-	TCODConsole::blit(con, 0, 0, borderWidth, borderHeight, TCODConsole::root, CELL_COLUMNS - borderWidth, MAIN_WINDOW_HEIGHT-1);
+	TCODConsole::blit(con, 0, 0, borderWidth, borderHeight, 
+		TCODConsole::root, CELL_COLUMNS - borderWidth - COMBAT_LOG_WINDOW_WIDTH, MAIN_WINDOW_HEIGHT-1);
+	delete con;
+}
+
+void drawCombatLogWindow()
+{
+	int borderWidth = COMBAT_LOG_WINDOW_WIDTH;
+	int borderHeight = COMBAT_LOG_WINDOW_HEIGHT;
+	TCODColor borderColor = TCOD_darker_green;
+	TCODConsole* con = new TCODConsole(borderWidth, borderHeight);
+
+	con->putCharEx(0, 0, TOP_LEFT_CORNER_WALL, borderColor, TCOD_black);
+	con->putCharEx(0, borderHeight - 1, BOTTOM_FORK_WALL, borderColor, TCOD_black);
+	con->putCharEx(borderWidth - 1, 0, RIGHT_FORK_WALL, borderColor, TCOD_black);
+	con->putCharEx(borderWidth - 1, borderHeight - 1, BOTTOM_RIGHT_CORNER_WALL, borderColor, TCOD_black);
+
+	for (int i = 1; i < borderWidth; i++)
+	{
+		con->putCharEx(i, 0, HORIZONTAL_WALL, borderColor, TCOD_black);
+		con->putCharEx(i, borderHeight - 1, HORIZONTAL_WALL, borderColor, TCOD_black);
+	}
+	for (int i = 1; i < borderHeight - 1; i++)
+	{
+		con->putCharEx(0, i, VERTICAL_WALL, borderColor, TCOD_black);
+		con->putCharEx(borderWidth, i, VERTICAL_WALL, borderColor, TCOD_black);
+	}
+
+	con->putCharEx(0, 1, 16 * 2 - 2, borderColor, TCOD_black);
+	con->putCharEx(0, borderHeight - 2, 16 * 2 - 1, borderColor, TCOD_black);
+
+	std::vector<LogEntry> log = engine->getCombatLog();
+	if (log.size() < 7)
+	{
+		for (int i = 0; i < log.size(); i++)
+		{
+			LogEntry entry = log[i];
+			std::string s = entry.getEntry();
+			for (int k = 0; k < s.size(); k++)
+			{
+				con->putCharEx(k + 1, i + 1, s[k], entry.getEntryColor(), TCOD_black);
+			}
+		}
+	}
+	else
+	{
+		int logPointer = engine->getCombatLogPointer();
+		int pos = 0;
+		for (int i = log.size() - 7 - logPointer; i < log.size() - logPointer; i++)
+		{
+			LogEntry entry = log[i];
+			std::string s = entry.getEntry();
+			for (int k = 0; k < s.size(); k++)
+			{
+				con->putCharEx(k + 1, pos + 1, s[k], entry.getEntryColor(), TCOD_black);
+			}
+			pos++;
+		}
+	}
+
+	TCODConsole::blit(con, 0, 0, borderWidth, borderHeight, TCODConsole::root, CELL_COLUMNS - borderWidth-1, MAIN_WINDOW_HEIGHT - 1);
 	delete con;
 }
 
@@ -828,64 +888,14 @@ void wrapTextWithinBounds(TCODConsole* con, std::string s, int x_1, int y_1, int
 	} while (ss);
 }
 
-void animateCellOnTimer(int xPos, int yPos, Map* map, Player* player, std::vector<Entity*> entities, float scale)
-{
-	auto t1 = engine->getTime();
-	auto t2 = engine->Clock.now();
-
-	auto dT = std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1).count();
-	std::cout << "Time passed: " << dT << std::endl;
-
-	Tile** world = engine->getMap()->getWorld();
-	if (dT >= scale * 10)
-	{
-		int currentSprite = player->getSprite();
-		engine->setTime(t2);
-		if (player->getAnimateForward())
-		{
-			switch (currentSprite)
-			{
-			case TORCH1: player->setSprite(TORCH2); break;
-			case TORCH2: player->setSprite(TORCH3); break;
-			case TORCH3: player->setSprite(TORCH4); player->setAnimateForward(false); break;
-			}
-		}
-		else
-		{
-			switch (currentSprite)
-			{
-			case TORCH4: player->setSprite(TORCH3); break;
-			case TORCH3: player->setSprite(TORCH2); break;
-			case TORCH2: player->setSprite(TORCH1); player->setAnimateForward(true); break;
-			}
-		}
-	}
-}
-
-void animateAuraAroundCell(int xPos, int yPos)
-{
-	auto t1 = engine->getTime();
-	auto t2 = engine->Clock.now();
-
-	auto dT = std::chrono::duration_cast<std::chrono::seconds>(t2 - t1).count();
-
-	Tile** world = engine->getMap()->getWorld();
-	if (dT >= 1)
-	{
-		//if ()
-		for (int i = -1; i <= 1; i++)
-		{
-			world[xPos + i][yPos - 1].setVisibleBackground(TCODColor::darkRed);
-		}
-	}
-}
 
 void drawUI()
 {
 	TCODConsole::root->clear();
 	drawUtilityWindow();
 	drawTargetWindow();
-	drawLogWindow();
+	drawGeneralLogWindow();
+	drawCombatLogWindow();
 	drawMainBorder();
 	drawMainWindow(engine->getMap(), engine->getPlayer(), engine->getEntities());
 	TCODConsole::flush();

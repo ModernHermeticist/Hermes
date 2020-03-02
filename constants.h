@@ -10,8 +10,10 @@ const int MAIN_WINDOW_WIDTH = 75; //THE PLAY AREA IS 73 WIDE
 const int MAIN_WINDOW_HEIGHT = 46; //THE PLAY AREA IS 52 HIGH
 const int UTILITY_WINDOW_WIDTH = 22;
 const int UTILITY_WINDOW_HEIGHT = 54;
-const int LOG_WINDOW_WIDTH = 75;
-const int LOG_WINDOW_HEIGHT = 9;
+const int GENERAL_LOG_WINDOW_WIDTH = 38;
+const int GENERAL_LOG_WINDOW_HEIGHT = 9;
+const int COMBAT_LOG_WINDOW_WIDTH = 37;
+const int COMBAT_LOG_WINDOW_HEIGHT = 9;
 
 const int TOP_LEFT_CORNER_WALL = 218;
 const int BOTTOM_RIGHT_CORNER_WALL = 217;
@@ -47,5 +49,21 @@ const int TORCH4 = 259;
 const int TORCH5 = 260;
 const int TORCH6 = 261;
 const int TORCH7 = 262;
+
+const int WATER1 = 263;
+const int WATER2 = 264;
+const int WATER3 = 265;
+const int WATER4 = 266;
+const int WATER5 = 267;
+const int WATER6 = 268;
+const int WATER7 = 269;
+const int WATER8 = 270;
+const int WATER9 = 271;
+const int WATER10 = 272;
+const int WATER11 = 273;
+
+const int WOOD_FLOOR_1 = 274;
+
+const int KOBOLD_1 = 275;
 
 #endif

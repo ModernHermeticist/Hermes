@@ -5,7 +5,7 @@ class Entity;
 class AnimatorComponent
 {
 public:
-	AnimatorComponent(int _animationStart, int _animationEnd, float _animationScale);
+	AnimatorComponent(int _animationStart, int _animationEnd, int _currentFrame, float _animationScale, bool _forwardAndReverse);
 	~AnimatorComponent();
 
 	int getAnimationStart();
@@ -25,6 +25,10 @@ public:
 	bool getAnimationForward();
 	void setAnimationForward(bool _animationForward);
 
+
+	std::chrono::steady_clock::time_point getTime();
+	void setTime(std::chrono::steady_clock::time_point _time);
+
 private:
 	int animationStart;
 	int animationEnd;
@@ -33,5 +37,10 @@ private:
 
 	int currentFrame;
 
+	bool forwardAndReverse;
+
 	Entity* parent;
+	std::chrono::high_resolution_clock Clock;
+
+	std::chrono::steady_clock::time_point time;
 };

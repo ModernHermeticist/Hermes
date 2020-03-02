@@ -62,7 +62,7 @@ void EnemyAI::moveOrAttack(Entity* owner, Player* target)
 			AttackComponent* attackComponent = owner->getAttackComponent();
 			int damage = attackComponent->getDamage();
 			damage = target->getPlayerAI()->takeDamage(damage);
-			engine->addToLog("You were hit by a " + owner->getName() + " for " + std::to_string(damage) + " damage!", TCOD_red);
+			engine->addToCombatLog("You were hit by a " + owner->getName() + " for " + std::to_string(damage) + " damage!", TCOD_red);
 			engine->setComputeFov(true);
 		}
 	}
@@ -101,7 +101,8 @@ bool EnemyAI::canMoveTo(Tile* tile, int newX, int newY)
 	std::vector<Entity*> entities = engine->getEntities();
 	for (int i = 0; i < entities.size(); i++)
 	{
-		if (entities[i]->getXPos() == newX && entities[i]->getYPos() == newY && entities[i]->getDestroyComponent()->isAlive()) return false;
+		DestroyComponent* destroyComponent = entities[i]->getDestroyComponent();
+		if (destroyComponent != NULL && entities[i]->getXPos() == newX && entities[i]->getYPos() == newY && entities[i]->getDestroyComponent()->isAlive()) return false;
 	}
 	return tile->getWalkable();
 }

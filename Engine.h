@@ -33,8 +33,10 @@ public:
 	int getWorldWidth();
 	int getWorldHeight();
 
-	std::vector<LogEntry> getLog();
-	void addToLog(std::string message, TCODColor c);
+	std::vector<LogEntry> getGeneralLog();
+	std::vector<LogEntry> getCombatLog();
+	void addToGeneralLog(std::string message, TCODColor c);
+	void addToCombatLog(std::string message, TCODColor c);
 
 	bool isImpassibleSprite(int sprite);
 
@@ -52,16 +54,13 @@ public:
 	bool getRefresh();
 	void setRefresh(bool val);
 
-	void incrementLogPointer();
-	void decrementLogPointer();
+	void incrementGeneralLogPointer();
+	void decrementGeneralLogPointer();
+	void incrementCombatLogPointer();
+	void decrementCombatLogPointer();
 
-	int getLogPointer();
-
-	std::chrono::steady_clock::time_point getTime();
-	void setTime(std::chrono::steady_clock::time_point _time);
-
-	std::chrono::high_resolution_clock Clock;
-
+	int getGeneralLogPointer();
+	int getCombatLogPointer();
 
 private:
 	int fovRadius;
@@ -73,7 +72,8 @@ private:
 	int world_width;
 	int world_height;
 
-	int logPointer = 0;
+	int generalLogPointer = 0;
+	int combatLogPointer = 0;
 	int maxLogHistory = 200;
 
 	STATE state;
@@ -86,11 +86,10 @@ private:
 	
 	std::vector<Entity*> entities;
 
-	std::vector<LogEntry> log;
+	std::vector<LogEntry> generalLog;
+	std::vector<LogEntry> combatLog;
 
 	TCOD_key_t lastKey;
-
-	std::chrono::steady_clock::time_point time;
 };
 
 extern Engine* engine;

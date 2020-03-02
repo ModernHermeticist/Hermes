@@ -1,13 +1,15 @@
 #include "main.h"
 
-AnimatorComponent::AnimatorComponent(int _animationStart, int _animationEnd, float _animationScale)
+AnimatorComponent::AnimatorComponent(int _animationStart, int _animationEnd, int _currentFrame, float _animationScale, bool _forwardAndReverse)
 {
 	animationStart = _animationStart;
 	animationEnd = _animationEnd;
 	animationScale = _animationScale;
 	animationForward = true;
-	currentFrame = animationStart;
+	currentFrame = _currentFrame;
 	parent = NULL;
+	forwardAndReverse = _forwardAndReverse;
+	time = Clock.now();
 }
 
 AnimatorComponent::~AnimatorComponent()
@@ -29,26 +31,39 @@ void AnimatorComponent::setParent(Entity* _parent) { parent = _parent; }
 
 void AnimatorComponent::animateCellOnTimer()
 {
-	auto t1 = engine->getTime();
-	auto t2 = engine->Clock.now();
+	auto t1 = time;
+	auto t2 = Clock.now();
 
 	auto dT = std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1).count();
 	Tile** world = engine->getMap()->getWorld();
 	if (dT >= animationScale * 10)
 	{
-		engine->setTime(t2);
-		if (currentFrame <= animationEnd)
+		time = t2;
+		if (animationForward)
 		{
 			parent->setSprite(currentFrame);
 			currentFrame++;
+			if (currentFrame >= animationEnd)
+			{
+				if (forwardAndReverse)
+					animationForward = false;
+				else currentFrame = animationStart;
+			}
 		}
-		else if (currentFrame >= animationStart)
+		else if (!animationForward)
 		{
 			parent->setSprite(currentFrame);
 			currentFrame--;
+			if (currentFrame <= animationStart)
+			{
+				animationForward = true;
+			}
 		}
 	}
 }
 
 bool AnimatorComponent::getAnimationForward() { return animationForward; }
 void AnimatorComponent::setAnimationForward(bool _animationForward) { animationForward = _animationForward; }
+
+std::chrono::steady_clock::time_point AnimatorComponent::getTime() { return time; }
+void AnimatorComponent::setTime(std::chrono::steady_clock::time_point _time) { time = _time; }

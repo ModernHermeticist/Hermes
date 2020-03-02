@@ -36,13 +36,25 @@ Engine::STATE PlayerAI::parseKeyInput()
 		case TCODK_KP3:   newState = moveOrAttack(1, 1, movementDirection::SOUTHEAST); break;
 		case TCODK_UP:
 		{
-			engine->incrementLogPointer();
+			engine->incrementGeneralLogPointer();
 			engine->setRefresh(true);
 			break;
 		}
 		case TCODK_DOWN:
 		{
-			engine->decrementLogPointer();
+			engine->decrementGeneralLogPointer();
+			engine->setRefresh(true);
+			break;
+		}
+		case TCODK_LEFT:
+		{
+			engine->incrementCombatLogPointer();
+			engine->setRefresh(true);
+			break;
+		}
+		case TCODK_RIGHT:
+		{
+			engine->decrementCombatLogPointer();
 			engine->setRefresh(true);
 			break;
 		}
@@ -94,19 +106,19 @@ Engine::STATE PlayerAI::pickUpItem()
 		{
 			if (inventoryComponent->getCurrentStorageSize() == inventoryComponent->getStorageCapacity())
 			{
-				engine->addToLog("Inventory is full.", TCOD_grey);
+				engine->addToGeneralLog("Inventory is full.", TCOD_grey);
 				return engine->getState();
 			}
 			else
 			{
 				inventoryComponent->addToStorage(entity);
 				engine->removeEntity(entity);
-				engine->addToLog("You pick up a " + entity->getName(), TCOD_grey);
+				engine->addToGeneralLog("You pick up a " + entity->getName(), TCOD_grey);
 				return Engine::STATE::ENEMY_TURN;
 			}
 		}
 	}
-	engine->addToLog("There is nothing here to pick up.", TCOD_grey);
+	engine->addToGeneralLog("There is nothing here to pick up.", TCOD_grey);
 	return engine->getState();
 }
 
@@ -121,7 +133,7 @@ Engine::STATE PlayerAI::dropItem(int c)
 		entity->setXPos(player->getXPos());
 		entity->setYPos(player->getYPos());
 		engine->addEntity(entity);
-		engine->addToLog("You drop a " + entity->getName() + '.', TCOD_grey);
+		engine->addToGeneralLog("You drop a " + entity->getName() + '.', TCOD_grey);
 		return Engine::STATE::ENEMY_TURN;
 	}
 	return engine->getState();
@@ -147,14 +159,14 @@ Engine::STATE PlayerAI::equipItem(int c)
 					itemInSlot->getItemComponent()->setEquipped(false);
 					equipmentComponent->removeItemAtSlot(slot);
 					modifyStatsOnItemDeEquip(itemInSlot->getItemComponent());
-					engine->addToLog("You unequip " + itemInSlot->getName() + ".", TCOD_grey);
+					engine->addToGeneralLog("You unequip " + itemInSlot->getName() + ".", TCOD_grey);
 				}
 				if (itemInSlot != entity)
 				{
 					equipmentComponent->setItemAtSlot(entity, slot);
 					entity->getItemComponent()->setEquipped(true);
 					modifyStatsOnItemEquip(itemComponent);
-					engine->addToLog("You equip " + entity->getName() + ".", TCOD_grey);
+					engine->addToGeneralLog("You equip " + entity->getName() + ".", TCOD_grey);
 				}
 			}
 		}
@@ -181,7 +193,7 @@ Engine::STATE PlayerAI::useItem(int c)
 	EffectComponent::Effect_Type effectType = effectComponent->getEffectType();
 	if (effectType == EffectComponent::Effect_Type::HEAL)
 	{
-		engine->addToLog("You use the " + entity->getName(), TCODColor::grey);
+		engine->addToGeneralLog("You use the " + entity->getName(), TCODColor::grey);
 		heal(effectComponent->getEffectValue());
 		inventoryComponent->removeFromStorage(entity);
 		engine->removeEntity(entity);
@@ -242,7 +254,7 @@ Engine::STATE PlayerAI::moveOrAttack(int dX, int dY, movementDirection dir)
 			ItemComponent* itemComponent = entity->getItemComponent();
 			if (newX == entity->getXPos() && newY == entity->getYPos() && destroyComponent == NULL && itemComponent != NULL)
 			{
-				engine->addToLog("You see a " + entity->getName() + " here.", TCOD_grey);
+				engine->addToGeneralLog("You see a " + entity->getName() + " here.", TCOD_grey);
 			}
 			else if (newX == entity->getXPos() && newY == entity->getYPos() && destroyComponent->isAlive())
 			{
@@ -250,10 +262,10 @@ Engine::STATE PlayerAI::moveOrAttack(int dX, int dY, movementDirection dir)
 				int damage = attackComponent->getDamage();
 				std::vector<int> retVal = enemy->takeDamage(entity, damage);
 				damage = retVal[0];
-				engine->addToLog("You hit a " + entity->getName() + " for " + std::to_string(damage) + " damage!", TCOD_red);
+				engine->addToCombatLog("You hit a " + entity->getName() + " for " + std::to_string(damage) + " damage!", TCOD_red);
 				if (retVal[1] == -1)
 				{
-					engine->addToLog(entity->getName() + " dies!", TCOD_darker_red);
+					engine->addToGeneralLog(entity->getName() + " dies!", TCOD_darker_red);
 					return gainExperience(destroyComponent->getExperienceValue());
 				}
 				engine->setComputeFov(true);
@@ -266,7 +278,7 @@ Engine::STATE PlayerAI::moveOrAttack(int dX, int dY, movementDirection dir)
 	}
 	else
 	{
-		engine->addToLog("You cannot move there.", TCOD_grey);
+		engine->addToGeneralLog("You cannot move there.", TCOD_grey);
 		return Engine::STATE::PLAYER_TURN;
 	}
 }
@@ -274,7 +286,7 @@ Engine::STATE PlayerAI::moveOrAttack(int dX, int dY, movementDirection dir)
 Engine::STATE PlayerAI::gainExperience(int val)
 {
 	currentExperience += val; 
-	engine->addToLog("You gain " + std::to_string(val) + " experience!", TCOD_gold);
+	engine->addToGeneralLog("You gain " + std::to_string(val) + " experience!", TCOD_gold);
 	if (currentExperience >= maximumExperience)
 	{
 		return Engine::STATE::PROGRESS_CHARACTER;
@@ -350,7 +362,7 @@ Engine::STATE PlayerAI::progressCharacter()
 			TCODConsole::flush();
 		}
 	}
-	engine->addToLog("You have attained level " + std::to_string(characterLevel) + "!", TCOD_gold);
+	engine->addToGeneralLog("You have attained level " + std::to_string(characterLevel) + "!", TCOD_gold);
 	return Engine::STATE::ENEMY_TURN;
 }
 
@@ -467,7 +479,7 @@ void PlayerAI::heal(int val)
 	{
 		destroyComponent->setCurrentHealth(destroyComponent->getMaximumHealth());
 	}
-	engine->addToLog("You heal " + std::to_string(val) + " hitpoints.", TCODColor::green);
+	engine->addToCombatLog("You heal " + std::to_string(val) + " hitpoints.", TCODColor::green);
 }
 
 void PlayerAI::selectTarget()

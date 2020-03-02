@@ -4,7 +4,6 @@
 
 Engine::Engine(int _screen_width, int _screen_height, int _world_width, int _world_height)
 {
-	time = Clock.now();
 	screen_width = _screen_width;
 	screen_height = _screen_height;
 	world_width = _world_width;
@@ -88,10 +87,26 @@ void Engine::loadMapFile(std::string fileName)
 			}
 			if (tile.character == '!')
 			{
-				AnimatorComponent* animatorComponent = new AnimatorComponent(TORCH1, TORCH4, 25);
+				int frameStart = rand() % 3 + TORCH1;
+				AnimatorComponent* animatorComponent = new AnimatorComponent(TORCH1, TORCH4, frameStart, 25, true);
 				Entity* entity = new Entity(i, j, TORCH1, TCODColor::white, TCODColor::black, "Torch", animatorComponent);
 				entity->getAnimatorComponent()->setParent(entity);
 				entities.push_back(entity);
+			}
+			else if (tile.character == '~')
+			{
+				int frameStart = WATER5;
+				AnimatorComponent* animatorComponent = new AnimatorComponent(WATER5, WATER11, frameStart, 20, false);
+				Entity* entity = new Entity(i, j, WATER5, TCODColor::white, TCODColor::black, "Water", animatorComponent);
+				entity->getAnimatorComponent()->setParent(entity);
+				entities.push_back(entity);
+			}
+			else if (tile.character == '.')
+			{
+				newTile.setSprite(WOOD_FLOOR_1);
+				newTile.setVisibleForeground(TCODColor::white);
+				newTile.setExploredForeground(TCODColor::darkGrey);
+				map->setTile(i, j, newTile);
 			}
 			else
 			{
@@ -120,7 +135,7 @@ void Engine::loadMapFile(std::string fileName)
 					EnemyAI* enemyAI = new EnemyAI();
 					AttackComponent* attackComponent = new AttackComponent(1, 3);
 					DestroyComponent* destroyComponent = new DestroyComponent(10, 2, 0, 2, 0, 0, 0, 0);
-					Entity* entity = new Entity(i, j, entityTile.character, cF, cB, "Kobold Whelp", enemyAI, attackComponent, destroyComponent, NULL, NULL);
+					Entity* entity = new Entity(i, j, KOBOLD_1, cF, cB, "Kobold Whelp", enemyAI, attackComponent, destroyComponent, NULL, NULL);
 					entities.push_back(entity);
 				}
 			}
@@ -194,7 +209,6 @@ void Engine::updateEntityAnimations()
 		AnimatorComponent* animatorComponent = entity->getAnimatorComponent();
 		if (animatorComponent != NULL)
 		{
-			std::cout << "Animating: " << i << std::endl;
 			animatorComponent->animateCellOnTimer();
 		}
 	}
@@ -210,15 +224,46 @@ int Engine::getWorldHeight()
 	return world_height;
 }
 
-std::vector<LogEntry> Engine::getLog()
+std::vector<LogEntry> Engine::getGeneralLog()
 {
-	return log;
+	return generalLog;
 }
-void Engine::addToLog(std::string message, TCODColor color)
+std::vector<LogEntry> Engine::getCombatLog()
 {
-	LogEntry lE = LogEntry(message, color);
-	if (log.size() > maxLogHistory) log.erase(log.begin());
-	log.push_back(lE);
+	return combatLog;
+}
+void Engine::addToGeneralLog(std::string message, TCODColor color)
+{
+	//36
+	if (message.size() > 36)
+	{
+		do
+		{
+			LogEntry lE = LogEntry(message.substr(0, 36), color);
+			if (generalLog.size() > maxLogHistory) generalLog.erase(generalLog.begin());
+			generalLog.push_back(lE);
+			message = message.substr(36);
+		} while (message.size() > 36);
+	}
+	LogEntry lE = LogEntry(message.substr(0, 36), color);
+	if (generalLog.size() > maxLogHistory) generalLog.erase(generalLog.begin());
+	generalLog.push_back(lE);
+}
+void Engine::addToCombatLog(std::string message, TCODColor color)
+{
+	if (message.size() > 36)
+	{
+		do
+		{
+			LogEntry lE = LogEntry(message.substr(0, 35), color);
+			if (combatLog.size() > maxLogHistory) combatLog.erase(combatLog.begin());
+			combatLog.push_back(lE);
+			message = message.substr(35);
+		} while (message.size() > 36);
+	}
+	LogEntry lE = LogEntry(message.substr(0, 35), color);
+	if (combatLog.size() > maxLogHistory) combatLog.erase(combatLog.begin());
+	combatLog.push_back(lE);
 }
 
 bool Engine::isImpassibleSprite(int sprite)
@@ -260,18 +305,27 @@ void Engine::setState(Engine::STATE s) { state = s; }
 bool Engine::getRefresh() { return refresh; }
 void Engine::setRefresh(bool val) { refresh = val; }
 
-void Engine::incrementLogPointer() 
+void Engine::incrementGeneralLogPointer() 
 { 
-	if (logPointer < maxLogHistory && logPointer < (int)log.size()-7)
-		logPointer++; 
+	if (generalLogPointer < maxLogHistory && generalLogPointer < (int)generalLog.size()-7)
+		generalLogPointer++; 
 }
-void Engine::decrementLogPointer() 
+void Engine::decrementGeneralLogPointer() 
 { 
-	if (logPointer > 0)
-		logPointer--; 
+	if (generalLogPointer > 0)
+		generalLogPointer--; 
 }
 
-int Engine::getLogPointer() { return logPointer; }
+void Engine::incrementCombatLogPointer()
+{
+	if (combatLogPointer < maxLogHistory && combatLogPointer < (int)combatLog.size() - 7)
+		combatLogPointer++;
+}
+void Engine::decrementCombatLogPointer()
+{
+	if (combatLogPointer > 0)
+		combatLogPointer--;
+}
 
-std::chrono::steady_clock::time_point Engine::getTime() { return time; }
-void Engine::setTime(std::chrono::steady_clock::time_point _time) { time = _time; }
+int Engine::getGeneralLogPointer() { return generalLogPointer; }
+int Engine::getCombatLogPointer() { return combatLogPointer; }
