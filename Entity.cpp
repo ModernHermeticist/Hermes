@@ -28,6 +28,21 @@ Entity::Entity(int _xPos, int _yPos, int _sprite, TCODColor _spriteForeground, T
 }
 
 Entity::Entity(int _xPos, int _yPos, int _sprite, TCODColor _spriteForeground, TCODColor _spriteBackground, std::string _name,
+	EnemyAI* _enemyAI, AttackComponent* _attackComponent, DestroyComponent* _destroyComponent, AnimatorComponent* _animatorComponent)
+{
+	xPos = _xPos;
+	yPos = _yPos;
+	sprite = _sprite;
+	spriteForeground = _spriteForeground;
+	spriteBackground = _spriteBackground;
+	name = _name;
+	enemyAI = _enemyAI;
+	attackComponent = _attackComponent;
+	destroyComponent = _destroyComponent;
+	animatorComponent = _animatorComponent;
+}
+
+Entity::Entity(int _xPos, int _yPos, int _sprite, TCODColor _spriteForeground, TCODColor _spriteBackground, std::string _name,
 	EnemyAI* _enemyAI, AttackComponent* _attackComponent, DestroyComponent* _destroyComponent, 
 	InventoryComponent* _inventoryComponent, ItemComponent* _itemComponent)
 {

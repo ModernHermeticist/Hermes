@@ -62,6 +62,11 @@ public:
 	int getGeneralLogPointer();
 	int getCombatLogPointer();
 
+	TTF_Font* getLogFont();
+	void setLogFont(TTF_Font* font);
+
+	SDL_Renderer* renderer;
+
 private:
 	int fovRadius;
 	bool computeFov;
@@ -81,6 +86,8 @@ private:
 	bool refresh;
 
 	Player* player;
+
+	TTF_Font* logFont;
 
 	Map* map;
 	

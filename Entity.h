@@ -11,6 +11,8 @@ public:
 
 	Entity(int _xPos, int _yPos, int _sprite, TCODColor _spriteForeground, TCODColor _spriteBackground, std::string _name);
 	Entity(int _xPos, int _yPos, int _sprite, TCODColor _spriteForeground, TCODColor _spriteBackground, std::string _name, AnimatorComponent* _animatorComponent);
+	Entity(int _xPos, int _yPos, int _sprite, TCODColor _spriteForeground, TCODColor _spriteBackground, std::string _name,
+		EnemyAI* _enemyAI, AttackComponent* _attackComponent, DestroyComponent* _destroyComponent, AnimatorComponent* _animatorComponent);
 	Entity(int _xPos, int _yPos, int _sprite, TCODColor _spriteForeground, TCODColor _spriteBackground, std::string _name, 
 		EnemyAI* _enemyAI, AttackComponent* _attackComponent, DestroyComponent* _destroyComponent, 
 		InventoryComponent* _inventoryComponent, ItemComponent* _itemComponent);

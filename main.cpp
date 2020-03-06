@@ -4,11 +4,12 @@ Engine* engine;
 
 int main() 
 {
+	TTF_Init();
 	srand((unsigned int)time(NULL));
-	TCODSystem::forceFullscreenResolution(SCREEN_WIDTH, SCREEN_HEIGHT);
+	TCOD_sys_force_fullscreen_resolution(SCREEN_WIDTH, SCREEN_HEIGHT);
 	TCODConsole::setCustomFont("Bisasam_16x16.png", TCOD_FONT_LAYOUT_ASCII_INROW, 16, 18);
-	TCODConsole::initRoot(CELL_COLUMNS, CELL_ROWS, "Hermes", false, TCOD_RENDERER_OPENGL2);
-	//TCODSystem::setFps(60);
+	TCODConsole::initRoot(CELL_COLUMNS, CELL_ROWS, "Hermes", true, TCOD_RENDERER_SDL2);
+	TCODSystem::setFps(30);
 
 	engine = new Engine(CELL_COLUMNS, CELL_ROWS, MAIN_WINDOW_WIDTH, MAIN_WINDOW_HEIGHT);
 
@@ -20,7 +21,6 @@ int main()
 	
 	while (!TCODConsole::isWindowClosed())
 	{
-		//engine->setRefresh(false);
 		Engine::STATE currentGameState = engine->getState();
 		Engine::STATE newGameState = currentGameState;
 		if (currentGameState == Engine::STATE::PLAYER_TURN)
@@ -130,6 +130,8 @@ int main()
 		engine->setState(newGameState);
 	}
 	delete engine;
+
+	TTF_Quit();
 	return 0;
 }
 

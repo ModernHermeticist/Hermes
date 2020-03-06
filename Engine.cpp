@@ -8,7 +8,9 @@ Engine::Engine(int _screen_width, int _screen_height, int _world_width, int _wor
 	screen_height = _screen_height;
 	world_width = _world_width;
 	world_height = _world_height;
+	renderer = TCOD_sys_get_sdl_renderer();
 	TCODSystem::checkForEvent(TCOD_EVENT_KEY_PRESS, &lastKey, NULL);
+	logFont = TTF_OpenFont("terminus.ttf", LOG_FONT_SIZE);
 	PlayerAI* playerAI = new PlayerAI();
 	int minimumDamage = 1;
 	int maximumDamage = 5;
@@ -58,6 +60,7 @@ Engine::~Engine()
 	{
 		delete entities[i];
 	}
+	TTF_CloseFont(logFont);
 }
 
 void Engine::loadMapFile(std::string fileName)
@@ -132,10 +135,13 @@ void Engine::loadMapFile(std::string fileName)
 				}
 				else
 				{
+					int frameStart = rand() % 3 + KOBOLD_1;
+					AnimatorComponent* animatorComponent = new AnimatorComponent(KOBOLD_1, KOBOLD_3, frameStart, 25, true);
 					EnemyAI* enemyAI = new EnemyAI();
 					AttackComponent* attackComponent = new AttackComponent(1, 3);
 					DestroyComponent* destroyComponent = new DestroyComponent(10, 2, 0, 2, 0, 0, 0, 0);
-					Entity* entity = new Entity(i, j, KOBOLD_1, cF, cB, "Kobold Whelp", enemyAI, attackComponent, destroyComponent, NULL, NULL);
+					Entity* entity = new Entity(i, j, frameStart, cF, cB, "Kobold Whelp", enemyAI, attackComponent, destroyComponent, animatorComponent);
+					entity->getAnimatorComponent()->setParent(entity);
 					entities.push_back(entity);
 				}
 			}
@@ -235,33 +241,35 @@ std::vector<LogEntry> Engine::getCombatLog()
 void Engine::addToGeneralLog(std::string message, TCODColor color)
 {
 	//36
-	if (message.size() > 36)
+	if (message.size() > MAXIMUM_LOG_LINE_LENGTH)
 	{
 		do
 		{
-			LogEntry lE = LogEntry(message.substr(0, 36), color);
+			LogEntry lE = LogEntry(message.substr(0, MAXIMUM_LOG_LINE_LENGTH), color);
 			if (generalLog.size() > maxLogHistory) generalLog.erase(generalLog.begin());
 			generalLog.push_back(lE);
-			message = message.substr(36);
-		} while (message.size() > 36);
+			message = message.substr(MAXIMUM_LOG_LINE_LENGTH);
+			if (message[0] == ' ') message = message.substr(1);
+		} while (message.size() > MAXIMUM_LOG_LINE_LENGTH);
 	}
-	LogEntry lE = LogEntry(message.substr(0, 36), color);
+	LogEntry lE = LogEntry(message.substr(0, MAXIMUM_LOG_LINE_LENGTH), color);
 	if (generalLog.size() > maxLogHistory) generalLog.erase(generalLog.begin());
 	generalLog.push_back(lE);
 }
 void Engine::addToCombatLog(std::string message, TCODColor color)
 {
-	if (message.size() > 36)
+	if (message.size() > MAXIMUM_LOG_LINE_LENGTH)
 	{
 		do
 		{
-			LogEntry lE = LogEntry(message.substr(0, 35), color);
+			LogEntry lE = LogEntry(message.substr(0, MAXIMUM_LOG_LINE_LENGTH), color);
 			if (combatLog.size() > maxLogHistory) combatLog.erase(combatLog.begin());
 			combatLog.push_back(lE);
-			message = message.substr(35);
-		} while (message.size() > 36);
+			message = message.substr(MAXIMUM_LOG_LINE_LENGTH);
+			if (message[0] == ' ') message = message.substr(1);
+		} while (message.size() > MAXIMUM_LOG_LINE_LENGTH);
 	}
-	LogEntry lE = LogEntry(message.substr(0, 35), color);
+	LogEntry lE = LogEntry(message.substr(0, MAXIMUM_LOG_LINE_LENGTH), color);
 	if (combatLog.size() > maxLogHistory) combatLog.erase(combatLog.begin());
 	combatLog.push_back(lE);
 }
@@ -307,7 +315,7 @@ void Engine::setRefresh(bool val) { refresh = val; }
 
 void Engine::incrementGeneralLogPointer() 
 { 
-	if (generalLogPointer < maxLogHistory && generalLogPointer < (int)generalLog.size()-7)
+	if (generalLogPointer < maxLogHistory && generalLogPointer < (int)generalLog.size()-NUMBER_OF_LOG_LINES)
 		generalLogPointer++; 
 }
 void Engine::decrementGeneralLogPointer() 
@@ -318,7 +326,7 @@ void Engine::decrementGeneralLogPointer()
 
 void Engine::incrementCombatLogPointer()
 {
-	if (combatLogPointer < maxLogHistory && combatLogPointer < (int)combatLog.size() - 7)
+	if (combatLogPointer < maxLogHistory && combatLogPointer < (int)combatLog.size() - NUMBER_OF_LOG_LINES)
 		combatLogPointer++;
 }
 void Engine::decrementCombatLogPointer()
@@ -329,3 +337,6 @@ void Engine::decrementCombatLogPointer()
 
 int Engine::getGeneralLogPointer() { return generalLogPointer; }
 int Engine::getCombatLogPointer() { return combatLogPointer; }
+
+TTF_Font* Engine::getLogFont() { return logFont; }
+void Engine::setLogFont(TTF_Font* font) { logFont = font; }

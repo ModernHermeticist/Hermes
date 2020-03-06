@@ -12,6 +12,9 @@
 #include <chrono>
 
 
+#include <SDL.h>
+#undef main
+#include <SDL_ttf.h>
 #include <libtcod.hpp>
 #include "REXSpeeder.h"
 

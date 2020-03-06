@@ -6,6 +6,9 @@ const int SCREEN_HEIGHT = 1080;
 const int CELL_COLUMNS = SCREEN_WIDTH / 20;
 const int CELL_ROWS = SCREEN_HEIGHT / 20;
 
+
+const int LOG_FONT_SIZE = 12;
+
 const int MAIN_WINDOW_WIDTH = 75; //THE PLAY AREA IS 73 WIDE
 const int MAIN_WINDOW_HEIGHT = 46; //THE PLAY AREA IS 52 HIGH
 const int UTILITY_WINDOW_WIDTH = 22;
@@ -14,6 +17,18 @@ const int GENERAL_LOG_WINDOW_WIDTH = 38;
 const int GENERAL_LOG_WINDOW_HEIGHT = 9;
 const int COMBAT_LOG_WINDOW_WIDTH = 37;
 const int COMBAT_LOG_WINDOW_HEIGHT = 9;
+
+const int GENERAL_LOG_WINDOW_TOP = int(SCREEN_HEIGHT * 0.845);
+const int GENERAL_LOG_WINDOW_BOTTOM = int(SCREEN_HEIGHT * 0.96);
+
+const int GENERAL_LOG_WINDOW_LEFT = int(SCREEN_WIDTH * 0.23);
+const int GENERAL_LOG_WINDOW_RIGHT = int(SCREEN_WIDTH * 0.50);
+
+const int COMBAT_LOG_WINDOW_TOP = int(SCREEN_HEIGHT * 0.845);
+const int COMBAT_LOG_WINDOW_BOTTOM = int(SCREEN_HEIGHT * 0.96);
+
+const int COMBAT_LOG_WINDOW_LEFT = int(SCREEN_WIDTH * 0.615);
+const int COMBAT_LOG_WINDOW_RIGHT = int(SCREEN_WIDTH * 0.96);
 
 const int TOP_LEFT_CORNER_WALL = 218;
 const int BOTTOM_RIGHT_CORNER_WALL = 217;
@@ -27,7 +42,8 @@ const int BOTTOM_FORK_WALL = 193;
 const int LEFT_FORK_WALL = 195;
 const int RIGHT_FORK_WALL = 180;
 
-
+const int NUMBER_OF_LOG_LINES = 12;
+const int MAXIMUM_LOG_LINE_LENGTH = 300;
 
 const int NORTH = 0;
 const int NORTHEAST = 1;
@@ -65,5 +81,7 @@ const int WATER11 = 273;
 const int WOOD_FLOOR_1 = 274;
 
 const int KOBOLD_1 = 275;
+const int KOBOLD_2 = 276;
+const int KOBOLD_3 = 277;
 
 #endif

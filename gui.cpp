@@ -22,6 +22,7 @@ void drawMainBorder()
 	}
 
 	TCODConsole::blit(con, 0, 0, borderWidth, borderHeight, TCODConsole::root, CELL_COLUMNS - borderWidth, 0);
+	//TCOD_sys_accumulate_console(TCODConsole::root->get_data());
 	delete con;
 }
 
@@ -59,6 +60,7 @@ void drawMainWindow(Map* map, Player* player, std::vector<Entity*> entities)
 	}
 	con->putCharEx(player->getXPos(), player->getYPos(), player->getSprite(), player->getSpriteForeground(), player->getSpriteBackground());
 	TCODConsole::blit(con, 0, 0, borderWidth, borderHeight, TCODConsole::root, CELL_COLUMNS - borderWidth-1, 1);
+	//TCOD_sys_accumulate_console(TCODConsole::root->get_data());
 	delete con;
 }
 
@@ -136,6 +138,7 @@ void drawTargetWindow()
 	wrapTextWithinBounds(con, s, 1, 2, borderWidth - 2, borderHeight - 2);
 
 	TCODConsole::blit(con, 0, 0, borderWidth, borderHeight, TCODConsole::root, 0, CELL_ROWS - borderHeight);
+	//TCOD_sys_accumulate_console(TCODConsole::root->get_data());
 	delete con;
 }
 
@@ -162,40 +165,38 @@ void drawGeneralLogWindow()
 		con->putCharEx(borderWidth - 1, i, VERTICAL_WALL, borderColor, TCOD_black);
 	}
 
+	// UP AND DOWN ARROWS
 	con->putCharEx(0, 1, 16 * 2 - 2, borderColor, TCOD_black);
 	con->putCharEx(0, borderHeight - 2, 16 * 2 - 1, borderColor, TCOD_black);
 
 	std::vector<LogEntry> log = engine->getGeneralLog();
-	if (log.size() < 7)
+	if (log.size() < NUMBER_OF_LOG_LINES)
 	{
 		for (int i = 0; i < log.size(); i++)
 		{
 			LogEntry entry = log[i];
 			std::string s = entry.getEntry();
-			for (int k = 0; k < s.size(); k++)
-			{
-				con->putCharEx(k + 1, i + 1, s[k], entry.getEntryColor(), TCOD_black);
-			}
+			SDL_Color textColor = utilityfunctions::mapTCODColorToSDLColor(entry.getEntryColor());
+			utilityfunctions::printLine(engine->renderer, s, textColor, GENERAL_LOG_WINDOW_LEFT, GENERAL_LOG_WINDOW_TOP + (i * LOG_FONT_SIZE));
 		}
 	}
 	else
 	{
 		int logPointer = engine->getGeneralLogPointer();
 		int pos = 0;
-		for (int i = log.size() - 7 - logPointer; i < log.size() - logPointer; i++)
+		for (int i = log.size() - NUMBER_OF_LOG_LINES - logPointer; i < log.size() - logPointer; i++)
 		{
 			LogEntry entry = log[i];
 			std::string s = entry.getEntry();
-			for (int k = 0; k < s.size(); k++)
-			{
-				con->putCharEx(k + 1, pos + 1, s[k], entry.getEntryColor(), TCOD_black);
-			}
+			SDL_Color textColor = utilityfunctions::mapTCODColorToSDLColor(entry.getEntryColor());
+			utilityfunctions::printLine(engine->renderer, s, textColor, GENERAL_LOG_WINDOW_LEFT, GENERAL_LOG_WINDOW_TOP + (pos * LOG_FONT_SIZE));
 			pos++;
 		}
 	}
-
 	TCODConsole::blit(con, 0, 0, borderWidth, borderHeight, 
 		TCODConsole::root, CELL_COLUMNS - borderWidth - COMBAT_LOG_WINDOW_WIDTH, MAIN_WINDOW_HEIGHT-1);
+	//SDL_RenderPresent(engine->renderer);
+	//TCOD_sys_accumulate_console(TCODConsole::root->get_data());
 	delete con;
 }
 
@@ -222,39 +223,37 @@ void drawCombatLogWindow()
 		con->putCharEx(borderWidth, i, VERTICAL_WALL, borderColor, TCOD_black);
 	}
 
+	// UP AND DOWN ARROWS
 	con->putCharEx(0, 1, 16 * 2 - 2, borderColor, TCOD_black);
 	con->putCharEx(0, borderHeight - 2, 16 * 2 - 1, borderColor, TCOD_black);
 
 	std::vector<LogEntry> log = engine->getCombatLog();
-	if (log.size() < 7)
+	if (log.size() < NUMBER_OF_LOG_LINES)
 	{
 		for (int i = 0; i < log.size(); i++)
 		{
 			LogEntry entry = log[i];
 			std::string s = entry.getEntry();
-			for (int k = 0; k < s.size(); k++)
-			{
-				con->putCharEx(k + 1, i + 1, s[k], entry.getEntryColor(), TCOD_black);
-			}
+			SDL_Color textColor = utilityfunctions::mapTCODColorToSDLColor(entry.getEntryColor());
+			utilityfunctions::printLine(engine->renderer, s, textColor, COMBAT_LOG_WINDOW_LEFT, COMBAT_LOG_WINDOW_TOP + (i * LOG_FONT_SIZE));
 		}
 	}
 	else
 	{
 		int logPointer = engine->getCombatLogPointer();
 		int pos = 0;
-		for (int i = log.size() - 7 - logPointer; i < log.size() - logPointer; i++)
+		for (int i = log.size() - NUMBER_OF_LOG_LINES - logPointer; i < log.size() - logPointer; i++)
 		{
 			LogEntry entry = log[i];
 			std::string s = entry.getEntry();
-			for (int k = 0; k < s.size(); k++)
-			{
-				con->putCharEx(k + 1, pos + 1, s[k], entry.getEntryColor(), TCOD_black);
-			}
+			SDL_Color textColor = utilityfunctions::mapTCODColorToSDLColor(entry.getEntryColor());
+			utilityfunctions::printLine(engine->renderer, s, textColor, COMBAT_LOG_WINDOW_LEFT, COMBAT_LOG_WINDOW_TOP + (pos * LOG_FONT_SIZE));
 			pos++;
 		}
 	}
-
-	TCODConsole::blit(con, 0, 0, borderWidth, borderHeight, TCODConsole::root, CELL_COLUMNS - borderWidth-1, MAIN_WINDOW_HEIGHT - 1);
+	TCODConsole::blit(con, 0, 0, borderWidth, borderHeight, TCODConsole::root, CELL_COLUMNS - borderWidth - 1, MAIN_WINDOW_HEIGHT - 1);
+	//SDL_RenderPresent(engine->renderer);
+	//TCOD_sys_accumulate_console(TCODConsole::root->get_data());
 	delete con;
 }
 
@@ -891,12 +890,13 @@ void wrapTextWithinBounds(TCODConsole* con, std::string s, int x_1, int y_1, int
 
 void drawUI()
 {
-	TCODConsole::root->clear();
 	drawUtilityWindow();
 	drawTargetWindow();
-	drawGeneralLogWindow();
-	drawCombatLogWindow();
 	drawMainBorder();
 	drawMainWindow(engine->getMap(), engine->getPlayer(), engine->getEntities());
-	TCODConsole::flush();
+	drawGeneralLogWindow();
+	drawCombatLogWindow();
+	SDL_RenderPresent(engine->renderer);
+	SDL_RenderClear(engine->renderer);
+	TCOD_sys_accumulate_console(TCODConsole::root->get_data());
 }
