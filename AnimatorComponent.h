@@ -25,6 +25,8 @@ public:
 	bool getAnimationForward();
 	void setAnimationForward(bool _animationForward);
 
+	bool getPlayAnimation();
+	void setPlayAnimation(bool _playAnimation);
 
 	std::chrono::steady_clock::time_point getTime();
 	void setTime(std::chrono::steady_clock::time_point _time);
@@ -34,6 +36,8 @@ private:
 	int animationEnd;
 	float animationScale;
 	bool animationForward;
+
+	bool playAnimation = true;
 
 	int currentFrame;
 

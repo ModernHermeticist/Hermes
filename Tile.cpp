@@ -67,6 +67,8 @@ TCODColor Tile::getExploredForeground(){return exploredForeground;}
 
 TCODColor Tile::getExploredBackground(){return exploredBackground;}
 
+TCODColor Tile::getStoreForeground() { return storeForeground; }
+
 TCODColor Tile::getStoreBackground() { return storeBackground; }
 
 void Tile::setWalkable(bool val){walkable = val;}
@@ -84,5 +86,7 @@ void Tile::setVisibleBackground(TCODColor color){visibleBackground = color;}
 void Tile::setExploredForeground(TCODColor color){exploredForeground = color;}
 
 void Tile::setExploredBackground(TCODColor color){exploredBackground = color;}
+
+void Tile::setStoreForeground(TCODColor color) { storeForeground = color; }
 
 void Tile::setStoreBackground(TCODColor color) { storeBackground = color; }

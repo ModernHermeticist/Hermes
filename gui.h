@@ -10,7 +10,7 @@ void drawCombatLogWindow();
 void drawBorder(TCODConsole* con, int borderHeight, int borderWidth, TCODColor borderColor);
 void drawCharacterWindow();
 void drawInventoryWindow();
-void drawProgressionWindow(std::vector<int> selections, std::vector<TCODColor> selectionColorizer);
+void drawProgressionWindow(std::vector<int> selections, std::vector<TCODColor> selectionColorizer, int availablePoints);
 void drawInspectionWindow(Entity* entity);
 void highlightTile(int xPos, int yPos, int oldX, int oldY, Map* map, Player* player, std::vector<Entity*> entities);
 void highlightAOETiles(int xPos, int yPos, int oldX, int oldY, int range, Map* map, Player* player, std::vector<Entity*> entities);

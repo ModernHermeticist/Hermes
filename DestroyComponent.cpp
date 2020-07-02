@@ -268,5 +268,6 @@ void DestroyComponent::die(Entity* owner)
 {
 	owner->setSprite('%');
 	owner->setSpriteForeground(TCOD_red);
+	owner->destroyAnimatorComponent();
 	alive = false;
 }

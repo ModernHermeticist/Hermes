@@ -65,5 +65,8 @@ void AnimatorComponent::animateCellOnTimer()
 bool AnimatorComponent::getAnimationForward() { return animationForward; }
 void AnimatorComponent::setAnimationForward(bool _animationForward) { animationForward = _animationForward; }
 
+bool AnimatorComponent::getPlayAnimation() { return playAnimation; }
+void AnimatorComponent::setPlayAnimation(bool _playAnimation) { playAnimation = _playAnimation; }
+
 std::chrono::steady_clock::time_point AnimatorComponent::getTime() { return time; }
 void AnimatorComponent::setTime(std::chrono::steady_clock::time_point _time) { time = _time; }

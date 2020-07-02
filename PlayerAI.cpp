@@ -85,6 +85,11 @@ Engine::STATE PlayerAI::parseKeyInput()
 			break;
 		}
 
+		case 'a':   newState = moveOrAttack(-1, 0, movementDirection::WEST); break;
+		case 'd':   newState = moveOrAttack(1, 0, movementDirection::EAST); break;
+		case 'w':   newState = moveOrAttack(0, -1, movementDirection::NORTH); break;
+		case 's':   newState = moveOrAttack(0, 1, movementDirection::SOUTH); break;
+
 
 		default: break;
 	}
@@ -310,7 +315,7 @@ Engine::STATE PlayerAI::progressCharacter()
 	availableStatPoints += 5;
 	characterLevel += 1;
 	TCODConsole::root->clear();
-	drawProgressionWindow(statSelections, selectionColorizer);
+	drawProgressionWindow(statSelections, selectionColorizer, availableStatPoints);
 	TCODConsole::flush();
 	while (!confirmed)
 	{
@@ -358,7 +363,7 @@ Engine::STATE PlayerAI::progressCharacter()
 		if (redraw)
 		{
 			TCODConsole::root->clear();
-			drawProgressionWindow(statSelections, selectionColorizer);
+			drawProgressionWindow(statSelections, selectionColorizer, availableStatPoints);
 			TCODConsole::flush();
 		}
 	}
@@ -498,10 +503,10 @@ void PlayerAI::selectTarget()
 	while (!confirmed)
 	{
 		TCODConsole::root->clear();
-		highlightConeTiles(cardinalDirection, oldCardinalDirection, range, 0, engine->getMap(), engine->getPlayer(), engine->getEntities());
+		//highlightConeTiles(cardinalDirection, oldCardinalDirection, range, 0, engine->getMap(), engine->getPlayer(), engine->getEntities());
 		//highlightLineTiles(cardinalDirection, oldCardinalDirection, 3, engine->getMap(), engine->getPlayer(), engine->getEntities());
 		//highlightAOETiles(pointerX, pointerY, oldX, oldY, 2, engine->getMap(), engine->getPlayer(), engine->getEntities());
-		//highlightTile(pointerX, pointerY, oldX, oldY, engine->getMap(), engine->getPlayer(), engine->getEntities());
+		highlightTile(pointerX, pointerY, oldX, oldY, engine->getMap(), engine->getPlayer(), engine->getEntities());
 		drawUI();
 		TCODConsole::flush();
 		TCOD_key_t key;

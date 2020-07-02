@@ -450,7 +450,7 @@ void drawBorder(TCODConsole* con, int borderHeight, int borderWidth, TCODColor b
 	}
 }
 
-void drawProgressionWindow(std::vector<int> selections, std::vector<TCODColor> selectionColorizer)
+void drawProgressionWindow(std::vector<int> selections, std::vector<TCODColor> selectionColorizer, int pointsRemaining)
 {
 	Player* player = engine->getPlayer();
 	AttackComponent* attackComponent = player->getAttackComponent();
@@ -598,6 +598,9 @@ void drawProgressionWindow(std::vector<int> selections, std::vector<TCODColor> s
 	s = "%cConfirm%c";
 	con->printf(1, 17, s.c_str(), TCOD_COLCTRL_1, TCOD_COLCTRL_STOP);
 
+	s = "Points remaining: " + std::to_string(pointsRemaining);
+	con->printf(1, 18, s.c_str());
+
 	TCODConsole::blit(con, 0, 0, borderWidth, borderHeight, TCODConsole::root, 0, 0);
 	delete con;
 }
@@ -625,6 +628,10 @@ void highlightTile(int xPos, int yPos, int oldX, int oldY, Map* map, Player* pla
 	world[oldX][oldY].setVisibleBackground(world[oldX][oldY].getStoreBackground());
 	world[xPos][yPos].setStoreBackground(world[xPos][yPos].getVisibleBackground());
 	world[xPos][yPos].setVisibleBackground(TCODColor::celadon);
+
+	world[oldX][oldY].setVisibleForeground(world[oldX][oldY].getStoreForeground());
+	world[xPos][yPos].setStoreForeground(world[xPos][yPos].getVisibleForeground());
+	world[xPos][yPos].setVisibleForeground(TCODColor::celadon);
 	for (std::vector<Entity*>::iterator it = entities.begin(); it != entities.end(); it++)
 	{
 		Entity* entity = *it;
@@ -835,6 +842,7 @@ void resetHighlight(int xPos, int yPos, Map* map, Player* player, std::vector<En
 {
 	Tile** world = map->getWorld();
 	world[xPos][yPos].setVisibleBackground(world[xPos][yPos].getStoreBackground());
+	world[xPos][yPos].setVisibleForeground(world[xPos][yPos].getStoreForeground());
 	for (std::vector<Entity*>::iterator it = entities.begin(); it != entities.end(); it++)
 	{
 		Entity* entity = *it;
@@ -842,6 +850,7 @@ void resetHighlight(int xPos, int yPos, Map* map, Player* player, std::vector<En
 		{
 			player->getPlayerAI()->setTarget(NULL);
 			entity->setSpriteBackground(entity->getStoreBackground());
+			entity->setSpriteForeground(entity->getStoreForeground());
 			return;
 		}
 	}

@@ -8,6 +8,7 @@ Entity::Entity(int _xPos, int _yPos, int _sprite, TCODColor _spriteForeground, T
 	spriteForeground = _spriteForeground;
 	spriteBackground = _spriteBackground;
 	storeBackground = spriteBackground;
+	storeForeground = spriteForeground;
 	name = _name;
 	enemyAI = NULL;
 	attackComponent = NULL;
@@ -23,6 +24,8 @@ Entity::Entity(int _xPos, int _yPos, int _sprite, TCODColor _spriteForeground, T
 	sprite = _sprite;
 	spriteForeground = _spriteForeground;
 	spriteBackground = _spriteBackground;
+	storeBackground = spriteBackground;
+	storeForeground = spriteForeground;
 	name = _name;
 	animatorComponent = _animatorComponent;
 }
@@ -35,6 +38,8 @@ Entity::Entity(int _xPos, int _yPos, int _sprite, TCODColor _spriteForeground, T
 	sprite = _sprite;
 	spriteForeground = _spriteForeground;
 	spriteBackground = _spriteBackground;
+	storeBackground = spriteBackground;
+	storeForeground = spriteForeground;
 	name = _name;
 	enemyAI = _enemyAI;
 	attackComponent = _attackComponent;
@@ -52,6 +57,7 @@ Entity::Entity(int _xPos, int _yPos, int _sprite, TCODColor _spriteForeground, T
 	spriteForeground = _spriteForeground;
 	spriteBackground = _spriteBackground;
 	storeBackground = spriteBackground;
+	storeForeground = spriteForeground;
 	name = _name;
 	enemyAI = _enemyAI;
 	attackComponent = _attackComponent;
@@ -69,6 +75,7 @@ Entity::Entity(int _xPos, int _yPos, int _sprite, TCODColor _spriteForeground, T
 	spriteForeground = _spriteForeground;
 	spriteBackground = _spriteBackground;
 	storeBackground = spriteBackground;
+	storeForeground = spriteForeground;
 	name = _name;
 	description = _description;
 	enemyAI = NULL;
@@ -88,6 +95,7 @@ Entity::Entity(int _xPos, int _yPos, int _sprite, TCODColor _spriteForeground, T
 	spriteForeground = _spriteForeground;
 	spriteBackground = _spriteBackground;
 	storeBackground = spriteBackground;
+	storeForeground = spriteForeground;
 	name = _name;
 	description = _description;
 	enemyAI = _enemyAI;
@@ -133,11 +141,15 @@ TCODColor Entity::getSpriteForeground(){return spriteForeground;}
 
 TCODColor Entity::getSpriteBackground(){return spriteBackground;}
 
+TCODColor Entity::getStoreForeground() { return storeForeground; }
+
 TCODColor Entity::getStoreBackground() { return storeBackground; }
 
 void Entity::setSpriteForeground(TCODColor c){spriteForeground = c;}
 
 void Entity::setSpriteBackground(TCODColor c){spriteBackground = c;}
+
+void Entity::setStoreForeground(TCODColor c) { storeForeground = c; }
 
 void Entity::setStoreBackground(TCODColor c) { storeBackground = c; }
 
@@ -152,3 +164,13 @@ DestroyComponent* Entity::getDestroyComponent() { return destroyComponent; }
 InventoryComponent* Entity::getInventoryComponent() { return inventoryComponent; }
 ItemComponent* Entity::getItemComponent() { return itemComponent; }
 AnimatorComponent* Entity::getAnimatorComponent() { return animatorComponent; }
+
+void Entity::destroyAnimatorComponent() 
+{
+	if (animatorComponent != NULL)
+	{
+		delete animatorComponent;
+		animatorComponent = NULL;
+	}
+	
+}

@@ -37,10 +37,12 @@ public:
 
 	TCODColor getSpriteForeground();
 	TCODColor getSpriteBackground();
+	TCODColor getStoreForeground();
 	TCODColor getStoreBackground();
 
 	void setSpriteForeground(TCODColor c);
 	void setSpriteBackground(TCODColor c);
+	void setStoreForeground(TCODColor color);
 	void setStoreBackground(TCODColor color);
 
 	std::string getName();
@@ -54,6 +56,8 @@ public:
 	ItemComponent* getItemComponent();
 	AnimatorComponent* getAnimatorComponent();
 
+	void destroyAnimatorComponent();
+
 
 private:
 	int xPos;
@@ -64,6 +68,7 @@ private:
 	TCODColor spriteForeground;
 	TCODColor spriteBackground;
 
+	TCODColor storeForeground;
 	TCODColor storeBackground;
 
 	std::string name;

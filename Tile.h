@@ -23,6 +23,7 @@ public:
 	TCODColor getVisibleBackground();
 	TCODColor getExploredForeground();
 	TCODColor getExploredBackground();
+	TCODColor getStoreForeground();
 	TCODColor getStoreBackground();
 
 	void setWalkable(bool val);
@@ -36,6 +37,7 @@ public:
 	void setVisibleBackground(TCODColor color);
 	void setExploredForeground(TCODColor color);
 	void setExploredBackground(TCODColor color);
+	void setStoreForeground(TCODColor color);
 	void setStoreBackground(TCODColor color);
 
 private:
@@ -53,6 +55,7 @@ private:
 	TCODColor exploredForeground;
 	TCODColor exploredBackground;
 
+	TCODColor storeForeground;
 	TCODColor storeBackground;
 };
 
